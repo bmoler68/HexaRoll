@@ -1,5 +1,6 @@
 package com.brianmoler.hexaroll.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.brianmoler.hexaroll.data.*
@@ -85,8 +86,12 @@ class DiceRollViewModel : ViewModel() {
     }
     
     fun rollDice() {
+        Log.d("DiceRollViewModel", "rollDice() called")
         val selections = _diceSelections.value.values.filter { it.count > 0 }
-        if (selections.isEmpty()) return
+        if (selections.isEmpty()) {
+            Log.d("DiceRollViewModel", "No dice selected, returning")
+            return
+        }
         
         val individualRolls = mutableListOf<List<Int>>()
         val d100Rolls = mutableListOf<D100Roll>()

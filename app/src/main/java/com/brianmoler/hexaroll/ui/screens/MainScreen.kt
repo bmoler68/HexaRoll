@@ -10,8 +10,12 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,7 +35,7 @@ import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    viewModel: DiceRollViewModel = viewModel()
+    viewModel: DiceRollViewModel
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
     
@@ -42,7 +46,7 @@ fun MainScreen(
         TabItem(Icons.Filled.List, "History")
     )
     
-        Column(
+    Column(
         modifier = modifier
             .fillMaxSize()
             .background(CyberpunkColors.DarkBackground)

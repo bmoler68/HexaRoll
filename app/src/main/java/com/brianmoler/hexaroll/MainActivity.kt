@@ -7,50 +7,31 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.brianmoler.hexaroll.ui.screens.MainScreen
 import com.brianmoler.hexaroll.ui.theme.HexaRollTheme
-import com.brianmoler.hexaroll.utils.ShakeDetector
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
 
 class MainActivity : ComponentActivity() {
-    private var shakeDetector: ShakeDetector? = null
+    private lateinit var viewModel: DiceRollViewModel
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        
+        // Initialize ViewModel
+        viewModel = DiceRollViewModel()
+        
         setContent {
             HexaRollTheme {
-                val viewModel: DiceRollViewModel = viewModel()
-                
-                // Initialize shake detector
-                LaunchedEffect(Unit) {
-                    shakeDetector = ShakeDetector(this@MainActivity) {
-                        viewModel.rollDice()
-                    }
-                    shakeDetector?.start()
-                }
-                
-                // Cleanup shake detector
-                DisposableEffect(Unit) {
-                    onDispose {
-                        shakeDetector?.stop()
-                    }
-                }
-                
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MainScreen(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        viewModel = viewModel
                     )
                 }
             }
         }
-    }
-    
-    override fun onDestroy() {
-        super.onDestroy()
-        shakeDetector?.stop()
     }
 }
