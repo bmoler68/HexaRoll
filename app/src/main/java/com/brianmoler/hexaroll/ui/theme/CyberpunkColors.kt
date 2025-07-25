@@ -5,18 +5,20 @@ import androidx.compose.ui.graphics.Color
 object CyberpunkColors {
     // Primary colors
     val NeonBlue = Color(0xFF00FFFF)
+    val NeonCyan = Color(0xFF00FFFF)
+    val NeonPurple = Color(0xFF8000FF)
     val NeonMagenta = Color(0xFFFF00FF)
     val NeonYellow = Color(0xFFFFD700)
     val NeonGreen = Color(0xFF00FF00)
     val NeonRed = Color(0xFFFF0000)
     val NeonOrange = Color(0xFFFF8C00)
     
-    // Darker button colors for better text visibility
-    val ButtonBlue = Color(0xFF0066CC)
-    val ButtonGreen = Color(0xFF006600)
-    val ButtonRed = Color(0xFFCC0000)
-    val ButtonYellow = Color(0xFFCC9900)
-    val ButtonMagenta = Color(0xFFCC00CC)
+    // Button colors for better visibility
+    val ButtonBlue = Color(0xFF0080FF)
+    val ButtonGreen = Color(0xFF00CC00)
+    val ButtonRed = Color(0xFFFF4040)
+    val ButtonYellow = Color(0xFFFFCC00)
+    val ButtonMagenta = Color(0xFFFF00FF)
     
     // Background colors
     val DarkBackground = Color(0xFF0A0A0A)

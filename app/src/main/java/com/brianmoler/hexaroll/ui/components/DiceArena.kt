@@ -2,6 +2,7 @@ package com.brianmoler.hexaroll.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -130,7 +131,7 @@ fun DiceCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp),
+            .height(150.dp),
         colors = CardDefaults.cardColors(
             containerColor = CyberpunkColors.ElevatedCardBackground
         ),
@@ -142,9 +143,9 @@ fun DiceCard(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp),
+                .padding(6.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             // Dice Shape
             DiceShape(
@@ -165,15 +166,22 @@ fun DiceCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(
-                    onClick = onDecrement,
-                    modifier = Modifier.size(32.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = CyberpunkColors.ButtonRed
-                    ),
-                    contentPadding = PaddingValues(0.dp)
+                androidx.compose.foundation.layout.Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .background(
+                            color = CyberpunkColors.ButtonRed,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .border(
+                            width = 2.dp,
+                            color = CyberpunkColors.NeonRed,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .clickable { onDecrement() },
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text("-", color = Color.White, fontSize = 16.sp)
+                    Text("-", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 }
                 
                 Text(
@@ -185,15 +193,22 @@ fun DiceCard(
                     textAlign = TextAlign.Center
                 )
                 
-                Button(
-                    onClick = onIncrement,
-                    modifier = Modifier.size(32.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = CyberpunkColors.ButtonGreen
-                    ),
-                    contentPadding = PaddingValues(0.dp)
+                androidx.compose.foundation.layout.Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .background(
+                            color = CyberpunkColors.ButtonGreen,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .border(
+                            width = 2.dp,
+                            color = CyberpunkColors.NeonGreen,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .clickable { onIncrement() },
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text("+", color = Color.White, fontSize = 16.sp)
+                    Text("+", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -239,9 +254,13 @@ fun ModifierSection(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = CyberpunkColors.ButtonRed
                 ),
-                contentPadding = PaddingValues(0.dp)
+                contentPadding = PaddingValues(0.dp),
+                border = androidx.compose.foundation.BorderStroke(
+                    width = 1.dp,
+                    color = CyberpunkColors.NeonRed
+                )
             ) {
-                Text("-", color = Color.White, fontSize = 16.sp)
+                Text("-", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
 
             Text(
@@ -259,9 +278,13 @@ fun ModifierSection(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = CyberpunkColors.ButtonGreen
                 ),
-                contentPadding = PaddingValues(0.dp)
+                contentPadding = PaddingValues(0.dp),
+                border = androidx.compose.foundation.BorderStroke(
+                    width = 1.dp,
+                    color = CyberpunkColors.NeonGreen
+                )
             ) {
-                Text("+", color = Color.White, fontSize = 16.sp)
+                Text("+", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
