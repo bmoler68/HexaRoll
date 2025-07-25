@@ -1,6 +1,10 @@
 # HexaRoll - Cyberpunk RPG Dice Rolling App
 
+**Copyright © 2024 Brian Moler. All rights reserved.**
+
 A modern Android dice rolling application with a Cyberpunk RPG aesthetic, built using Jetpack Compose.
+
+> **Note**: This is a private, proprietary project owned by Brian Moler. This codebase is not open source and may not be copied, modified, or distributed without explicit permission.
 
 ## Features
 
@@ -88,4 +92,13 @@ The app is built using:
 
 ## License
 
-This project is open source and available under the MIT License. 
+**Copyright © 2024 Brian Moler. All rights reserved.**
+
+This project is **NOT open source** and is privately owned by Brian Moler. 
+
+- **Private Project**: This codebase is proprietary and confidential
+- **No Public License**: No open source license is granted
+- **All Rights Reserved**: All intellectual property rights are retained by Brian Moler
+- **No Redistribution**: This code may not be copied, modified, or distributed without explicit permission
+
+For licensing inquiries, please contact Brian Moler directly. 
