@@ -95,11 +95,22 @@ data class TabItem(
 
 @Composable
 fun RollScreen(viewModel: DiceRollViewModel) {
+    val presetLoadedMessage by viewModel.presetLoadedMessage.collectAsState()
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        // Preset loaded message
+        presetLoadedMessage?.let { message ->
+            PresetLoadedNotification(
+                message = message,
+                onDismiss = { viewModel.clearPresetLoadedMessage() }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        
         DiceArena(viewModel)
     }
 }
@@ -210,6 +221,7 @@ fun CustomizationCard(
 @Composable
 fun PresetsScreen(viewModel: DiceRollViewModel) {
     val presetRolls by viewModel.presetRolls.collectAsState()
+    val presetLoadedMessage by viewModel.presetLoadedMessage.collectAsState()
     
     Column(
         modifier = Modifier
@@ -224,16 +236,40 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
             modifier = Modifier.padding(bottom = 16.dp)
         )
         
+        // Preset loaded message
+        presetLoadedMessage?.let { message ->
+            PresetLoadedNotification(
+                message = message,
+                onDismiss = { viewModel.clearPresetLoadedMessage() }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        
         if (presetRolls.isEmpty()) {
-            Text(
-                text = "No preset rolls available",
-                color = CyberpunkColors.SecondaryText,
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 32.dp)
-            )
+                    .padding(vertical = 32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "No preset rolls yet",
+                    color = CyberpunkColors.SecondaryText,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Text(
+                    text = "Create presets by rolling dice and using the 'Save to Presets' button in the History tab",
+                    color = CyberpunkColors.SecondaryText,
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
         } else {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -295,7 +331,7 @@ fun PresetCard(
                     Button(
                         onClick = { showEditDialog = true },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = CyberpunkColors.NeonBlue
+                            containerColor = CyberpunkColors.ButtonBlue
                         ),
                         modifier = Modifier.size(32.dp),
                         contentPadding = PaddingValues(0.dp)
@@ -311,7 +347,7 @@ fun PresetCard(
                     Button(
                         onClick = { showDeleteDialog = true },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = CyberpunkColors.NeonRed
+                            containerColor = CyberpunkColors.ButtonRed
                         ),
                         modifier = Modifier.size(32.dp),
                         contentPadding = PaddingValues(0.dp)
@@ -348,7 +384,7 @@ fun PresetCard(
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.NeonGreen
+                    containerColor = CyberpunkColors.ButtonGreen
                 )
             ) {
                 Text(
@@ -488,7 +524,7 @@ fun RollHistoryCard(
                     Button(
                         onClick = { showSaveDialog = true },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = CyberpunkColors.NeonGreen
+                            containerColor = CyberpunkColors.ButtonGreen
                         ),
                         modifier = Modifier.padding(top = 4.dp)
                     ) {
@@ -602,7 +638,7 @@ fun SavePresetDialog(
             Button(
                 onClick = { onSave(name, description) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.NeonGreen
+                    containerColor = CyberpunkColors.ButtonGreen
                 )
             ) {
                 Text("Save")
@@ -612,7 +648,7 @@ fun SavePresetDialog(
             Button(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.NeonRed
+                    containerColor = CyberpunkColors.ButtonRed
                 )
             ) {
                 Text("Cancel")
@@ -681,7 +717,7 @@ fun EditPresetDialog(
             Button(
                 onClick = { onSave(name, description) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.NeonGreen
+                    containerColor = CyberpunkColors.ButtonGreen
                 )
             ) {
                 Text("Save")
@@ -691,7 +727,7 @@ fun EditPresetDialog(
             Button(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.NeonRed
+                    containerColor = CyberpunkColors.ButtonRed
                 )
             ) {
                 Text("Cancel")
@@ -728,7 +764,7 @@ fun DeletePresetDialog(
             Button(
                 onClick = onConfirm,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.NeonRed
+                    containerColor = CyberpunkColors.ButtonRed
                 )
             ) {
                 Text("Delete")
@@ -738,7 +774,7 @@ fun DeletePresetDialog(
             Button(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.NeonBlue
+                    containerColor = CyberpunkColors.ButtonBlue
                 )
             ) {
                 Text("Cancel")
@@ -748,6 +784,70 @@ fun DeletePresetDialog(
         titleContentColor = CyberpunkColors.NeonRed,
         textContentColor = CyberpunkColors.PrimaryText
     )
+}
+
+@Composable
+fun PresetLoadedNotification(
+    message: String,
+    onDismiss: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = CyberpunkColors.ButtonGreen.copy(alpha = 0.2f)
+        ),
+        border = androidx.compose.foundation.BorderStroke(
+            width = 1.dp,
+            color = CyberpunkColors.ButtonGreen
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
+            ) {
+                // Success icon
+                Text(
+                    text = "✓",
+                    color = CyberpunkColors.ButtonGreen,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                
+                // Message
+                Text(
+                    text = message,
+                    color = CyberpunkColors.PrimaryText,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+            
+            // Dismiss button
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent
+                ),
+                contentPadding = PaddingValues(4.dp),
+                modifier = Modifier.size(24.dp)
+            ) {
+                Text(
+                    text = "×",
+                    color = CyberpunkColors.SecondaryText,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+    }
 }
 
 @Composable

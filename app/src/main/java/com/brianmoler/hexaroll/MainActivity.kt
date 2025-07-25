@@ -14,17 +14,15 @@ import com.brianmoler.hexaroll.ui.theme.HexaRollTheme
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
 
 class MainActivity : ComponentActivity() {
-    private lateinit var viewModel: DiceRollViewModel
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         
-        // Initialize ViewModel
-        viewModel = DiceRollViewModel()
-        
         setContent {
             HexaRollTheme {
+                val viewModel: DiceRollViewModel = viewModel()
+                
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MainScreen(
                         modifier = Modifier.padding(innerPadding),

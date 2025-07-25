@@ -1,16 +1,21 @@
 package com.brianmoler.hexaroll.viewmodel
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.brianmoler.hexaroll.data.*
+import com.brianmoler.hexaroll.utils.PresetStorage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-class DiceRollViewModel : ViewModel() {
+class DiceRollViewModel(application: Application) : AndroidViewModel(application) {
+    
+    private val presetStorage = PresetStorage(application)
     
     private val _diceSelections = MutableStateFlow(
         DiceType.values().associateWith { DiceSelection(it, 0) }
@@ -26,32 +31,40 @@ class DiceRollViewModel : ViewModel() {
     private val _currentResult = MutableStateFlow<RollResult?>(null)
     val currentResult: StateFlow<RollResult?> = _currentResult.asStateFlow()
     
-    private val _presetRolls = MutableStateFlow<List<PresetRoll>>(
-        listOf(
-            PresetRoll(
-                name = "Pathfinder",
-                description = "Standard D20 system",
-                diceSelections = listOf(DiceSelection(DiceType.D20, 1)),
-                modifier = 0
-            ),
-            PresetRoll(
-                name = "COC Stats",
-                description = "Call of Cthulhu character stats",
-                diceSelections = listOf(DiceSelection(DiceType.D6, 3)),
-                modifier = 0
-            ),
-            PresetRoll(
-                name = "Fireball",
-                description = "D&D 5e Fireball spell",
-                diceSelections = listOf(DiceSelection(DiceType.D6, 8)),
-                modifier = 0
-            )
-        )
-    )
+    private val _presetRolls = MutableStateFlow<List<PresetRoll>>(emptyList())
     val presetRolls: StateFlow<List<PresetRoll>> = _presetRolls.asStateFlow()
     
     private val _customization = MutableStateFlow(DiceCustomization())
     val customization: StateFlow<DiceCustomization> = _customization.asStateFlow()
+    
+    private val _presetLoadedMessage = MutableStateFlow<String?>(null)
+    val presetLoadedMessage: StateFlow<String?> = _presetLoadedMessage.asStateFlow()
+    
+    init {
+        loadPresetsFromStorage()
+    }
+    
+    private fun loadPresetsFromStorage() {
+        viewModelScope.launch {
+            try {
+                val presets = presetStorage.loadPresets()
+                _presetRolls.value = presets
+            } catch (e: Exception) {
+                Log.e("DiceRollViewModel", "Error loading presets", e)
+                _presetRolls.value = emptyList()
+            }
+        }
+    }
+    
+    private fun savePresetsToStorage() {
+        viewModelScope.launch {
+            try {
+                presetStorage.savePresets(_presetRolls.value)
+            } catch (e: Exception) {
+                Log.e("DiceRollViewModel", "Error saving presets", e)
+            }
+        }
+    }
     
     fun updateDiceCount(diceType: DiceType, newCount: Int) {
         _diceSelections.update { selections ->
@@ -172,9 +185,12 @@ class DiceRollViewModel : ViewModel() {
         _presetRolls.update { presets ->
             presets + preset
         }
+        savePresetsToStorage()
     }
     
     fun loadPresetRoll(preset: PresetRoll) {
+        Log.d("DiceRollViewModel", "Loading preset: ${preset.name}")
+        
         // Reset all dice counts
         _diceSelections.update { selections ->
             selections.mapValues { DiceSelection(it.key, 0) }
@@ -190,6 +206,18 @@ class DiceRollViewModel : ViewModel() {
         
         // Clear the current result when loading a preset
         _currentResult.value = null
+        
+        // Show confirmation message
+        val message = "Preset '${preset.name}' loaded successfully!"
+        Log.d("DiceRollViewModel", "Setting preset message: $message")
+        _presetLoadedMessage.value = message
+        
+        // Clear the message after 3 seconds
+        viewModelScope.launch {
+            kotlinx.coroutines.delay(3000)
+            Log.d("DiceRollViewModel", "Clearing preset message")
+            _presetLoadedMessage.value = null
+        }
     }
     
     fun createPresetFromRoll(rollResult: RollResult, name: String, description: String) {
@@ -203,12 +231,14 @@ class DiceRollViewModel : ViewModel() {
         _presetRolls.update { presets ->
             presets + preset
         }
+        savePresetsToStorage()
     }
     
     fun removePreset(presetId: String) {
         _presetRolls.update { presets ->
             presets.filter { it.id != presetId }
         }
+        savePresetsToStorage()
     }
     
     fun updatePreset(presetId: String, newName: String, newDescription: String) {
@@ -221,6 +251,7 @@ class DiceRollViewModel : ViewModel() {
                 }
             }
         }
+        savePresetsToStorage()
     }
     
     fun saveCurrentRollToPreset(name: String, description: String) {
@@ -236,7 +267,12 @@ class DiceRollViewModel : ViewModel() {
             _presetRolls.update { presets ->
                 presets + preset
             }
+            savePresetsToStorage()
         }
+    }
+    
+    fun clearPresetLoadedMessage() {
+        _presetLoadedMessage.value = null
     }
     
     fun updateCustomization(customization: DiceCustomization) {

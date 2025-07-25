@@ -169,7 +169,7 @@ fun DiceCard(
                     onClick = onDecrement,
                     modifier = Modifier.size(32.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = CyberpunkColors.NeonRed
+                        containerColor = CyberpunkColors.ButtonRed
                     ),
                     contentPadding = PaddingValues(0.dp)
                 ) {
@@ -189,7 +189,7 @@ fun DiceCard(
                     onClick = onIncrement,
                     modifier = Modifier.size(32.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = CyberpunkColors.NeonGreen
+                        containerColor = CyberpunkColors.ButtonGreen
                     ),
                     contentPadding = PaddingValues(0.dp)
                 ) {
@@ -237,7 +237,7 @@ fun ModifierSection(
                 onClick = onDecrement,
                 modifier = Modifier.size(36.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.NeonRed
+                    containerColor = CyberpunkColors.ButtonRed
                 ),
                 contentPadding = PaddingValues(0.dp)
             ) {
@@ -257,7 +257,7 @@ fun ModifierSection(
                 onClick = onIncrement,
                 modifier = Modifier.size(36.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.NeonGreen
+                    containerColor = CyberpunkColors.ButtonGreen
                 ),
                 contentPadding = PaddingValues(0.dp)
             ) {
@@ -422,7 +422,7 @@ fun ClearArenaButton(
         onClick = onClick,
         modifier = modifier.height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = CyberpunkColors.NeonRed
+            containerColor = CyberpunkColors.ButtonRed
         ),
         border = androidx.compose.foundation.BorderStroke(
             width = 2.dp,
@@ -451,7 +451,7 @@ fun RollButton(
         enabled = isEnabled,
         modifier = modifier.height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isEnabled) CyberpunkColors.NeonOrange else CyberpunkColors.CardBackground,
+            containerColor = if (isEnabled) CyberpunkColors.ButtonYellow else CyberpunkColors.CardBackground,
             disabledContainerColor = CyberpunkColors.CardBackground
         ),
         border = androidx.compose.foundation.BorderStroke(

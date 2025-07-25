@@ -11,6 +11,13 @@ object CyberpunkColors {
     val NeonRed = Color(0xFFFF0000)
     val NeonOrange = Color(0xFFFF8C00)
     
+    // Darker button colors for better text visibility
+    val ButtonBlue = Color(0xFF0066CC)
+    val ButtonGreen = Color(0xFF006600)
+    val ButtonRed = Color(0xFFCC0000)
+    val ButtonYellow = Color(0xFFCC9900)
+    val ButtonMagenta = Color(0xFFCC00CC)
+    
     // Background colors
     val DarkBackground = Color(0xFF0A0A0A)
     val DarkerBackground = Color(0xFF050505)
