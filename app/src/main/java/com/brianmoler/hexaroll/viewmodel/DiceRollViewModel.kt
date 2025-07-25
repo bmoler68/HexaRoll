@@ -205,6 +205,40 @@ class DiceRollViewModel : ViewModel() {
         }
     }
     
+    fun removePreset(presetId: String) {
+        _presetRolls.update { presets ->
+            presets.filter { it.id != presetId }
+        }
+    }
+    
+    fun updatePreset(presetId: String, newName: String, newDescription: String) {
+        _presetRolls.update { presets ->
+            presets.map { preset ->
+                if (preset.id == presetId) {
+                    preset.copy(name = newName, description = newDescription)
+                } else {
+                    preset
+                }
+            }
+        }
+    }
+    
+    fun saveCurrentRollToPreset(name: String, description: String) {
+        val selections = _diceSelections.value.values.filter { it.count > 0 }
+        if (selections.isNotEmpty()) {
+            val preset = PresetRoll(
+                name = name,
+                description = description,
+                diceSelections = selections,
+                modifier = _modifier.value
+            )
+            
+            _presetRolls.update { presets ->
+                presets + preset
+            }
+        }
+    }
+    
     fun updateCustomization(customization: DiceCustomization) {
         _customization.value = customization
     }
