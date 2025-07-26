@@ -1,8 +1,8 @@
-# HexaRoll - Cyberpunk RPG Dice Rolling App
+# HexaRoll - Multi-Theme RPG Dice Rolling App
 
 **Copyright © 2024 Brian Moler. All rights reserved.**
 
-A modern Android dice rolling application with a Cyberpunk RPG aesthetic, built using Jetpack Compose.
+A modern Android dice rolling application with multiple theme options (Cyberpunk, Fantasy, SCI-FI), built using Jetpack Compose.
 
 > **Note**: This is a private, proprietary project owned by Brian Moler. This codebase is not open source and may not be copied, modified, or distributed without explicit permission.
 
@@ -22,13 +22,16 @@ A modern Android dice rolling application with a Cyberpunk RPG aesthetic, built 
 - **Interactive Controls**: +/- buttons to adjust dice quantities
 - **Roll Modifier**: Adjustable modifier with +/- controls
 - **Total Display**: Shows total dice count and final total with modifier
-- **Shake to Roll**: Shake your device to trigger dice rolls
-- **Roll Button**: Manual roll button with Cyberpunk styling
+
+- **Roll Button**: Manual roll button with theme-appropriate styling
 
 ### 🎨 Customization (Second Tab)
-- **Dice Color**: Customize dice appearance
-- **Arena Background**: Choose from different background themes
-- **Unique Dice**: Special dice customization options
+- **Theme Selection**: Choose from three distinct visual themes:
+  - **Cyberpunk**: Vibrant neon colors with electric glow effects
+  - **Fantasy**: Warm earthy tones with magical golden accents
+  - **SCI-FI**: Cool futuristic blues with holographic highlights
+- **Persistent Preferences**: Your theme choice is automatically saved
+- **Complete Visual Transformation**: All UI elements adapt to your chosen theme
 
 ### 📋 Preset Rolls (Third Tab)
 - **Pre-configured Rolls**: Save and load common dice combinations
@@ -46,20 +49,30 @@ A modern Android dice rolling application with a Cyberpunk RPG aesthetic, built 
 ## Technical Features
 
 - **Modern UI**: Built with Jetpack Compose
-- **Cyberpunk Theme**: Dark background with neon colors
-- **Sensor Integration**: Accelerometer-based shake detection
+- **Multi-Theme System**: Three distinct visual themes with complete UI adaptation
+- **Theme Persistence**: Automatic saving and loading of user theme preferences
 - **State Management**: MVVM architecture with ViewModel
 - **Responsive Design**: Adapts to different screen sizes
+- **Theme-Aware Components**: All UI elements dynamically change with theme selection
 
-## Color Scheme
+## Theme System
 
-The app uses a Cyberpunk-inspired color palette:
-- **Background**: Dark grays and blacks
-- **Primary**: Neon cyan (#00FFFF)
-- **Secondary**: Neon magenta (#FF00FF)
-- **Accent**: Neon yellow (#FFD700)
-- **Success**: Neon green (#00FF00)
-- **Error**: Neon red (#FF0000)
+The app features three distinct visual themes, each with its own color palette and aesthetic:
+
+### 🎭 Cyberpunk Theme (Default)
+- **Background**: Deep blue-black with dark blue-gray cards
+- **Primary Colors**: Bright neon yellows, electric cyan, bright neon greens and reds
+- **Character**: High contrast, vibrant, electric, futuristic
+
+### 🏰 Fantasy Theme
+- **Background**: Deep brown wood with rich mahogany cards
+- **Primary Colors**: Goldenrod (magical gold), royal blue (mystical), forest green (nature), crimson (dragon fire)
+- **Character**: Warm, earthy, magical, medieval-inspired
+
+### 🚀 SCI-FI Theme
+- **Background**: Deep space black with dark metal cards
+- **Primary Colors**: Electric blue, spring green, bright red, cyan (holographic), dark orchid (quantum)
+- **Character**: Cool, high-tech, futuristic, space-themed
 
 ## Installation
 
@@ -70,16 +83,16 @@ The app uses a Cyberpunk-inspired color palette:
 ## Requirements
 
 - Android API 24+ (Android 7.0)
-- Device with accelerometer sensor
 - Minimum 2GB RAM recommended
 
 ## Usage
 
 1. **Select Dice**: Use the +/- buttons to choose dice quantities
 2. **Set Modifier**: Adjust the roll modifier as needed
-3. **Roll**: Either tap the ROLL button or shake your device
-4. **View Results**: Check the sidebar for recent rolls
+3. **Roll**: Tap the ROLL button to roll your dice
+4. **View Results**: Check the History tab for recent rolls
 5. **Save Presets**: Create custom presets for frequently used combinations
+6. **Customize Theme**: Visit the Customize tab to choose your preferred visual theme
 
 ## Development
 
@@ -88,7 +101,8 @@ The app is built using:
 - **Material 3** design system
 - **MVVM** architecture pattern
 - **StateFlow** for reactive state management
-- **Android Sensors** for shake detection
+- **Theme System** with persistent user preferences
+- **Custom Drawing** for theme-aware dice shapes
 
 ## License
 
