@@ -11,39 +11,87 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.dp
+import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.data.DiceType
 import com.brianmoler.hexaroll.ui.theme.CyberpunkColors
+import com.brianmoler.hexaroll.ui.theme.FantasyColors
+import com.brianmoler.hexaroll.ui.theme.SciFiColors
 import android.graphics.Paint
 import android.graphics.BlurMaskFilter
 import kotlin.math.*
+
+// Helper function for theme-aware colors
+private fun getThemeColor(theme: AppTheme, colorType: String): Color {
+    return when (theme) {
+        AppTheme.CYBERPUNK -> when (colorType) {
+            "NeonBlue" -> CyberpunkColors.NeonBlue
+            "NeonCyan" -> CyberpunkColors.NeonCyan
+            "NeonYellow" -> CyberpunkColors.NeonYellow
+            "NeonPurple" -> CyberpunkColors.NeonPurple
+            "NeonGreen" -> CyberpunkColors.NeonGreen
+            "NeonRed" -> CyberpunkColors.NeonRed
+            else -> CyberpunkColors.NeonCyan
+        }
+        AppTheme.FANTASY -> when (colorType) {
+            "NeonBlue" -> FantasyColors.NeonBlue
+            "NeonCyan" -> FantasyColors.NeonCyan
+            "NeonYellow" -> FantasyColors.NeonYellow
+            "NeonPurple" -> FantasyColors.NeonPurple
+            "NeonGreen" -> FantasyColors.NeonGreen
+            "NeonRed" -> FantasyColors.NeonRed
+            else -> FantasyColors.NeonCyan
+        }
+        AppTheme.SCI_FI -> when (colorType) {
+            "NeonBlue" -> SciFiColors.NeonBlue
+            "NeonCyan" -> SciFiColors.NeonCyan
+            "NeonYellow" -> SciFiColors.NeonYellow
+            "NeonPurple" -> SciFiColors.NeonPurple
+            "NeonGreen" -> SciFiColors.NeonGreen
+            "NeonRed" -> SciFiColors.NeonRed
+            else -> SciFiColors.NeonCyan
+        }
+    }
+}
 
 @Composable
 fun DiceShape(
     diceType: DiceType,
     modifier: Modifier = Modifier,
-    color: Color = CyberpunkColors.DiceDefault,
+    theme: AppTheme = AppTheme.CYBERPUNK,
     isSelected: Boolean = false
 ) {
-    val strokeColor = if (isSelected) CyberpunkColors.GlowYellow else CyberpunkColors.NeonCyan
+    val strokeColor = if (isSelected) {
+        when (theme) {
+            AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+            AppTheme.FANTASY -> FantasyColors.NeonYellow
+            AppTheme.SCI_FI -> SciFiColors.NeonYellow
+        }
+    } else {
+        when (theme) {
+            AppTheme.CYBERPUNK -> CyberpunkColors.NeonCyan
+            AppTheme.FANTASY -> FantasyColors.NeonCyan
+            AppTheme.SCI_FI -> SciFiColors.NeonCyan
+        }
+    }
     val strokeWidth = if (isSelected) 4f else 2f
 
     Canvas(
         modifier = modifier.size(80.dp)
     ) {
         when (diceType) {
-            DiceType.D4 -> drawCyberpunkD4(strokeColor, strokeWidth, isSelected)
-            DiceType.D6 -> drawCyberpunkD6(strokeColor, strokeWidth, isSelected)
-            DiceType.D8 -> drawCyberpunkD8(strokeColor, strokeWidth, isSelected)
-            DiceType.D10 -> drawCyberpunkD10(strokeColor, strokeWidth, isSelected)
-            DiceType.D12 -> drawCyberpunkD12(strokeColor, strokeWidth, isSelected)
-            DiceType.D20 -> drawCyberpunkD20(strokeColor, strokeWidth, isSelected)
-            DiceType.D30 -> drawCyberpunkD30(strokeColor, strokeWidth, isSelected)
-            DiceType.D100 -> drawCyberpunkD100(strokeColor, strokeWidth, isSelected)
+            DiceType.D4 -> drawCyberpunkD4(strokeColor, strokeWidth, isSelected, theme)
+            DiceType.D6 -> drawCyberpunkD6(strokeColor, strokeWidth, isSelected, theme)
+            DiceType.D8 -> drawCyberpunkD8(strokeColor, strokeWidth, isSelected, theme)
+            DiceType.D10 -> drawCyberpunkD10(strokeColor, strokeWidth, isSelected, theme)
+            DiceType.D12 -> drawCyberpunkD12(strokeColor, strokeWidth, isSelected, theme)
+            DiceType.D20 -> drawCyberpunkD20(strokeColor, strokeWidth, isSelected, theme)
+            DiceType.D30 -> drawCyberpunkD30(strokeColor, strokeWidth, isSelected, theme)
+            DiceType.D100 -> drawCyberpunkD100(strokeColor, strokeWidth, isSelected, theme)
         }
     }
 }
 
-private fun DrawScope.drawCyberpunkD4(strokeColor: Color, strokeWidth: Float, isSelected: Boolean) {
+private fun DrawScope.drawCyberpunkD4(strokeColor: Color, strokeWidth: Float, isSelected: Boolean, theme: AppTheme) {
     val center = Offset(size.width / 2, size.height / 2)
     val radius = size.minDimension / 3f
     
@@ -58,9 +106,9 @@ private fun DrawScope.drawCyberpunkD4(strokeColor: Color, strokeWidth: Float, is
     // Multi-layer cyberpunk effect
     val baseGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonBlue.copy(alpha = 1.0f),
-            CyberpunkColors.NeonBlue.copy(alpha = 0.7f),
-            CyberpunkColors.NeonBlue.copy(alpha = 0.3f),
+            getThemeColor(theme, "NeonBlue").copy(alpha = 1.0f),
+            getThemeColor(theme, "NeonBlue").copy(alpha = 0.7f),
+            getThemeColor(theme, "NeonBlue").copy(alpha = 0.3f),
             Color.Transparent
         ),
         center = center,
@@ -69,7 +117,7 @@ private fun DrawScope.drawCyberpunkD4(strokeColor: Color, strokeWidth: Float, is
     
     val highlightGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonCyan.copy(alpha = 0.8f),
+            getThemeColor(theme, "NeonCyan").copy(alpha = 0.8f),
             Color.Transparent
         ),
         center = Offset(center.x - radius * 0.3f, center.y - radius * 0.3f),
@@ -94,13 +142,13 @@ private fun DrawScope.drawCyberpunkD4(strokeColor: Color, strokeWidth: Float, is
         lineTo(center.x + radius * 0.5f, center.y + radius * 0.3f)
         close()
     }
-    drawPath(innerPath, CyberpunkColors.NeonCyan.copy(alpha = 0.3f), style = Stroke(width = 1f))
+    drawPath(innerPath, getThemeColor(theme, "NeonCyan").copy(alpha = 0.3f), style = Stroke(width = 1f))
     
     // Draw D4 number with cyberpunk styling
-    drawCyberpunkText("4", center, CyberpunkColors.NeonYellow, isSelected)
+    drawCyberpunkText("4", center, getThemeColor(theme, "NeonYellow"), isSelected)
 }
 
-private fun DrawScope.drawCyberpunkD6(strokeColor: Color, strokeWidth: Float, isSelected: Boolean) {
+private fun DrawScope.drawCyberpunkD6(strokeColor: Color, strokeWidth: Float, isSelected: Boolean, theme: AppTheme) {
     val center = Offset(size.width / 2, size.height / 2)
     val cubeSize = size.minDimension / 3f
     
@@ -116,9 +164,9 @@ private fun DrawScope.drawCyberpunkD6(strokeColor: Color, strokeWidth: Float, is
     // Cyberpunk gradient with metallic effect
     val baseGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonGreen.copy(alpha = 1.0f),
-            CyberpunkColors.NeonGreen.copy(alpha = 0.6f),
-            CyberpunkColors.NeonGreen.copy(alpha = 0.2f),
+            getThemeColor(theme, "NeonGreen").copy(alpha = 1.0f),
+            getThemeColor(theme, "NeonGreen").copy(alpha = 0.6f),
+            getThemeColor(theme, "NeonGreen").copy(alpha = 0.2f),
             Color.Transparent
         ),
         center = center,
@@ -127,7 +175,7 @@ private fun DrawScope.drawCyberpunkD6(strokeColor: Color, strokeWidth: Float, is
     
     val highlightGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonCyan.copy(alpha = 0.6f),
+            getThemeColor(theme, "NeonCyan").copy(alpha = 0.6f),
             Color.Transparent
         ),
         center = Offset(center.x - cubeSize * 0.4f, center.y - cubeSize * 0.4f),
@@ -149,18 +197,18 @@ private fun DrawScope.drawCyberpunkD6(strokeColor: Color, strokeWidth: Float, is
     drawPath(Path().apply {
         moveTo(center.x - cubeSize, center.y)
         lineTo(center.x + cubeSize, center.y)
-    }, CyberpunkColors.NeonCyan.copy(alpha = 0.4f), style = Stroke(width = 1f))
+    }, getThemeColor(theme, "NeonCyan").copy(alpha = 0.4f), style = Stroke(width = 1f))
     
     drawPath(Path().apply {
         moveTo(center.x, center.y - cubeSize)
         lineTo(center.x, center.y + cubeSize)
-    }, CyberpunkColors.NeonCyan.copy(alpha = 0.4f), style = Stroke(width = 1f))
+    }, getThemeColor(theme, "NeonCyan").copy(alpha = 0.4f), style = Stroke(width = 1f))
     
     // Draw D6 number
-    drawCyberpunkText("6", center, CyberpunkColors.NeonYellow, isSelected)
+    drawCyberpunkText("6", center, getThemeColor(theme, "NeonYellow"), isSelected)
 }
 
-private fun DrawScope.drawCyberpunkD8(strokeColor: Color, strokeWidth: Float, isSelected: Boolean) {
+private fun DrawScope.drawCyberpunkD8(strokeColor: Color, strokeWidth: Float, isSelected: Boolean, theme: AppTheme) {
     val center = Offset(size.width / 2, size.height / 2)
     val radius = size.minDimension / 3f
     
@@ -176,9 +224,9 @@ private fun DrawScope.drawCyberpunkD8(strokeColor: Color, strokeWidth: Float, is
     // Cyberpunk gradient with energy effect
     val baseGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonPurple.copy(alpha = 1.0f),
-            CyberpunkColors.NeonPurple.copy(alpha = 0.7f),
-            CyberpunkColors.NeonPurple.copy(alpha = 0.3f),
+            getThemeColor(theme, "NeonPurple").copy(alpha = 1.0f),
+            getThemeColor(theme, "NeonPurple").copy(alpha = 0.7f),
+            getThemeColor(theme, "NeonPurple").copy(alpha = 0.3f),
             Color.Transparent
         ),
         center = center,
@@ -187,7 +235,7 @@ private fun DrawScope.drawCyberpunkD8(strokeColor: Color, strokeWidth: Float, is
     
     val energyGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonMagenta.copy(alpha = 0.8f),
+            getThemeColor(theme, "NeonPurple").copy(alpha = 0.8f),
             Color.Transparent
         ),
         center = center,
@@ -209,18 +257,18 @@ private fun DrawScope.drawCyberpunkD8(strokeColor: Color, strokeWidth: Float, is
     drawPath(Path().apply {
         moveTo(center.x, center.y - radius * 0.7f)
         lineTo(center.x, center.y + radius * 0.7f)
-    }, CyberpunkColors.NeonMagenta.copy(alpha = 0.5f), style = Stroke(width = 2f))
+    }, getThemeColor(theme, "NeonPurple").copy(alpha = 0.5f), style = Stroke(width = 2f))
     
     drawPath(Path().apply {
         moveTo(center.x - radius * 0.6f, center.y)
         lineTo(center.x + radius * 0.6f, center.y)
-    }, CyberpunkColors.NeonMagenta.copy(alpha = 0.5f), style = Stroke(width = 2f))
+    }, getThemeColor(theme, "NeonPurple").copy(alpha = 0.5f), style = Stroke(width = 2f))
     
     // Draw D8 number
-    drawCyberpunkText("8", center, CyberpunkColors.NeonYellow, isSelected)
+    drawCyberpunkText("8", center, getThemeColor(theme, "NeonYellow"), isSelected)
 }
 
-private fun DrawScope.drawCyberpunkD10(strokeColor: Color, strokeWidth: Float, isSelected: Boolean) {
+private fun DrawScope.drawCyberpunkD10(strokeColor: Color, strokeWidth: Float, isSelected: Boolean, theme: AppTheme) {
     val center = Offset(size.width / 2, size.height / 2)
     val radius = size.minDimension / 3f
     
@@ -247,9 +295,9 @@ private fun DrawScope.drawCyberpunkD10(strokeColor: Color, strokeWidth: Float, i
     // Cyberpunk gradient with tech effect
     val baseGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonRed.copy(alpha = 1.0f),
-            CyberpunkColors.NeonRed.copy(alpha = 0.6f),
-            CyberpunkColors.NeonRed.copy(alpha = 0.2f),
+            getThemeColor(theme, "NeonRed").copy(alpha = 1.0f),
+            getThemeColor(theme, "NeonRed").copy(alpha = 0.6f),
+            getThemeColor(theme, "NeonRed").copy(alpha = 0.2f),
             Color.Transparent
         ),
         center = center,
@@ -258,7 +306,7 @@ private fun DrawScope.drawCyberpunkD10(strokeColor: Color, strokeWidth: Float, i
     
     val techGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonOrange.copy(alpha = 0.7f),
+            getThemeColor(theme, "NeonRed").copy(alpha = 0.7f),
             Color.Transparent
         ),
         center = center,
@@ -287,14 +335,14 @@ private fun DrawScope.drawCyberpunkD10(strokeColor: Color, strokeWidth: Float, i
         drawPath(Path().apply {
             moveTo(startX.toFloat(), startY.toFloat())
             lineTo(endX.toFloat(), endY.toFloat())
-        }, CyberpunkColors.NeonOrange.copy(alpha = 0.4f), style = Stroke(width = 1f))
+        }, getThemeColor(theme, "NeonRed").copy(alpha = 0.4f), style = Stroke(width = 1f))
     }
     
     // Draw D10 number
-    drawCyberpunkText("0", center, CyberpunkColors.NeonYellow, isSelected)
+    drawCyberpunkText("0", center, getThemeColor(theme, "NeonYellow"), isSelected)
 }
 
-private fun DrawScope.drawCyberpunkD12(strokeColor: Color, strokeWidth: Float, isSelected: Boolean) {
+private fun DrawScope.drawCyberpunkD12(strokeColor: Color, strokeWidth: Float, isSelected: Boolean, theme: AppTheme) {
     val center = Offset(size.width / 2, size.height / 2)
     val radius = size.minDimension / 3f
     
@@ -321,9 +369,9 @@ private fun DrawScope.drawCyberpunkD12(strokeColor: Color, strokeWidth: Float, i
     // Cyberpunk gradient with holographic effect
     val baseGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonCyan.copy(alpha = 1.0f),
-            CyberpunkColors.NeonCyan.copy(alpha = 0.7f),
-            CyberpunkColors.NeonCyan.copy(alpha = 0.3f),
+            getThemeColor(theme, "NeonCyan").copy(alpha = 1.0f),
+            getThemeColor(theme, "NeonCyan").copy(alpha = 0.7f),
+            getThemeColor(theme, "NeonCyan").copy(alpha = 0.3f),
             Color.Transparent
         ),
         center = center,
@@ -332,7 +380,7 @@ private fun DrawScope.drawCyberpunkD12(strokeColor: Color, strokeWidth: Float, i
     
     val holoGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonBlue.copy(alpha = 0.6f),
+            getThemeColor(theme, "NeonBlue").copy(alpha = 0.6f),
             Color.Transparent
         ),
         center = center,
@@ -361,14 +409,14 @@ private fun DrawScope.drawCyberpunkD12(strokeColor: Color, strokeWidth: Float, i
         drawPath(Path().apply {
             moveTo(startX.toFloat(), startY.toFloat())
             lineTo(endX.toFloat(), endY.toFloat())
-        }, CyberpunkColors.NeonBlue.copy(alpha = 0.3f), style = Stroke(width = 1f))
+        }, getThemeColor(theme, "NeonBlue").copy(alpha = 0.3f), style = Stroke(width = 1f))
     }
     
     // Draw D12 number
-    drawCyberpunkText("12", center, CyberpunkColors.NeonYellow, isSelected)
+    drawCyberpunkText("12", center, getThemeColor(theme, "NeonYellow"), isSelected)
 }
 
-private fun DrawScope.drawCyberpunkD20(strokeColor: Color, strokeWidth: Float, isSelected: Boolean) {
+private fun DrawScope.drawCyberpunkD20(strokeColor: Color, strokeWidth: Float, isSelected: Boolean, theme: AppTheme) {
     val center = Offset(size.width / 2, size.height / 2)
     val radius = size.minDimension / 3f
     
@@ -395,9 +443,9 @@ private fun DrawScope.drawCyberpunkD20(strokeColor: Color, strokeWidth: Float, i
     // Cyberpunk gradient with quantum effect
     val baseGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonMagenta.copy(alpha = 1.0f),
-            CyberpunkColors.NeonMagenta.copy(alpha = 0.7f),
-            CyberpunkColors.NeonMagenta.copy(alpha = 0.3f),
+            getThemeColor(theme, "NeonPurple").copy(alpha = 1.0f),
+            getThemeColor(theme, "NeonPurple").copy(alpha = 0.7f),
+            getThemeColor(theme, "NeonPurple").copy(alpha = 0.3f),
             Color.Transparent
         ),
         center = center,
@@ -406,7 +454,7 @@ private fun DrawScope.drawCyberpunkD20(strokeColor: Color, strokeWidth: Float, i
     
     val quantumGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonPurple.copy(alpha = 0.8f),
+            getThemeColor(theme, "NeonPurple").copy(alpha = 0.8f),
             Color.Transparent
         ),
         center = center,
@@ -435,14 +483,14 @@ private fun DrawScope.drawCyberpunkD20(strokeColor: Color, strokeWidth: Float, i
         drawPath(Path().apply {
             moveTo(startX.toFloat(), startY.toFloat())
             lineTo(endX.toFloat(), endY.toFloat())
-        }, CyberpunkColors.NeonPurple.copy(alpha = 0.2f), style = Stroke(width = 0.5f))
+        }, getThemeColor(theme, "NeonPurple").copy(alpha = 0.2f), style = Stroke(width = 0.5f))
     }
     
     // Draw D20 number
-    drawCyberpunkText("20", center, CyberpunkColors.NeonYellow, isSelected)
+    drawCyberpunkText("20", center, getThemeColor(theme, "NeonYellow"), isSelected)
 }
 
-private fun DrawScope.drawCyberpunkD30(strokeColor: Color, strokeWidth: Float, isSelected: Boolean) {
+private fun DrawScope.drawCyberpunkD30(strokeColor: Color, strokeWidth: Float, isSelected: Boolean, theme: AppTheme) {
     val center = Offset(size.width / 2, size.height / 2)
     val radius = size.minDimension / 3f
     
@@ -469,9 +517,9 @@ private fun DrawScope.drawCyberpunkD30(strokeColor: Color, strokeWidth: Float, i
     // Cyberpunk gradient with neural network effect
     val baseGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonOrange.copy(alpha = 1.0f),
-            CyberpunkColors.NeonOrange.copy(alpha = 0.6f),
-            CyberpunkColors.NeonOrange.copy(alpha = 0.2f),
+            getThemeColor(theme, "NeonRed").copy(alpha = 1.0f),
+            getThemeColor(theme, "NeonRed").copy(alpha = 0.6f),
+            getThemeColor(theme, "NeonRed").copy(alpha = 0.2f),
             Color.Transparent
         ),
         center = center,
@@ -480,7 +528,7 @@ private fun DrawScope.drawCyberpunkD30(strokeColor: Color, strokeWidth: Float, i
     
     val neuralGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonYellow.copy(alpha = 0.7f),
+            getThemeColor(theme, "NeonYellow").copy(alpha = 0.7f),
             Color.Transparent
         ),
         center = center,
@@ -509,14 +557,14 @@ private fun DrawScope.drawCyberpunkD30(strokeColor: Color, strokeWidth: Float, i
         drawPath(Path().apply {
             moveTo(startX.toFloat(), startY.toFloat())
             lineTo(endX.toFloat(), endY.toFloat())
-        }, CyberpunkColors.NeonYellow.copy(alpha = 0.15f), style = Stroke(width = 0.3f))
+        }, getThemeColor(theme, "NeonYellow").copy(alpha = 0.15f), style = Stroke(width = 0.3f))
     }
     
     // Draw D30 number
-    drawCyberpunkText("30", center, CyberpunkColors.NeonYellow, isSelected)
+    drawCyberpunkText("30", center, getThemeColor(theme, "NeonYellow"), isSelected)
 }
 
-private fun DrawScope.drawCyberpunkD100(strokeColor: Color, strokeWidth: Float, isSelected: Boolean) {
+private fun DrawScope.drawCyberpunkD100(strokeColor: Color, strokeWidth: Float, isSelected: Boolean, theme: AppTheme) {
     val center = Offset(size.width / 2, size.height / 2)
     val radius = size.minDimension / 3f
     
@@ -562,9 +610,9 @@ private fun DrawScope.drawCyberpunkD100(strokeColor: Color, strokeWidth: Float, 
     // Cyberpunk gradients with dual energy effect
     val outerGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonBlue.copy(alpha = 1.0f),
-            CyberpunkColors.NeonBlue.copy(alpha = 0.7f),
-            CyberpunkColors.NeonBlue.copy(alpha = 0.3f),
+            getThemeColor(theme, "NeonBlue").copy(alpha = 1.0f),
+            getThemeColor(theme, "NeonBlue").copy(alpha = 0.7f),
+            getThemeColor(theme, "NeonBlue").copy(alpha = 0.3f),
             Color.Transparent
         ),
         center = center,
@@ -573,9 +621,9 @@ private fun DrawScope.drawCyberpunkD100(strokeColor: Color, strokeWidth: Float, 
     
     val innerGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonGreen.copy(alpha = 1.0f),
-            CyberpunkColors.NeonGreen.copy(alpha = 0.7f),
-            CyberpunkColors.NeonGreen.copy(alpha = 0.3f),
+            getThemeColor(theme, "NeonGreen").copy(alpha = 1.0f),
+            getThemeColor(theme, "NeonGreen").copy(alpha = 0.7f),
+            getThemeColor(theme, "NeonGreen").copy(alpha = 0.3f),
             Color.Transparent
         ),
         center = center,
@@ -584,7 +632,7 @@ private fun DrawScope.drawCyberpunkD100(strokeColor: Color, strokeWidth: Float, 
     
     val energyGradient = androidx.compose.ui.graphics.Brush.radialGradient(
         colors = listOf(
-            CyberpunkColors.NeonCyan.copy(alpha = 0.8f),
+            getThemeColor(theme, "NeonCyan").copy(alpha = 0.8f),
             Color.Transparent
         ),
         center = center,
@@ -616,12 +664,12 @@ private fun DrawScope.drawCyberpunkD100(strokeColor: Color, strokeWidth: Float, 
         drawPath(Path().apply {
             moveTo(startX.toFloat(), startY.toFloat())
             lineTo(endX.toFloat(), endY.toFloat())
-        }, CyberpunkColors.NeonCyan.copy(alpha = 0.6f), style = Stroke(width = 2f))
+        }, getThemeColor(theme, "NeonCyan").copy(alpha = 0.6f), style = Stroke(width = 2f))
     }
     
     // Draw D100 numbers
-    drawCyberpunkText("00", Offset(center.x - radius * 0.3f, center.y), CyberpunkColors.NeonYellow, isSelected)
-    drawCyberpunkText("90", Offset(center.x + radius * 0.3f, center.y), CyberpunkColors.NeonYellow, isSelected)
+    drawCyberpunkText("00", Offset(center.x - radius * 0.3f, center.y), getThemeColor(theme, "NeonYellow"), isSelected)
+    drawCyberpunkText("90", Offset(center.x + radius * 0.3f, center.y), getThemeColor(theme, "NeonYellow"), isSelected)
 }
 
 private fun DrawScope.drawCyberpunkText(text: String, position: Offset, color: Color, isSelected: Boolean) {

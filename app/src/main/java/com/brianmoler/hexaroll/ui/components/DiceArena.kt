@@ -20,25 +20,37 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.data.DiceType
 import com.brianmoler.hexaroll.ui.theme.CyberpunkColors
+import com.brianmoler.hexaroll.ui.theme.FantasyColors
+import com.brianmoler.hexaroll.ui.theme.SciFiColors
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
 
 @Composable
 fun DiceArena(viewModel: DiceRollViewModel) {
     val diceSelections by viewModel.diceSelections.collectAsState()
     val modifier by viewModel.modifier.collectAsState()
+    val customization by viewModel.customization.collectAsState()
     
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = CyberpunkColors.CardBackground,
+                color = when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
+                    AppTheme.FANTASY -> FantasyColors.CardBackground
+                    AppTheme.SCI_FI -> SciFiColors.CardBackground
+                },
                 shape = RoundedCornerShape(12.dp)
             )
             .border(
                 width = 2.dp,
-                color = CyberpunkColors.BorderBlue,
+                color = when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                    AppTheme.FANTASY -> FantasyColors.BorderBlue
+                    AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                },
                 shape = RoundedCornerShape(12.dp)
             )
             .padding(12.dp)
@@ -46,7 +58,11 @@ fun DiceArena(viewModel: DiceRollViewModel) {
         // Title
         Text(
             text = "DICE ARENA",
-            color = CyberpunkColors.NeonYellow,
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                AppTheme.SCI_FI -> SciFiColors.NeonYellow
+            },
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 8.dp)
@@ -64,7 +80,8 @@ fun DiceArena(viewModel: DiceRollViewModel) {
                     diceType = diceType,
                     count = diceSelections[diceType]?.count ?: 0,
                     onIncrement = { viewModel.incrementDice(diceType) },
-                    onDecrement = { viewModel.decrementDice(diceType) }
+                    onDecrement = { viewModel.decrementDice(diceType) },
+                    theme = customization.theme
                 )
             }
         }
@@ -75,7 +92,8 @@ fun DiceArena(viewModel: DiceRollViewModel) {
         ModifierSection(
             modifier = modifier,
             onIncrement = { viewModel.incrementModifier() },
-            onDecrement = { viewModel.decrementModifier() }
+            onDecrement = { viewModel.decrementModifier() },
+            theme = customization.theme
         )
         
         Spacer(modifier = Modifier.height(8.dp))
@@ -108,7 +126,8 @@ fun DiceArena(viewModel: DiceRollViewModel) {
             // Clear Arena Button
             ClearArenaButton(
                 onClick = { viewModel.clearArena() },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                viewModel = viewModel
             )
             
             // Roll Button
@@ -126,18 +145,27 @@ fun DiceCard(
     diceType: DiceType,
     count: Int,
     onIncrement: () -> Unit,
-    onDecrement: () -> Unit
+    onDecrement: () -> Unit,
+    theme: AppTheme = AppTheme.CYBERPUNK
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(150.dp),
         colors = CardDefaults.cardColors(
-            containerColor = CyberpunkColors.ElevatedCardBackground
+            containerColor = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+            }
         ),
         border = androidx.compose.foundation.BorderStroke(
             width = 1.dp,
-            color = CyberpunkColors.BorderBlue
+            color = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                AppTheme.FANTASY -> FantasyColors.BorderBlue
+                AppTheme.SCI_FI -> SciFiColors.BorderBlue
+            }
         )
     ) {
         Column(
@@ -150,13 +178,18 @@ fun DiceCard(
             // Dice Shape
             DiceShape(
                 diceType = diceType,
+                theme = theme,
                 isSelected = count > 0
             )
             
             // Dice Type Label
             Text(
                 text = diceType.displayName,
-                color = CyberpunkColors.PrimaryText,
+                color = when (theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                    AppTheme.FANTASY -> FantasyColors.PrimaryText
+                    AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                },
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -170,12 +203,20 @@ fun DiceCard(
                     modifier = Modifier
                         .size(36.dp)
                         .background(
-                            color = CyberpunkColors.ButtonRed,
+                            color = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed
+                                AppTheme.FANTASY -> FantasyColors.ButtonRed
+                                AppTheme.SCI_FI -> SciFiColors.ButtonRed
+                            },
                             shape = RoundedCornerShape(4.dp)
                         )
                         .border(
                             width = 2.dp,
-                            color = CyberpunkColors.NeonRed,
+                            color = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed
+                                AppTheme.FANTASY -> FantasyColors.NeonRed
+                                AppTheme.SCI_FI -> SciFiColors.NeonRed
+                            },
                             shape = RoundedCornerShape(4.dp)
                         )
                         .clickable { onDecrement() },
@@ -186,7 +227,11 @@ fun DiceCard(
                 
                 Text(
                     text = count.toString(),
-                    color = CyberpunkColors.NeonYellow,
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                        AppTheme.FANTASY -> FantasyColors.NeonYellow
+                        AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                    },
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.width(24.dp),
@@ -197,12 +242,20 @@ fun DiceCard(
                     modifier = Modifier
                         .size(36.dp)
                         .background(
-                            color = CyberpunkColors.ButtonGreen,
+                            color = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen
+                                AppTheme.FANTASY -> FantasyColors.ButtonGreen
+                                AppTheme.SCI_FI -> SciFiColors.ButtonGreen
+                            },
                             shape = RoundedCornerShape(4.dp)
                         )
                         .border(
                             width = 2.dp,
-                            color = CyberpunkColors.NeonGreen,
+                            color = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen
+                                AppTheme.FANTASY -> FantasyColors.NeonGreen
+                                AppTheme.SCI_FI -> SciFiColors.NeonGreen
+                            },
                             shape = RoundedCornerShape(4.dp)
                         )
                         .clickable { onIncrement() },
@@ -219,18 +272,27 @@ fun DiceCard(
 fun ModifierSection(
     modifier: Int,
     onIncrement: () -> Unit,
-    onDecrement: () -> Unit
+    onDecrement: () -> Unit,
+    theme: AppTheme = AppTheme.CYBERPUNK
 ) {
-        Row(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = CyberpunkColors.ElevatedCardBackground,
+                color = when (theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
+                    AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
+                    AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+                },
                 shape = RoundedCornerShape(8.dp)
             )
             .border(
                 width = 1.dp,
-                color = CyberpunkColors.BorderBlue,
+                color = when (theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                    AppTheme.FANTASY -> FantasyColors.BorderBlue
+                    AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                },
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(8.dp),
@@ -239,7 +301,11 @@ fun ModifierSection(
     ) {
         Text(
             text = "MODIFIER",
-            color = CyberpunkColors.NeonBlue,
+            color = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                AppTheme.FANTASY -> FantasyColors.NeonBlue
+                AppTheme.SCI_FI -> SciFiColors.NeonBlue
+            },
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
@@ -252,12 +318,20 @@ fun ModifierSection(
                 onClick = onDecrement,
                 modifier = Modifier.size(36.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.ButtonRed
+                    containerColor = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed
+                        AppTheme.FANTASY -> FantasyColors.ButtonRed
+                        AppTheme.SCI_FI -> SciFiColors.ButtonRed
+                    }
                 ),
                 contentPadding = PaddingValues(0.dp),
                 border = androidx.compose.foundation.BorderStroke(
                     width = 1.dp,
-                    color = CyberpunkColors.NeonRed
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed
+                        AppTheme.FANTASY -> FantasyColors.NeonRed
+                        AppTheme.SCI_FI -> SciFiColors.NeonRed
+                    }
                 )
             ) {
                 Text("-", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
@@ -265,7 +339,11 @@ fun ModifierSection(
 
             Text(
                 text = if (modifier >= 0) "+$modifier" else "$modifier",
-                color = CyberpunkColors.NeonYellow,
+                color = when (theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                    AppTheme.FANTASY -> FantasyColors.NeonYellow
+                    AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                },
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.width(50.dp),
@@ -276,12 +354,20 @@ fun ModifierSection(
                 onClick = onIncrement,
                 modifier = Modifier.size(36.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.ButtonGreen
+                    containerColor = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen
+                        AppTheme.FANTASY -> FantasyColors.ButtonGreen
+                        AppTheme.SCI_FI -> SciFiColors.ButtonGreen
+                    }
                 ),
                 contentPadding = PaddingValues(0.dp),
                 border = androidx.compose.foundation.BorderStroke(
                     width = 1.dp,
-                    color = CyberpunkColors.NeonGreen
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen
+                        AppTheme.FANTASY -> FantasyColors.NeonGreen
+                        AppTheme.SCI_FI -> SciFiColors.NeonGreen
+                    }
                 )
             ) {
                 Text("+", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
@@ -297,6 +383,7 @@ fun TotalDisplay(
 ) {
     val diceSelections by viewModel.diceSelections.collectAsState()
     val modifierValue by viewModel.modifier.collectAsState()
+    val customization by viewModel.customization.collectAsState()
 
     val totalDice = diceSelections.values.sumOf { it.count }
     val notation = diceSelections.values
@@ -313,11 +400,19 @@ fun TotalDisplay(
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = CyberpunkColors.ElevatedCardBackground
+            containerColor = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+            }
         ),
         border = androidx.compose.foundation.BorderStroke(
             width = 1.dp,
-            color = CyberpunkColors.BorderYellow
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                AppTheme.SCI_FI -> SciFiColors.NeonYellow
+            }
         )
     ) {
         Column(
@@ -326,35 +421,55 @@ fun TotalDisplay(
         ) {
             Text(
                 text = "TOTAL",
-                color = CyberpunkColors.NeonYellow,
+                color = when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                    AppTheme.FANTASY -> FantasyColors.NeonYellow
+                    AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                },
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
             )
             if (notation.isNotBlank()) {
                 Text(
                     text = notation + (if (modifierText.isNotBlank()) " $modifierText" else ""),
-                    color = CyberpunkColors.NeonBlue,
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                        AppTheme.FANTASY -> FantasyColors.NeonBlue
+                        AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                    },
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center
                 )
             } else {
                 Text(
                     text = "No dice selected",
-                    color = CyberpunkColors.SecondaryText,
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                        AppTheme.FANTASY -> FantasyColors.SecondaryText
+                        AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                    },
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center
                 )
             }
             Text(
                 text = "$totalDice dice",
-                color = CyberpunkColors.PrimaryText,
+                color = when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                    AppTheme.FANTASY -> FantasyColors.PrimaryText
+                    AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                },
                 fontSize = 12.sp,
                 textAlign = TextAlign.Center
             )
             if (modifierValue != 0) {
                 Text(
                     text = if (modifierValue > 0) "+$modifierValue modifier" else "$modifierValue modifier",
-                    color = CyberpunkColors.NeonBlue,
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                        AppTheme.FANTASY -> FantasyColors.NeonBlue
+                        AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                    },
                     fontSize = 11.sp,
                     textAlign = TextAlign.Center
                 )
@@ -369,15 +484,24 @@ fun ResultDisplay(
     modifier: Modifier = Modifier
 ) {
     val currentResult by viewModel.currentResult.collectAsState()
+    val customization by viewModel.customization.collectAsState()
 
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = CyberpunkColors.ElevatedCardBackground
+            containerColor = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+            }
         ),
         border = androidx.compose.foundation.BorderStroke(
             width = 1.dp,
-            color = CyberpunkColors.BorderMagenta
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonPurple
+                AppTheme.FANTASY -> FantasyColors.NeonPurple
+                AppTheme.SCI_FI -> SciFiColors.NeonPurple
+            }
         )
     ) {
         Column(
@@ -386,7 +510,11 @@ fun ResultDisplay(
         ) {
             Text(
                 text = "RESULT",
-                color = CyberpunkColors.NeonMagenta,
+                color = when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonPurple
+                    AppTheme.FANTASY -> FantasyColors.NeonPurple
+                    AppTheme.SCI_FI -> SciFiColors.NeonPurple
+                },
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -394,14 +522,22 @@ fun ResultDisplay(
             currentResult?.let { result ->
                 Text(
                     text = "${result.total}",
-                    color = CyberpunkColors.NeonYellow,
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                        AppTheme.FANTASY -> FantasyColors.NeonYellow
+                        AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                    },
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
                 Text(
                     text = "(${result.notation})",
-                    color = CyberpunkColors.NeonBlue,
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                        AppTheme.FANTASY -> FantasyColors.NeonBlue
+                        AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                    },
                     fontSize = 10.sp,
                     textAlign = TextAlign.Center
                 )
@@ -419,7 +555,11 @@ fun ResultDisplay(
                         }
                     Text(
                         text = breakdown,
-                        color = CyberpunkColors.SecondaryText,
+                        color = when (customization.theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                            AppTheme.FANTASY -> FantasyColors.SecondaryText
+                            AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                        },
                         fontSize = 9.sp,
                         textAlign = TextAlign.Center
                     )
@@ -427,7 +567,11 @@ fun ResultDisplay(
             } ?: run {
                 Text(
                     text = "No rolls yet",
-                    color = CyberpunkColors.SecondaryText,
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                        AppTheme.FANTASY -> FantasyColors.SecondaryText
+                        AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                    },
                     fontSize = 12.sp,
                     textAlign = TextAlign.Center
                 )
@@ -439,17 +583,28 @@ fun ResultDisplay(
 @Composable
 fun ClearArenaButton(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: DiceRollViewModel
 ) {
+    val customization by viewModel.customization.collectAsState()
+    
     Button(
         onClick = onClick,
         modifier = modifier.height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = CyberpunkColors.ButtonRed
+            containerColor = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed
+                AppTheme.FANTASY -> FantasyColors.ButtonRed
+                AppTheme.SCI_FI -> SciFiColors.ButtonRed
+            }
         ),
         border = androidx.compose.foundation.BorderStroke(
             width = 2.dp,
-            color = CyberpunkColors.GlowRed
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed
+                AppTheme.FANTASY -> FantasyColors.NeonRed
+                AppTheme.SCI_FI -> SciFiColors.NeonRed
+            }
         )
     ) {
         Text(
@@ -468,23 +623,59 @@ fun RollButton(
     modifier: Modifier = Modifier
 ) {
     val diceSelections by viewModel.diceSelections.collectAsState()
+    val customization by viewModel.customization.collectAsState()
     val isEnabled = diceSelections.values.any { it.count > 0 }
+    
     Button(
         onClick = onClick,
         enabled = isEnabled,
         modifier = modifier.height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isEnabled) CyberpunkColors.ButtonYellow else CyberpunkColors.CardBackground,
-            disabledContainerColor = CyberpunkColors.CardBackground
+            containerColor = if (isEnabled) {
+                when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen
+                    AppTheme.FANTASY -> FantasyColors.ButtonGreen
+                    AppTheme.SCI_FI -> SciFiColors.ButtonGreen
+                }
+            } else {
+                when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
+                    AppTheme.FANTASY -> FantasyColors.CardBackground
+                    AppTheme.SCI_FI -> SciFiColors.CardBackground
+                }
+            },
+            disabledContainerColor = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
+                AppTheme.FANTASY -> FantasyColors.CardBackground
+                AppTheme.SCI_FI -> SciFiColors.CardBackground
+            }
         ),
         border = androidx.compose.foundation.BorderStroke(
             width = 2.dp,
-            color = if (isEnabled) CyberpunkColors.GlowYellow else CyberpunkColors.BorderBlue
+            color = if (isEnabled) {
+                when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen
+                    AppTheme.FANTASY -> FantasyColors.NeonGreen
+                    AppTheme.SCI_FI -> SciFiColors.NeonGreen
+                }
+            } else {
+                when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                    AppTheme.FANTASY -> FantasyColors.BorderBlue
+                    AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                }
+            }
         )
     ) {
         Text(
             text = "ROLL",
-            color = if (isEnabled) Color.White else CyberpunkColors.SecondaryText,
+            color = if (isEnabled) Color.White else {
+                when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                    AppTheme.FANTASY -> FantasyColors.SecondaryText
+                    AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                }
+            },
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
         )

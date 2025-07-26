@@ -14,10 +14,10 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
     primary = CyberpunkColors.NeonBlue,
-    secondary = CyberpunkColors.NeonMagenta,
+    secondary = CyberpunkColors.NeonPurple,
     tertiary = CyberpunkColors.NeonYellow,
-    background = CyberpunkColors.DarkBackground,
-    surface = CyberpunkColors.CardBackground,
+    background = CyberpunkColors.CardBackground,
+    surface = CyberpunkColors.ElevatedCardBackground,
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
@@ -27,10 +27,10 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = CyberpunkColors.NeonBlue,
-    secondary = CyberpunkColors.NeonMagenta,
+    secondary = CyberpunkColors.NeonPurple,
     tertiary = CyberpunkColors.NeonYellow,
-    background = CyberpunkColors.DarkBackground,
-    surface = CyberpunkColors.CardBackground,
+    background = CyberpunkColors.CardBackground,
+    surface = CyberpunkColors.ElevatedCardBackground,
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,

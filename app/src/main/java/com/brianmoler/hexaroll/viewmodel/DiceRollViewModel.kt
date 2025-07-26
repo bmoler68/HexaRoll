@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.brianmoler.hexaroll.data.*
 import com.brianmoler.hexaroll.utils.PresetStorage
+import com.brianmoler.hexaroll.utils.ThemeStorage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +17,7 @@ import kotlin.random.Random
 class DiceRollViewModel(application: Application) : AndroidViewModel(application) {
     
     private val presetStorage = PresetStorage(application)
+    private val themeStorage = ThemeStorage(application)
     
     private val _diceSelections = MutableStateFlow(
         DiceType.values().associateWith { DiceSelection(it, 0) }
@@ -42,6 +44,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     
     init {
         loadPresetsFromStorage()
+        loadThemeFromStorage()
     }
     
     private fun loadPresetsFromStorage() {
@@ -277,6 +280,33 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     
     fun updateCustomization(customization: DiceCustomization) {
         _customization.value = customization
+    }
+    
+    private fun loadThemeFromStorage() {
+        viewModelScope.launch {
+            try {
+                val theme = themeStorage.loadTheme()
+                _customization.value = DiceCustomization(theme = theme)
+            } catch (e: Exception) {
+                Log.e("DiceRollViewModel", "Error loading theme", e)
+                _customization.value = DiceCustomization(theme = AppTheme.CYBERPUNK)
+            }
+        }
+    }
+    
+    private fun saveThemeToStorage(theme: AppTheme) {
+        viewModelScope.launch {
+            try {
+                themeStorage.saveTheme(theme)
+            } catch (e: Exception) {
+                Log.e("DiceRollViewModel", "Error saving theme", e)
+            }
+        }
+    }
+    
+    fun updateTheme(theme: AppTheme) {
+        _customization.value = DiceCustomization(theme = theme)
+        saveThemeToStorage(theme)
     }
     
     fun getTotalDiceCount(): Int {

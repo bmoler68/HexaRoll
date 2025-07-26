@@ -43,16 +43,12 @@ data class PresetRoll(
     val modifier: Int
 )
 
-data class DiceCustomization(
-    val diceColor: Color = Color(0xFF00FFFF), // Cyan
-    val criticalSuccessColor: Color = Color(0xFF00FF00), // Green
-    val criticalFailureColor: Color = Color(0xFFFF0000), // Red
-    val arenaBackground: ArenaBackground = ArenaBackground.CIRCUIT_BOARD
-)
+enum class AppTheme(val displayName: String, val description: String) {
+    CYBERPUNK("Cyberpunk", "Vibrant neon colors with electric glow effects"),
+    FANTASY("Fantasy", "Warm earthy tones with magical golden accents"),
+    SCI_FI("SCI-FI", "Cool futuristic blues with holographic highlights")
+}
 
-enum class ArenaBackground(val displayName: String) {
-    CIRCUIT_BOARD("Circuit Board"),
-    NEON_GRID("Neon Grid"),
-    DIGITAL_RAIN("Digital Rain"),
-    STATIC("Static")
-} 
+data class DiceCustomization(
+    val theme: AppTheme = AppTheme.CYBERPUNK
+) 

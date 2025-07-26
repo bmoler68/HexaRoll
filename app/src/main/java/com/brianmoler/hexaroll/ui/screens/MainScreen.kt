@@ -3,33 +3,82 @@ package com.brianmoler.hexaroll.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.brianmoler.hexaroll.data.PresetRoll
-import com.brianmoler.hexaroll.data.RollResult
+import com.brianmoler.hexaroll.data.*
 import com.brianmoler.hexaroll.ui.components.DiceArena
-import com.brianmoler.hexaroll.ui.theme.CyberpunkColors
+import com.brianmoler.hexaroll.ui.theme.*
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
+import java.text.SimpleDateFormat
+import java.util.*
+
+// Helper function for theme-aware colors
+private fun getThemeColor(theme: AppTheme, colorType: String): Color {
+    return when (theme) {
+        AppTheme.CYBERPUNK -> when (colorType) {
+            "PrimaryText" -> CyberpunkColors.PrimaryText
+            "SecondaryText" -> CyberpunkColors.SecondaryText
+            "CardBackground" -> CyberpunkColors.CardBackground
+            "ElevatedCardBackground" -> CyberpunkColors.ElevatedCardBackground
+            "BorderBlue" -> CyberpunkColors.BorderBlue
+            "NeonYellow" -> CyberpunkColors.NeonYellow
+            "NeonBlue" -> CyberpunkColors.NeonBlue
+            "NeonGreen" -> CyberpunkColors.NeonGreen
+            "NeonRed" -> CyberpunkColors.NeonRed
+            "ButtonGreen" -> CyberpunkColors.ButtonGreen
+            "ButtonRed" -> CyberpunkColors.ButtonRed
+            else -> CyberpunkColors.PrimaryText
+        }
+        AppTheme.FANTASY -> when (colorType) {
+            "PrimaryText" -> FantasyColors.PrimaryText
+            "SecondaryText" -> FantasyColors.SecondaryText
+            "CardBackground" -> FantasyColors.CardBackground
+            "ElevatedCardBackground" -> FantasyColors.ElevatedCardBackground
+            "BorderBlue" -> FantasyColors.BorderBlue
+            "NeonYellow" -> FantasyColors.NeonYellow
+            "NeonBlue" -> FantasyColors.NeonBlue
+            "NeonGreen" -> FantasyColors.NeonGreen
+            "NeonRed" -> FantasyColors.NeonRed
+            "ButtonGreen" -> FantasyColors.ButtonGreen
+            "ButtonRed" -> FantasyColors.ButtonRed
+            else -> FantasyColors.PrimaryText
+        }
+        AppTheme.SCI_FI -> when (colorType) {
+            "PrimaryText" -> SciFiColors.PrimaryText
+            "SecondaryText" -> SciFiColors.SecondaryText
+            "CardBackground" -> SciFiColors.CardBackground
+            "ElevatedCardBackground" -> SciFiColors.ElevatedCardBackground
+            "BorderBlue" -> SciFiColors.BorderBlue
+            "NeonYellow" -> SciFiColors.NeonYellow
+            "NeonBlue" -> SciFiColors.NeonBlue
+            "NeonGreen" -> SciFiColors.NeonGreen
+            "NeonRed" -> SciFiColors.NeonRed
+            "ButtonGreen" -> SciFiColors.ButtonGreen
+            "ButtonRed" -> SciFiColors.ButtonRed
+            else -> SciFiColors.PrimaryText
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,6 +87,7 @@ fun MainScreen(
     viewModel: DiceRollViewModel
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
+    val customization by viewModel.customization.collectAsState()
     
     val tabs = listOf(
         TabItem(Icons.Filled.PlayArrow, "Roll"),
@@ -49,17 +99,29 @@ fun MainScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(CyberpunkColors.DarkBackground)
+            .background(when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
+                AppTheme.FANTASY -> FantasyColors.CardBackground
+                AppTheme.SCI_FI -> SciFiColors.CardBackground
+            })
     ) {
         // App Title
-        AppTitle()
+        AppTitle(theme = customization.theme)
 
         // Tab Row
         TabRow(
             selectedTabIndex = selectedTabIndex,
-            modifier = Modifier.background(CyberpunkColors.DarkerBackground),
+            modifier = Modifier.background(when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+            }),
             containerColor = Color.Transparent,
-            contentColor = CyberpunkColors.PrimaryText
+            contentColor = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                AppTheme.FANTASY -> FantasyColors.PrimaryText
+                AppTheme.SCI_FI -> SciFiColors.PrimaryText
+            }
         ) {
             tabs.forEachIndexed { index, tab ->
                 Tab(
@@ -69,7 +131,19 @@ fun MainScreen(
                         Icon(
                             imageVector = tab.icon,
                             contentDescription = tab.label,
-                            tint = if (selectedTabIndex == index) CyberpunkColors.NeonYellow else CyberpunkColors.NeonBlue,
+                            tint = if (selectedTabIndex == index) {
+                                when (customization.theme) {
+                                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                                    AppTheme.FANTASY -> FantasyColors.NeonYellow
+                                    AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                                }
+                            } else {
+                                when (customization.theme) {
+                                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                                    AppTheme.FANTASY -> FantasyColors.NeonBlue
+                                    AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                                }
+                            },
                             modifier = Modifier.size(20.dp)
                         )
                     },
@@ -125,37 +199,37 @@ fun CustomizeScreen(viewModel: DiceRollViewModel) {
             .padding(16.dp)
     ) {
         Text(
-            text = "DICE CUSTOMIZATION",
-            color = CyberpunkColors.NeonYellow,
+            text = "HEXAROLL THEME",
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                AppTheme.SCI_FI -> SciFiColors.NeonYellow
+            },
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
         
+        Text(
+            text = "Choose your preferred visual theme for the app",
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                AppTheme.FANTASY -> FantasyColors.SecondaryText
+                AppTheme.SCI_FI -> SciFiColors.SecondaryText
+            },
+            fontSize = 14.sp,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
+        
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item {
-                CustomizationCard(
-                    title = "DICE COLOR",
-                    description = "Choose the color of your dice",
-                    onClick = { /* TODO: Implement color picker */ }
-                )
-            }
-            
-            item {
-                CustomizationCard(
-                    title = "ARENA BACKGROUND",
-                    description = "Select your dice arena background",
-                    onClick = { /* TODO: Implement background picker */ }
-                )
-            }
-            
-            item {
-                CustomizationCard(
-                    title = "UNIQUE DICE",
-                    description = "Customize special dice effects",
-                    onClick = { /* TODO: Implement unique dice */ }
+            items(AppTheme.values()) { theme ->
+                ThemeSelectionCard(
+                    theme = theme,
+                    isSelected = theme == customization.theme,
+                    onSelect = { viewModel.updateTheme(theme) },
+                    themeType = customization.theme
                 )
             }
         }
@@ -163,23 +237,40 @@ fun CustomizeScreen(viewModel: DiceRollViewModel) {
 }
 
 @Composable
-fun CustomizationCard(
-    title: String,
-    description: String,
-    onClick: () -> Unit
+fun ThemeSelectionCard(
+    theme: AppTheme,
+    isSelected: Boolean,
+    onSelect: () -> Unit,
+    themeType: AppTheme
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = CyberpunkColors.ElevatedCardBackground
+            containerColor = if (isSelected) {
+                when (themeType) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
+                    AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
+                    AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+                }
+            } else {
+                when (themeType) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
+                    AppTheme.FANTASY -> FantasyColors.CardBackground
+                    AppTheme.SCI_FI -> SciFiColors.CardBackground
+                }
+            }
         ),
         border = androidx.compose.foundation.BorderStroke(
-            width = 1.dp,
-            color = CyberpunkColors.BorderBlue
+            width = if (isSelected) 2.dp else 1.dp,
+            color = when (themeType) {
+                AppTheme.CYBERPUNK -> if (isSelected) CyberpunkColors.NeonYellow else CyberpunkColors.BorderBlue
+                AppTheme.FANTASY -> if (isSelected) FantasyColors.NeonYellow else FantasyColors.BorderBlue
+                AppTheme.SCI_FI -> if (isSelected) SciFiColors.NeonYellow else SciFiColors.BorderBlue
+            }
         )
     ) {
         Button(
-            onClick = onClick,
+            onClick = onSelect,
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent
@@ -196,23 +287,38 @@ fun CustomizationCard(
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
-                        text = title,
-                        color = CyberpunkColors.NeonYellow,
-                        fontSize = 16.sp,
+                        text = theme.displayName,
+                        color = when (themeType) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                            AppTheme.FANTASY -> FantasyColors.NeonYellow
+                            AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                        },
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = description,
-                        color = CyberpunkColors.SecondaryText,
-                        fontSize = 12.sp
+                        text = theme.description,
+                        color = when (themeType) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                            AppTheme.FANTASY -> FantasyColors.SecondaryText
+                            AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                        },
+                        fontSize = 14.sp
                     )
                 }
-                Text(
-                    text = "→",
-                    color = CyberpunkColors.NeonBlue,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                
+                if (isSelected) {
+                    Text(
+                        text = "✓",
+                        color = when (themeType) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen
+                            AppTheme.FANTASY -> FantasyColors.NeonGreen
+                            AppTheme.SCI_FI -> SciFiColors.NeonGreen
+                        },
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }
@@ -222,6 +328,7 @@ fun CustomizationCard(
 fun PresetsScreen(viewModel: DiceRollViewModel) {
     val presetRolls by viewModel.presetRolls.collectAsState()
     val presetLoadedMessage by viewModel.presetLoadedMessage.collectAsState()
+    val customization by viewModel.customization.collectAsState()
     
     Column(
         modifier = Modifier
@@ -230,7 +337,11 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
     ) {
         Text(
             text = "PRESET ROLLS",
-            color = CyberpunkColors.NeonYellow,
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                AppTheme.SCI_FI -> SciFiColors.NeonYellow
+            },
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
@@ -240,7 +351,8 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
         presetLoadedMessage?.let { message ->
             PresetLoadedNotification(
                 message = message,
-                onDismiss = { viewModel.clearPresetLoadedMessage() }
+                onDismiss = { viewModel.clearPresetLoadedMessage() },
+                theme = customization.theme
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -254,7 +366,11 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
             ) {
                 Text(
                     text = "No preset rolls yet",
-                    color = CyberpunkColors.SecondaryText,
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                        AppTheme.FANTASY -> FantasyColors.SecondaryText
+                        AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                    },
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -264,7 +380,11 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
                 
                 Text(
                     text = "Create presets by rolling dice and using the 'Save to Presets' button in the History tab",
-                    color = CyberpunkColors.SecondaryText,
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                        AppTheme.FANTASY -> FantasyColors.SecondaryText
+                        AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                    },
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -279,7 +399,8 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
                         preset = preset,
                         onLoad = { viewModel.loadPresetRoll(preset) },
                         onEdit = { name, description -> viewModel.updatePreset(preset.id, name, description) },
-                        onRemove = { viewModel.removePreset(preset.id) }
+                        onRemove = { viewModel.removePreset(preset.id) },
+                        theme = customization.theme
                     )
                 }
             }
@@ -292,7 +413,8 @@ fun PresetCard(
     preset: PresetRoll,
     onLoad: () -> Unit,
     onEdit: (String, String) -> Unit,
-    onRemove: () -> Unit
+    onRemove: () -> Unit,
+    theme: AppTheme = AppTheme.CYBERPUNK
 ) {
     var showEditDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -300,11 +422,19 @@ fun PresetCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = CyberpunkColors.ElevatedCardBackground
+            containerColor = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+            }
         ),
         border = androidx.compose.foundation.BorderStroke(
             width = 1.dp,
-            color = CyberpunkColors.BorderBlue
+            color = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                AppTheme.FANTASY -> FantasyColors.BorderBlue
+                AppTheme.SCI_FI -> SciFiColors.BorderBlue
+            }
         )
     ) {
         Column(
@@ -318,7 +448,11 @@ fun PresetCard(
             ) {
                 Text(
                     text = preset.name,
-                    color = CyberpunkColors.NeonYellow,
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                        AppTheme.FANTASY -> FantasyColors.NeonYellow
+                        AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                    },
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
@@ -331,7 +465,11 @@ fun PresetCard(
                     Button(
                         onClick = { showEditDialog = true },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = CyberpunkColors.ButtonBlue
+                            containerColor = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                                AppTheme.FANTASY -> FantasyColors.NeonBlue
+                                AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                            }
                         ),
                         modifier = Modifier.size(32.dp),
                         contentPadding = PaddingValues(0.dp)
@@ -347,7 +485,11 @@ fun PresetCard(
                     Button(
                         onClick = { showDeleteDialog = true },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = CyberpunkColors.ButtonRed
+                            containerColor = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed
+                                AppTheme.FANTASY -> FantasyColors.ButtonRed
+                                AppTheme.SCI_FI -> SciFiColors.ButtonRed
+                            }
                         ),
                         modifier = Modifier.size(32.dp),
                         contentPadding = PaddingValues(0.dp)
@@ -364,7 +506,11 @@ fun PresetCard(
             // Description
             Text(
                 text = preset.description,
-                color = CyberpunkColors.SecondaryText,
+                color = when (theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                    AppTheme.FANTASY -> FantasyColors.SecondaryText
+                    AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                },
                 fontSize = 14.sp,
                 modifier = Modifier.padding(top = 4.dp)
             )
@@ -372,7 +518,11 @@ fun PresetCard(
             // Dice notation
             Text(
                 text = buildPresetNotation(preset),
-                color = CyberpunkColors.NeonBlue,
+                color = when (theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                    AppTheme.FANTASY -> FantasyColors.NeonBlue
+                    AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                },
                 fontSize = 12.sp,
                 modifier = Modifier.padding(top = 8.dp)
             )
@@ -384,7 +534,11 @@ fun PresetCard(
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.ButtonGreen
+                    containerColor = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen
+                        AppTheme.FANTASY -> FantasyColors.ButtonGreen
+                        AppTheme.SCI_FI -> SciFiColors.ButtonGreen
+                    }
                 )
             ) {
                 Text(
@@ -404,7 +558,8 @@ fun PresetCard(
             onSave = { name, description ->
                 onEdit(name, description)
                 showEditDialog = false
-            }
+            },
+            theme = theme
         )
     }
     
@@ -416,7 +571,8 @@ fun PresetCard(
             onConfirm = {
                 onRemove()
                 showDeleteDialog = false
-            }
+            },
+            theme = theme
         )
     }
 }
@@ -437,6 +593,7 @@ private fun buildPresetNotation(preset: PresetRoll): String {
 @Composable
 fun HistoryScreen(viewModel: DiceRollViewModel) {
     val rollHistory by viewModel.rollHistory.collectAsState()
+    val customization by viewModel.customization.collectAsState()
     
     Column(
         modifier = Modifier
@@ -445,7 +602,11 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
     ) {
         Text(
             text = "ROLL HISTORY",
-            color = CyberpunkColors.NeonYellow,
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                AppTheme.SCI_FI -> SciFiColors.NeonYellow
+            },
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
@@ -454,7 +615,11 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
         if (rollHistory.isEmpty()) {
             Text(
                 text = "No rolls yet",
-                color = CyberpunkColors.SecondaryText,
+                color = when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                    AppTheme.FANTASY -> FantasyColors.SecondaryText
+                    AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                },
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -466,7 +631,7 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(rollHistory) { roll ->
-                    RollHistoryCard(roll = roll, viewModel = viewModel)
+                    RollHistoryCard(roll = roll, viewModel = viewModel, theme = customization.theme)
                 }
             }
         }
@@ -476,7 +641,8 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
 @Composable
 fun RollHistoryCard(
     roll: RollResult,
-    viewModel: DiceRollViewModel
+    viewModel: DiceRollViewModel,
+    theme: AppTheme = AppTheme.CYBERPUNK
 ) {
     var showSaveDialog by remember { mutableStateOf(false) }
     var presetName by remember { mutableStateOf("") }
@@ -485,11 +651,19 @@ fun RollHistoryCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = CyberpunkColors.ElevatedCardBackground
+            containerColor = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+            }
         ),
         border = androidx.compose.foundation.BorderStroke(
             width = 1.dp,
-            color = CyberpunkColors.BorderBlue
+            color = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                AppTheme.FANTASY -> FantasyColors.BorderBlue
+                AppTheme.SCI_FI -> SciFiColors.BorderBlue
+            }
         )
     ) {
         Column(
@@ -503,13 +677,21 @@ fun RollHistoryCard(
                 Column {
                     Text(
                         text = "Result: ${roll.total}",
-                        color = CyberpunkColors.NeonYellow,
+                        color = when (theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                            AppTheme.FANTASY -> FantasyColors.NeonYellow
+                            AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                        },
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = "(${roll.notation})",
-                        color = CyberpunkColors.NeonBlue,
+                        color = when (theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                            AppTheme.FANTASY -> FantasyColors.NeonBlue
+                            AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                        },
                         fontSize = 14.sp
                     )
                 }
@@ -518,13 +700,21 @@ fun RollHistoryCard(
                 ) {
                     Text(
                         text = formatTimestamp(roll.timestamp),
-                        color = CyberpunkColors.SecondaryText,
+                        color = when (theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                            AppTheme.FANTASY -> FantasyColors.SecondaryText
+                            AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                        },
                         fontSize = 12.sp
                     )
                     Button(
                         onClick = { showSaveDialog = true },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = CyberpunkColors.ButtonGreen
+                            containerColor = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen
+                                AppTheme.FANTASY -> FantasyColors.ButtonGreen
+                                AppTheme.SCI_FI -> SciFiColors.ButtonGreen
+                            }
                         ),
                         modifier = Modifier.padding(top = 4.dp)
                     ) {
@@ -541,7 +731,11 @@ fun RollHistoryCard(
             if (roll.individualRolls.isNotEmpty()) {
                 Text(
                     text = "Individual Rolls:",
-                    color = CyberpunkColors.PrimaryText,
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                        AppTheme.FANTASY -> FantasyColors.PrimaryText
+                        AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                    },
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(top = 8.dp)
@@ -551,7 +745,11 @@ fun RollHistoryCard(
                     if (diceType != null && rolls.isNotEmpty()) {
                         Text(
                             text = "${diceType.displayName}: ${rolls.joinToString(", ")}",
-                            color = CyberpunkColors.SecondaryText,
+                            color = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                                AppTheme.FANTASY -> FantasyColors.SecondaryText
+                                AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                            },
                             fontSize = 11.sp
                         )
                     }
@@ -569,7 +767,8 @@ fun RollHistoryCard(
                 showSaveDialog = false
             },
             defaultName = "Roll ${roll.notation}",
-            defaultDescription = "Saved from roll history"
+            defaultDescription = "Saved from roll history",
+            theme = theme
         )
     }
 }
@@ -585,7 +784,8 @@ fun SavePresetDialog(
     onDismiss: () -> Unit,
     onSave: (String, String) -> Unit,
     defaultName: String,
-    defaultDescription: String
+    defaultDescription: String,
+    theme: AppTheme = AppTheme.CYBERPUNK
 ) {
     var name by remember { mutableStateOf(defaultName) }
     var description by remember { mutableStateOf(defaultDescription) }
@@ -595,7 +795,7 @@ fun SavePresetDialog(
         title = {
             Text(
                 text = "Save to Presets",
-                color = CyberpunkColors.NeonYellow,
+                color = getThemeColor(theme, "NeonYellow"),
                 fontWeight = FontWeight.Bold
             )
         },
@@ -606,12 +806,12 @@ fun SavePresetDialog(
                     onValueChange = { name = it },
                     label = { Text("Preset Name") },
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = CyberpunkColors.NeonBlue,
-                        unfocusedBorderColor = CyberpunkColors.BorderBlue,
-                        focusedLabelColor = CyberpunkColors.NeonBlue,
-                        unfocusedLabelColor = CyberpunkColors.SecondaryText,
-                        focusedTextColor = CyberpunkColors.PrimaryText,
-                        unfocusedTextColor = CyberpunkColors.PrimaryText
+                        focusedBorderColor = getThemeColor(theme, "NeonBlue"),
+                        unfocusedBorderColor = getThemeColor(theme, "BorderBlue"),
+                        focusedLabelColor = getThemeColor(theme, "NeonBlue"),
+                        unfocusedLabelColor = getThemeColor(theme, "SecondaryText"),
+                        focusedTextColor = getThemeColor(theme, "PrimaryText"),
+                        unfocusedTextColor = getThemeColor(theme, "PrimaryText")
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -623,12 +823,12 @@ fun SavePresetDialog(
                     onValueChange = { description = it },
                     label = { Text("Description") },
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = CyberpunkColors.NeonBlue,
-                        unfocusedBorderColor = CyberpunkColors.BorderBlue,
-                        focusedLabelColor = CyberpunkColors.NeonBlue,
-                        unfocusedLabelColor = CyberpunkColors.SecondaryText,
-                        focusedTextColor = CyberpunkColors.PrimaryText,
-                        unfocusedTextColor = CyberpunkColors.PrimaryText
+                        focusedBorderColor = getThemeColor(theme, "NeonBlue"),
+                        unfocusedBorderColor = getThemeColor(theme, "BorderBlue"),
+                        focusedLabelColor = getThemeColor(theme, "NeonBlue"),
+                        unfocusedLabelColor = getThemeColor(theme, "SecondaryText"),
+                        focusedTextColor = getThemeColor(theme, "PrimaryText"),
+                        unfocusedTextColor = getThemeColor(theme, "PrimaryText")
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -638,7 +838,7 @@ fun SavePresetDialog(
             Button(
                 onClick = { onSave(name, description) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.ButtonGreen
+                    containerColor = getThemeColor(theme, "ButtonGreen")
                 )
             ) {
                 Text("Save")
@@ -648,15 +848,15 @@ fun SavePresetDialog(
             Button(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.ButtonRed
+                    containerColor = getThemeColor(theme, "ButtonRed")
                 )
             ) {
                 Text("Cancel")
             }
         },
-        containerColor = CyberpunkColors.CardBackground,
-        titleContentColor = CyberpunkColors.NeonYellow,
-        textContentColor = CyberpunkColors.PrimaryText
+        containerColor = getThemeColor(theme, "CardBackground"),
+        titleContentColor = getThemeColor(theme, "NeonYellow"),
+        textContentColor = getThemeColor(theme, "PrimaryText")
     )
 }
 
@@ -664,7 +864,8 @@ fun SavePresetDialog(
 fun EditPresetDialog(
     preset: PresetRoll,
     onDismiss: () -> Unit,
-    onSave: (String, String) -> Unit
+    onSave: (String, String) -> Unit,
+    theme: AppTheme = AppTheme.CYBERPUNK
 ) {
     var name by remember { mutableStateOf(preset.name) }
     var description by remember { mutableStateOf(preset.description) }
@@ -674,7 +875,7 @@ fun EditPresetDialog(
         title = {
             Text(
                 text = "Edit Preset",
-                color = CyberpunkColors.NeonYellow,
+                color = getThemeColor(theme, "NeonYellow"),
                 fontWeight = FontWeight.Bold
             )
         },
@@ -685,12 +886,12 @@ fun EditPresetDialog(
                     onValueChange = { name = it },
                     label = { Text("Preset Name") },
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = CyberpunkColors.NeonBlue,
-                        unfocusedBorderColor = CyberpunkColors.BorderBlue,
-                        focusedLabelColor = CyberpunkColors.NeonBlue,
-                        unfocusedLabelColor = CyberpunkColors.SecondaryText,
-                        focusedTextColor = CyberpunkColors.PrimaryText,
-                        unfocusedTextColor = CyberpunkColors.PrimaryText
+                        focusedBorderColor = getThemeColor(theme, "NeonBlue"),
+                        unfocusedBorderColor = getThemeColor(theme, "BorderBlue"),
+                        focusedLabelColor = getThemeColor(theme, "NeonBlue"),
+                        unfocusedLabelColor = getThemeColor(theme, "SecondaryText"),
+                        focusedTextColor = getThemeColor(theme, "PrimaryText"),
+                        unfocusedTextColor = getThemeColor(theme, "PrimaryText")
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -702,12 +903,12 @@ fun EditPresetDialog(
                     onValueChange = { description = it },
                     label = { Text("Description") },
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = CyberpunkColors.NeonBlue,
-                        unfocusedBorderColor = CyberpunkColors.BorderBlue,
-                        focusedLabelColor = CyberpunkColors.NeonBlue,
-                        unfocusedLabelColor = CyberpunkColors.SecondaryText,
-                        focusedTextColor = CyberpunkColors.PrimaryText,
-                        unfocusedTextColor = CyberpunkColors.PrimaryText
+                        focusedBorderColor = getThemeColor(theme, "NeonBlue"),
+                        unfocusedBorderColor = getThemeColor(theme, "BorderBlue"),
+                        focusedLabelColor = getThemeColor(theme, "NeonBlue"),
+                        unfocusedLabelColor = getThemeColor(theme, "SecondaryText"),
+                        focusedTextColor = getThemeColor(theme, "PrimaryText"),
+                        unfocusedTextColor = getThemeColor(theme, "PrimaryText")
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -717,7 +918,7 @@ fun EditPresetDialog(
             Button(
                 onClick = { onSave(name, description) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.ButtonGreen
+                    containerColor = getThemeColor(theme, "ButtonGreen")
                 )
             ) {
                 Text("Save")
@@ -727,15 +928,15 @@ fun EditPresetDialog(
             Button(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.ButtonRed
+                    containerColor = getThemeColor(theme, "ButtonRed")
                 )
             ) {
                 Text("Cancel")
             }
         },
-        containerColor = CyberpunkColors.CardBackground,
-        titleContentColor = CyberpunkColors.NeonYellow,
-        textContentColor = CyberpunkColors.PrimaryText
+        containerColor = getThemeColor(theme, "CardBackground"),
+        titleContentColor = getThemeColor(theme, "NeonYellow"),
+        textContentColor = getThemeColor(theme, "PrimaryText")
     )
 }
 
@@ -743,28 +944,29 @@ fun EditPresetDialog(
 fun DeletePresetDialog(
     presetName: String,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
+    theme: AppTheme = AppTheme.CYBERPUNK
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
                 text = "Delete Preset",
-                color = CyberpunkColors.NeonRed,
+                color = getThemeColor(theme, "NeonRed"),
                 fontWeight = FontWeight.Bold
             )
         },
         text = {
             Text(
                 text = "Are you sure you want to delete \"$presetName\"? This action cannot be undone.",
-                color = CyberpunkColors.PrimaryText
+                color = getThemeColor(theme, "PrimaryText")
             )
         },
         confirmButton = {
             Button(
                 onClick = onConfirm,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.ButtonRed
+                    containerColor = getThemeColor(theme, "ButtonRed")
                 )
             ) {
                 Text("Delete")
@@ -774,31 +976,32 @@ fun DeletePresetDialog(
             Button(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkColors.ButtonBlue
+                    containerColor = getThemeColor(theme, "NeonBlue")
                 )
             ) {
                 Text("Cancel")
             }
         },
-        containerColor = CyberpunkColors.CardBackground,
-        titleContentColor = CyberpunkColors.NeonRed,
-        textContentColor = CyberpunkColors.PrimaryText
+        containerColor = getThemeColor(theme, "CardBackground"),
+        titleContentColor = getThemeColor(theme, "NeonRed"),
+        textContentColor = getThemeColor(theme, "PrimaryText")
     )
 }
 
 @Composable
 fun PresetLoadedNotification(
     message: String,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    theme: AppTheme = AppTheme.CYBERPUNK
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = CyberpunkColors.ButtonGreen.copy(alpha = 0.2f)
+            containerColor = getThemeColor(theme, "ButtonGreen").copy(alpha = 0.2f)
         ),
         border = androidx.compose.foundation.BorderStroke(
             width = 1.dp,
-            color = CyberpunkColors.ButtonGreen
+            color = getThemeColor(theme, "ButtonGreen")
         )
     ) {
         Row(
@@ -815,7 +1018,7 @@ fun PresetLoadedNotification(
                 // Success icon
                 Text(
                     text = "✓",
-                    color = CyberpunkColors.ButtonGreen,
+                    color = getThemeColor(theme, "ButtonGreen"),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(end = 8.dp)
@@ -824,7 +1027,7 @@ fun PresetLoadedNotification(
                 // Message
                 Text(
                     text = message,
-                    color = CyberpunkColors.PrimaryText,
+                    color = getThemeColor(theme, "PrimaryText"),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -841,7 +1044,7 @@ fun PresetLoadedNotification(
             ) {
                 Text(
                     text = "×",
-                    color = CyberpunkColors.SecondaryText,
+                    color = getThemeColor(theme, "SecondaryText"),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -851,17 +1054,25 @@ fun PresetLoadedNotification(
 }
 
 @Composable
-fun AppTitle() {
+fun AppTitle(theme: AppTheme) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(CyberpunkColors.DarkerBackground)
+            .background(when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+            })
             .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = "HEXAROLL",
-            color = CyberpunkColors.NeonYellow,
+            color = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                AppTheme.SCI_FI -> SciFiColors.NeonYellow
+            },
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 3.sp
