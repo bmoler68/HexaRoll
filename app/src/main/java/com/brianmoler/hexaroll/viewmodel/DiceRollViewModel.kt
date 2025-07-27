@@ -79,8 +79,6 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     
     fun incrementDice(diceType: DiceType) {
         val currentCount = _diceSelections.value[diceType]?.count ?: 0
-        // Limit D100 to maximum 1 dice
-        if (diceType == DiceType.D100 && currentCount >= 1) return
         updateDiceCount(diceType, currentCount + 1)
     }
     
@@ -156,13 +154,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
             .filter { it.count > 0 }
             .joinToString("+") { selection ->
                 if (selection.diceType == DiceType.D100) {
-                    if (d100Rolls.isNotEmpty()) {
-                        // Show the result with D10 breakdown
-                        val d100Roll = d100Rolls.first()
-                        "${d100Roll.result} [${d100Roll.tensDie},${d100Roll.onesDie}]"
-                    } else {
-                        "${selection.count}x100"
-                    }
+                    "${selection.count}${selection.diceType.displayName}"
                 } else {
                     "${selection.count}${selection.diceType.displayName}"
                 }
@@ -211,7 +203,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         _currentResult.value = null
         
         // Show confirmation message
-        val message = "Preset '${preset.name}' loaded successfully!"
+        val message = "Favorite '${preset.name}' loaded successfully!"
         Log.d("DiceRollViewModel", "Setting preset message: $message")
         _presetLoadedMessage.value = message
         

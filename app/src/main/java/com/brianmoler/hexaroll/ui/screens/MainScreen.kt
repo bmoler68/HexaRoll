@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
@@ -92,7 +93,7 @@ fun MainScreen(
     val tabs = listOf(
         TabItem(Icons.Filled.PlayArrow, "Roll"),
         TabItem(Icons.Filled.Edit, "Customize"),
-        TabItem(Icons.Filled.Settings, "Presets"),
+        TabItem(Icons.Filled.Favorite, "Favorites"),
         TabItem(Icons.Filled.List, "History")
     )
     
@@ -336,7 +337,7 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
             .padding(16.dp)
     ) {
         Text(
-            text = "PRESET ROLLS",
+            text = "FAVORITES",
             color = when (customization.theme) {
                 AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
                 AppTheme.FANTASY -> FantasyColors.NeonYellow
@@ -365,7 +366,7 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "No preset rolls yet",
+                    text = "No favorites yet",
                     color = when (customization.theme) {
                         AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                         AppTheme.FANTASY -> FantasyColors.SecondaryText
@@ -379,7 +380,7 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 Text(
-                    text = "Create presets by rolling dice and using the 'Save to Presets' button in the History tab",
+                    text = "Create favorites by rolling dice and using the 'Save to Favorites' button in the History tab",
                     color = when (customization.theme) {
                         AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                         AppTheme.FANTASY -> FantasyColors.SecondaryText
@@ -542,7 +543,7 @@ fun PresetCard(
                 )
             ) {
                 Text(
-                    text = "Load Preset",
+                    text = "Load Favorite",
                     color = Color.White,
                     fontSize = 14.sp
                 )
@@ -669,12 +670,15 @@ fun RollHistoryCard(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
+            // Header row with result and timestamp
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ) {
-                Column {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
                     Text(
                         text = "Result: ${roll.total}",
                         color = when (theme) {
@@ -696,7 +700,8 @@ fun RollHistoryCard(
                     )
                 }
                 Column(
-                    horizontalAlignment = Alignment.End
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier.padding(start = 8.dp)
                 ) {
                     Text(
                         text = formatTimestamp(roll.timestamp),
@@ -719,7 +724,7 @@ fun RollHistoryCard(
                         modifier = Modifier.padding(top = 4.dp)
                     ) {
                         Text(
-                            text = "Save to Presets",
+                            text = "Save to Favorites",
                             color = Color.White,
                             fontSize = 10.sp
                         )
@@ -743,8 +748,17 @@ fun RollHistoryCard(
                 roll.individualRolls.forEachIndexed { index, rolls ->
                     val diceType = roll.diceSelections.getOrNull(index)?.diceType
                     if (diceType != null && rolls.isNotEmpty()) {
+                        val rollText = if (diceType == DiceType.D100 && roll.d100Rolls.isNotEmpty()) {
+                            // Show detailed D100 information
+                            val d100Details = roll.d100Rolls.map { d100Roll ->
+                                "${d100Roll.result} [${d100Roll.tensDie},${d100Roll.onesDie}]"
+                            }
+                            "${diceType.displayName}: ${d100Details.joinToString(", ")}"
+                        } else {
+                            "${diceType.displayName}: ${rolls.joinToString(", ")}"
+                        }
                         Text(
-                            text = "${diceType.displayName}: ${rolls.joinToString(", ")}",
+                            text = rollText,
                             color = when (theme) {
                                 AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                                 AppTheme.FANTASY -> FantasyColors.SecondaryText
@@ -767,7 +781,7 @@ fun RollHistoryCard(
                 showSaveDialog = false
             },
             defaultName = "Roll ${roll.notation}",
-            defaultDescription = "Saved from roll history",
+            defaultDescription = "Saved as favorite from roll history",
             theme = theme
         )
     }
@@ -794,7 +808,7 @@ fun SavePresetDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = "Save to Presets",
+                text = "Save to Favorites",
                 color = getThemeColor(theme, "NeonYellow"),
                 fontWeight = FontWeight.Bold
             )
@@ -804,7 +818,7 @@ fun SavePresetDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Preset Name") },
+                    label = { Text("Favorite Name") },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = getThemeColor(theme, "NeonBlue"),
                         unfocusedBorderColor = getThemeColor(theme, "BorderBlue"),
@@ -874,7 +888,7 @@ fun EditPresetDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = "Edit Preset",
+                text = "Edit Favorite",
                 color = getThemeColor(theme, "NeonYellow"),
                 fontWeight = FontWeight.Bold
             )
@@ -884,7 +898,7 @@ fun EditPresetDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Preset Name") },
+                    label = { Text("Favorite Name") },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = getThemeColor(theme, "NeonBlue"),
                         unfocusedBorderColor = getThemeColor(theme, "BorderBlue"),
@@ -951,7 +965,7 @@ fun DeletePresetDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = "Delete Preset",
+                text = "Delete Favorite",
                 color = getThemeColor(theme, "NeonRed"),
                 fontWeight = FontWeight.Bold
             )

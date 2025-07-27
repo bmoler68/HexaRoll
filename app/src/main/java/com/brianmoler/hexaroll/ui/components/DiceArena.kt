@@ -427,7 +427,9 @@ fun TotalDisplay(
                     AppTheme.SCI_FI -> SciFiColors.NeonYellow
                 },
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
             if (notation.isNotBlank()) {
                 Text(
@@ -438,7 +440,8 @@ fun TotalDisplay(
                         AppTheme.SCI_FI -> SciFiColors.NeonBlue
                     },
                     fontSize = 14.sp,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
             } else {
                 Text(
@@ -449,7 +452,8 @@ fun TotalDisplay(
                         AppTheme.SCI_FI -> SciFiColors.SecondaryText
                     },
                     fontSize = 14.sp,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
             Text(
@@ -460,7 +464,8 @@ fun TotalDisplay(
                     AppTheme.SCI_FI -> SciFiColors.PrimaryText
                 },
                 fontSize = 12.sp,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
             if (modifierValue != 0) {
                 Text(
@@ -471,7 +476,8 @@ fun TotalDisplay(
                         AppTheme.SCI_FI -> SciFiColors.NeonBlue
                     },
                     fontSize = 11.sp,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
@@ -516,7 +522,9 @@ fun ResultDisplay(
                     AppTheme.SCI_FI -> SciFiColors.NeonPurple
                 },
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
             
             currentResult?.let { result ->
@@ -529,7 +537,8 @@ fun ResultDisplay(
                     },
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
                 Text(
                     text = "(${result.notation})",
@@ -539,16 +548,19 @@ fun ResultDisplay(
                         AppTheme.SCI_FI -> SciFiColors.NeonBlue
                     },
                     fontSize = 10.sp,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
                 if (result.individualRolls.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(2.dp))
                     val breakdown = result.diceSelections.zip(result.individualRolls)
                         .joinToString("\n") { (sel, rolls) ->
                             if (sel.diceType == DiceType.D100 && result.d100Rolls.isNotEmpty()) {
-                                // Show D10 breakdown for D100
-                                val d100Roll = result.d100Rolls.first()
-                                "${sel.diceType.displayName}: ${d100Roll.result} [${d100Roll.tensDie},${d100Roll.onesDie}]"
+                                // Show D10 breakdown for all D100 rolls
+                                val d100Details = result.d100Rolls.map { d100Roll ->
+                                    "${d100Roll.result} [${d100Roll.tensDie},${d100Roll.onesDie}]"
+                                }
+                                "${sel.diceType.displayName}: ${d100Details.joinToString(", ")}"
                             } else {
                                 "${sel.diceType.displayName}: [${rolls.joinToString(", ")}]"
                             }
@@ -561,7 +573,8 @@ fun ResultDisplay(
                             AppTheme.SCI_FI -> SciFiColors.SecondaryText
                         },
                         fontSize = 9.sp,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             } ?: run {
@@ -573,7 +586,8 @@ fun ResultDisplay(
                         AppTheme.SCI_FI -> SciFiColors.SecondaryText
                     },
                     fontSize = 12.sp,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
