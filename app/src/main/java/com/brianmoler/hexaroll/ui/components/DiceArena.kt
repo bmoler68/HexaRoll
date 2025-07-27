@@ -15,11 +15,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.data.DiceType
 import com.brianmoler.hexaroll.ui.theme.CyberpunkColors
@@ -68,22 +70,47 @@ fun DiceArena(viewModel: DiceRollViewModel) {
             modifier = Modifier.padding(bottom = 8.dp)
         )
         
-        // Dice Grid
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
+        // Dice Grid with Scroll Indicator
+        Box(
             modifier = Modifier.weight(1f)
         ) {
-            items(DiceType.values()) { diceType ->
-                DiceCard(
-                    diceType = diceType,
-                    count = diceSelections[diceType]?.count ?: 0,
-                    onIncrement = { viewModel.incrementDice(diceType) },
-                    onDecrement = { viewModel.decrementDice(diceType) },
-                    theme = customization.theme
-                )
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(DiceType.values()) { diceType ->
+                    DiceCard(
+                        diceType = diceType,
+                        count = diceSelections[diceType]?.count ?: 0,
+                        onIncrement = { viewModel.incrementDice(diceType) },
+                        onDecrement = { viewModel.decrementDice(diceType) },
+                        theme = customization.theme
+                    )
+                }
             }
+            
+            // Scroll indicator gradient overlay
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(20.dp)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                when (customization.theme) {
+                                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground.copy(alpha = 0.8f)
+                                    AppTheme.FANTASY -> FantasyColors.CardBackground.copy(alpha = 0.8f)
+                                    AppTheme.SCI_FI -> SciFiColors.CardBackground.copy(alpha = 0.8f)
+                                }
+                            )
+                        )
+                    )
+                    .zIndex(1f)
+            )
         }
         
         Spacer(modifier = Modifier.height(8.dp))
