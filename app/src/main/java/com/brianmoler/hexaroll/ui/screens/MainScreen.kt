@@ -633,24 +633,54 @@ private fun buildPresetNotation(preset: PresetRoll): String {
 fun HistoryScreen(viewModel: DiceRollViewModel) {
     val rollHistory by viewModel.rollHistory.collectAsState()
     val customization by viewModel.customization.collectAsState()
+    var showClearHistoryDialog by remember { mutableStateOf(false) }
     
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = "ROLL HISTORY",
-            color = when (customization.theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
-                AppTheme.FANTASY -> FantasyColors.NeonYellow
-                AppTheme.SCI_FI -> SciFiColors.NeonYellow
-                AppTheme.WESTERN -> WesternColors.NeonYellow
-            },
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        // Header with title and clear button
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "ROLL HISTORY",
+                color = when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                    AppTheme.FANTASY -> FantasyColors.NeonYellow
+                    AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                    AppTheme.WESTERN -> WesternColors.NeonYellow
+                },
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+            
+            if (rollHistory.isNotEmpty()) {
+                Button(
+                    onClick = { showClearHistoryDialog = true },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = when (customization.theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed
+                            AppTheme.FANTASY -> FantasyColors.ButtonRed
+                            AppTheme.SCI_FI -> SciFiColors.ButtonRed
+                            AppTheme.WESTERN -> WesternColors.ButtonRed
+                        }
+                    ),
+                    modifier = Modifier.padding(start = 8.dp)
+                ) {
+                    Text(
+                        text = "Clear History",
+                        color = Color.White,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
         
         if (rollHistory.isEmpty()) {
             Text(
@@ -676,6 +706,75 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
                 }
             }
         }
+    }
+    
+    // Clear History Confirmation Dialog
+    if (showClearHistoryDialog) {
+        AlertDialog(
+            onDismissRequest = { showClearHistoryDialog = false },
+            title = {
+                Text(
+                    text = "Clear Roll History",
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed
+                        AppTheme.FANTASY -> FantasyColors.NeonRed
+                        AppTheme.SCI_FI -> SciFiColors.NeonRed
+                        AppTheme.WESTERN -> WesternColors.NeonRed
+                    },
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "Are you sure you want to clear all roll history? This action cannot be undone.",
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                        AppTheme.FANTASY -> FantasyColors.PrimaryText
+                        AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                        AppTheme.WESTERN -> WesternColors.PrimaryText
+                    }
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        viewModel.clearRollHistory()
+                        showClearHistoryDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = when (customization.theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed
+                            AppTheme.FANTASY -> FantasyColors.ButtonRed
+                            AppTheme.SCI_FI -> SciFiColors.ButtonRed
+                            AppTheme.WESTERN -> WesternColors.ButtonRed
+                        }
+                    )
+                ) {
+                    Text("Clear History")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showClearHistoryDialog = false },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = when (customization.theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen
+                            AppTheme.FANTASY -> FantasyColors.ButtonGreen
+                            AppTheme.SCI_FI -> SciFiColors.ButtonGreen
+                            AppTheme.WESTERN -> WesternColors.ButtonGreen
+                        }
+                    )
+                ) {
+                    Text("Cancel")
+                }
+            },
+            containerColor = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
+                AppTheme.FANTASY -> FantasyColors.CardBackground
+                AppTheme.SCI_FI -> SciFiColors.CardBackground
+                AppTheme.WESTERN -> WesternColors.CardBackground
+            }
+        )
     }
 }
 
@@ -837,7 +936,7 @@ fun RollHistoryCard(
 
 private fun formatTimestamp(timestamp: Long): String {
     val date = java.util.Date(timestamp)
-    val formatter = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
+    val formatter = java.text.SimpleDateFormat("MMM dd, yyyy HH:mm:ss", java.util.Locale.getDefault())
     return formatter.format(date)
 }
 

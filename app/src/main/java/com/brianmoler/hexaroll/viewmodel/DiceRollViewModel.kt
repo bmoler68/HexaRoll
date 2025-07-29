@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.brianmoler.hexaroll.data.*
 import com.brianmoler.hexaroll.utils.PresetStorage
+import com.brianmoler.hexaroll.utils.RollHistoryStorage
 import com.brianmoler.hexaroll.utils.ThemeStorage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +18,7 @@ import kotlin.random.Random
 class DiceRollViewModel(application: Application) : AndroidViewModel(application) {
     
     private val presetStorage = PresetStorage(application)
+    private val rollHistoryStorage = RollHistoryStorage(application)
     private val themeStorage = ThemeStorage(application)
     
     private val _diceSelections = MutableStateFlow(
@@ -45,6 +47,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     init {
         loadPresetsFromStorage()
         loadThemeFromStorage()
+        loadRollHistory()
     }
     
     private fun loadPresetsFromStorage() {
@@ -141,9 +144,13 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
             notation = notation
         )
         
+        // Update roll history with new roll at the beginning (most recent first)
         _rollHistory.update { history ->
-            listOf(rollResult) + history.take(99) // Keep last 100 rolls
+            (listOf(rollResult) + history).take(100) // Keep latest 100 rolls
         }
+        
+        // Save to persistent storage
+        saveRollHistoryToStorage()
         
         // Set the current result for display
         _currentResult.value = rollResult
@@ -322,5 +329,38 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         _currentResult.value = null
         
         // Note: Roll history is preserved for the History tab
+    }
+
+    private fun loadRollHistory() {
+        viewModelScope.launch {
+            try {
+                val history = rollHistoryStorage.loadRollHistory()
+                _rollHistory.value = history
+            } catch (e: Exception) {
+                Log.e("DiceRollViewModel", "Error loading roll history", e)
+                _rollHistory.value = emptyList()
+            }
+        }
+    }
+
+    private fun saveRollHistoryToStorage() {
+        viewModelScope.launch {
+            try {
+                rollHistoryStorage.saveRollHistory(_rollHistory.value)
+            } catch (e: Exception) {
+                Log.e("DiceRollViewModel", "Error saving roll history", e)
+            }
+        }
+    }
+    
+    fun clearRollHistory() {
+        viewModelScope.launch {
+            try {
+                rollHistoryStorage.clearRollHistory()
+                _rollHistory.value = emptyList()
+            } catch (e: Exception) {
+                Log.e("DiceRollViewModel", "Error clearing roll history", e)
+            }
+        }
     }
 } 
