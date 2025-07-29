@@ -49,6 +49,7 @@ data class AchievementStats(
     val totalModifier: Int = 0,
     val positiveModifier: Int = 0,
     val negativeModifier: Int = 0,
+    val modifierUsageCount: Int = 0, // Count of rolls that used modifiers
     val themeUsage: Map<AppTheme, Int> = emptyMap(),
     val sessionRolls: Int = 0,
     val sessionStartTime: Long = System.currentTimeMillis(),
@@ -405,10 +406,11 @@ object AchievementDefinitions {
     val BALANCED = Achievement(
         id = "balanced",
         name = "Balanced",
-        description = "Use both positive and negative modifiers in one roll",
+        description = "Use modifiers in 10 different rolls",
         category = AchievementCategory.COMBINATION_MODIFIERS,
         tier = AchievementTier.BRONZE,
-        icon = "⚖️"
+        icon = "⚖️",
+        maxProgress = 10
     )
     
     val EXTREME = Achievement(

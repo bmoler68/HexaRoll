@@ -66,6 +66,11 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
             try {
                 val presets = presetStorage.loadPresets()
                 _presetRolls.value = presets
+                
+                // Track loaded favorites for achievements
+                if (presets.isNotEmpty()) {
+                    achievementManager.onFavoritesLoaded(presets.size)
+                }
             } catch (e: Exception) {
                 Log.e("DiceRollViewModel", "Error loading presets", e)
                 _presetRolls.value = emptyList()
@@ -164,7 +169,9 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         saveRollHistoryToStorage()
         
         // Trigger achievement checks
-        achievementManager.onRollCompleted(rollResult)
+        viewModelScope.launch {
+            achievementManager.onRollCompleted(rollResult, _customization.value.theme)
+        }
         
         // Set the current result for display
         _currentResult.value = rollResult
@@ -253,6 +260,11 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
             presets + preset
         }
         savePresetsToStorage()
+        
+        // Track favorite creation for achievements
+        viewModelScope.launch {
+            achievementManager.onFavoriteCreated()
+        }
     }
     
     fun removePreset(presetId: String) {
@@ -289,6 +301,11 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
                 presets + preset
             }
             savePresetsToStorage()
+            
+            // Track favorite creation for achievements
+            viewModelScope.launch {
+                achievementManager.onFavoriteCreated()
+            }
         }
     }
     
@@ -305,9 +322,15 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
             try {
                 val theme = themeStorage.loadTheme()
                 _customization.value = DiceCustomization(theme = theme)
+                
+                // Track loaded theme for achievements
+                achievementManager.onThemeLoaded(theme)
             } catch (e: Exception) {
                 Log.e("DiceRollViewModel", "Error loading theme", e)
                 _customization.value = DiceCustomization(theme = AppTheme.CYBERPUNK)
+                
+                // Track default theme for achievements
+                achievementManager.onThemeLoaded(AppTheme.CYBERPUNK)
             }
         }
     }
@@ -328,7 +351,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         
         // Track theme change for achievements
         viewModelScope.launch {
-            achievementManager.onThemeChanged()
+            achievementManager.onThemeChanged(theme)
         }
     }
     
@@ -401,9 +424,17 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     
     fun getUnlockedAchievements() = achievementManager.getUnlockedAchievements()
     
-    fun getCompletionPercentage() = achievementManager.getCompletionPercentage()
+    fun getCompletionPercentage() = achievementManager.completionPercentage
     
-    suspend fun saveAchievementData() {
-        achievementManager.saveAchievementData()
+    fun saveAchievementData() {
+        viewModelScope.launch {
+            achievementManager.saveAchievementData()
+        }
+    }
+    
+    fun resetAllProgress() {
+        viewModelScope.launch {
+            achievementManager.resetAllProgress()
+        }
     }
 } 

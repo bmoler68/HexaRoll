@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.brianmoler.hexaroll.data.Achievement
+import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.ui.theme.*
 
 @Composable

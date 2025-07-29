@@ -21,46 +21,93 @@ import androidx.compose.ui.unit.sp
 import com.brianmoler.hexaroll.data.*
 import com.brianmoler.hexaroll.ui.theme.*
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 
 @Composable
 fun AchievementScreen(viewModel: DiceRollViewModel) {
     val achievements by viewModel.achievements.collectAsState()
-    val achievementStats by viewModel.achievementStats.collectAsState()
     val customization by viewModel.customization.collectAsState()
+    val completionPercentage by viewModel.getCompletionPercentage().collectAsState()
+    
+    var showResetConfirmation by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf<AchievementCategory?>(null) }
+    
+    // Filter achievements based on selected category
+    val filteredAchievements = if (selectedCategory != null) {
+        achievements.filter { it.category == selectedCategory }
+    } else {
+        achievements
+    }
     
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .background(
+                when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
+                    AppTheme.FANTASY -> FantasyColors.CardBackground
+                    AppTheme.SCI_FI -> SciFiColors.CardBackground
+                    AppTheme.WESTERN -> WesternColors.CardBackground
+                }
+            )
     ) {
-        // Header with completion percentage
         AchievementHeader(
-            completionPercentage = viewModel.getCompletionPercentage(),
+            completionPercentage = completionPercentage,
             totalAchievements = achievements.size,
-            unlockedAchievements = achievements.count { it.isUnlocked },
-            theme = customization.theme
+            unlockedCount = achievements.count { it.isUnlocked },
+            onResetProgress = { showResetConfirmation = true }
         )
         
-        Spacer(modifier = Modifier.height(16.dp))
+        // Confirmation Dialog
+        if (showResetConfirmation) {
+            AlertDialog(
+                onDismissRequest = { showResetConfirmation = false },
+                title = {
+                    Text(
+                        text = "Reset All Progress?",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                text = {
+                    Text(
+                        text = "This will permanently delete all achievement progress, unlocked achievements, and statistics. This action cannot be undone.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            viewModel.resetAllProgress()
+                            showResetConfirmation = false
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Text("Reset All Progress")
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = { showResetConfirmation = false }
+                    ) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
         
-        // Category filter buttons
         CategoryFilterButtons(
             selectedCategory = selectedCategory,
             onCategorySelected = { selectedCategory = it },
             theme = customization.theme
         )
         
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        // Achievement list
-        val filteredAchievements = if (selectedCategory != null) {
-            achievements.filter { it.category == selectedCategory }
-        } else {
-            achievements
-        }
-        
         LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(filteredAchievements) { achievement ->
@@ -75,93 +122,59 @@ fun AchievementScreen(viewModel: DiceRollViewModel) {
 
 @Composable
 fun AchievementHeader(
-    completionPercentage: Double,
+    completionPercentage: Float,
     totalAchievements: Int,
-    unlockedAchievements: Int,
-    theme: AppTheme
+    unlockedCount: Int,
+    onResetProgress: () -> Unit
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = when (theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-            }
-        ),
-        border = androidx.compose.foundation.BorderStroke(
-            width = 2.dp,
-            color = when (theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
-                AppTheme.FANTASY -> FantasyColors.NeonYellow
-                AppTheme.SCI_FI -> SciFiColors.NeonYellow
-                AppTheme.WESTERN -> WesternColors.NeonYellow
-            }
-        )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Text(
+            text = "Achievements",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        Text(
+            text = "$unlockedCount / $totalAchievements Unlocked",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        
+        Spacer(modifier = Modifier.height(4.dp))
+        
+        Text(
+            text = "${(completionPercentage * 100).toInt()}% Complete",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Reset button
+        Button(
+            onClick = onResetProgress,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.error
+            ),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = "🏆 ACHIEVEMENTS",
-                color = when (theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
-                    AppTheme.FANTASY -> FantasyColors.NeonYellow
-                    AppTheme.SCI_FI -> SciFiColors.NeonYellow
-                    AppTheme.WESTERN -> WesternColors.NeonYellow
-                },
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+            Icon(
+                imageVector = Icons.Filled.Refresh,
+                contentDescription = "Reset Progress",
+                tint = MaterialTheme.colorScheme.onError
             )
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "${unlockedAchievements}/${totalAchievements} Unlocked",
-                color = when (theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
-                    AppTheme.FANTASY -> FantasyColors.PrimaryText
-                    AppTheme.SCI_FI -> SciFiColors.PrimaryText
-                    AppTheme.WESTERN -> WesternColors.PrimaryText
-                },
-                fontSize = 16.sp
-            )
-            
-            Spacer(modifier = Modifier.height(4.dp))
-            
-            Text(
-                text = "${String.format("%.1f", completionPercentage)}% Complete",
-                color = when (theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen
-                    AppTheme.FANTASY -> FantasyColors.NeonGreen
-                    AppTheme.SCI_FI -> SciFiColors.NeonGreen
-                    AppTheme.WESTERN -> WesternColors.NeonGreen
-                },
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
-            )
-            
-            // Progress bar
-            Spacer(modifier = Modifier.height(8.dp))
-            LinearProgressIndicator(
-                progress = (completionPercentage / 100).toFloat(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(8.dp),
-                color = when (theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen
-                    AppTheme.FANTASY -> FantasyColors.NeonGreen
-                    AppTheme.SCI_FI -> SciFiColors.NeonGreen
-                    AppTheme.WESTERN -> WesternColors.NeonGreen
-                },
-                trackColor = when (theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
-                    AppTheme.FANTASY -> FantasyColors.BorderBlue
-                    AppTheme.SCI_FI -> SciFiColors.BorderBlue
-                    AppTheme.WESTERN -> WesternColors.BorderBlue
-                }
+                text = "Reset All Progress",
+                color = MaterialTheme.colorScheme.onError
             )
         }
     }

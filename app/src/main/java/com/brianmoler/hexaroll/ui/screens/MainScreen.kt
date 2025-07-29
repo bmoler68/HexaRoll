@@ -15,7 +15,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -113,7 +113,7 @@ fun MainScreen(
         TabItem(Icons.Filled.Edit, "Customize"),
         TabItem(Icons.Filled.Favorite, "Favorites"),
         TabItem(Icons.Filled.List, "History"),
-        TabItem(Icons.Filled.EmojiEvents, "Achievements")
+        TabItem(Icons.Filled.Star, "Achievements")
     )
     
     Column(
@@ -183,7 +183,7 @@ fun MainScreen(
             1 -> CustomizeScreen(viewModel)
             2 -> PresetsScreen(viewModel)
             3 -> HistoryScreen(viewModel)
-            4 -> AchievementsScreen(viewModel)
+            4 -> AchievementScreen(viewModel)
         }
         
         // Achievement popup
