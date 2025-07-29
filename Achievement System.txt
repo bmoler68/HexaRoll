@@ -1,0 +1,121 @@
+Create achievement system as follows:
+
+
+
+Achievements:
+
+1. Rolling Milestones
+First Roll: Complete your first dice roll
+Roll Master: Roll 100, 500, 1000, 5000, 10000 times
+Speed Demon: Roll 10 times in under 30 seconds
+Marathon Roller: Roll continuously for 5 minutes
+Session Champion: Roll 50+ times in a single app session
+
+2. Dice Type Specialists
+D4 Devotee: Roll D4 50 times
+D6 Specialist: Roll D6 100 times
+D8 Enthusiast: Roll D8 75 times
+D10 Master: Roll D10 100 times
+D12 Expert: Roll D12 50 times
+D20 Legend: Roll D20 200 times
+D30 Pioneer: Roll D30 25 times
+D100 Centurion: Roll D100 50 times
+Polyhedral Master: Roll all 8 dice types at least once
+
+3. Result-Based Achievements
+Lucky Numbers: Roll specific numbers
+Snake Eyes: Roll 1 on D6
+Boxcars: Roll 12 on 2D6
+Natural 20: Roll 20 on D20
+Critical Fail: Roll 1 on D20
+Perfect 100: Roll 100 on D100
+High Roller: Roll maximum value on any dice 10 times
+Low Baller: Roll minimum value (1) on any dice 10 times
+Average Joe: Roll exactly the average value for a dice type 10 times
+
+4. Streak & Pattern Achievements
+Hot Streak: Roll the same number 3 times in a row
+Cold Streak: Roll 1 three times in a row
+Alternating: Roll high/low/high/low pattern
+Consistent: Roll within 2 points of each other for 5 rolls
+Unpredictable: Roll maximum range (1 to max) in 3 consecutive rolls
+
+5. Combination & Modifier Achievements
+Modifier Master: Use modifiers totaling +10 or more
+Negative Nancy: Use negative modifiers totaling -10 or more
+Balanced: Use both positive and negative modifiers in one roll
+Extreme: Roll with +20 or -20 modifier
+Mixed Bag: Roll 3+ different dice types in one roll
+Dice Hoarder: Roll 10+ dice in a single roll
+
+6. Theme-Based Achievements
+Theme Explorer: Use all four themes (Cyberpunk, Fantasy, Sci-Fi, Western)
+Theme Loyalist: Roll 100 times with the same theme
+Theme Switcher: Change themes 10 times in one session
+
+7. Favorites & History Achievements
+Preset Pioneer: Create your first favorite
+Preset Collector: Create 5, 10, 25 favorites
+History Buff: View roll history 50 times
+Memory Master: Have 50+ rolls in history
+
+8. Special Event Achievements
+Midnight Roller: Roll at midnight
+Lucky Hour: Roll at 7:11, 11:11, etc.
+Weekend Warrior: Roll 50+ times on weekends
+Daily Grinder: Roll every day for a week
+Monthly Master: Roll every day for a month
+
+
+
+Achievement System Features:
+
+Tier System:
+Bronze: Basic achievements (first roll, simple milestones)
+Silver: Intermediate achievements (streaks, combinations)
+Gold: Advanced achievements (long streaks, perfect rolls)
+Platinum: Expert achievements (rare combinations, extreme modifiers)
+Diamond: Legendary achievements (perfect timing, rare events)
+
+Progressive Achievements:
+Roll Counter: 10 → 50 → 100 → 500 → 1000 → 5000 → 10000
+Streak Master: 3 → 5 → 7 → 10 → 15 → 20 consecutive same results
+Modifier Extreme: +5 → +10 → +15 → +20 → +25 → +30
+
+
+
+UI/UX Recommendations:
+
+Achievement Display:
+Achievement Popup: Show when unlocked with satisfying animation
+Achievement Panel: Dedicated screen showing all achievements.  This should be additional tab with, perhaps, a trophy icon.
+Progress Bars: Show progress toward next tier
+Badge System: Visual badges for different achievement categories
+
+Statistics Integration:
+Achievement Stats: Track completion percentage
+Rarity System: Show how rare each achievement is
+
+Rewards System:
+Title System: Custom titles like "Dice Master", "Streak Breaker", etc.
+
+Progress, stats and rewards will be persistent
+
+
+
+Technical Implementation Ideas:
+
+Achievement Tracking:
+Store achievement data in DiceRollViewModel
+Use StateFlow to track achievement progress
+Persist achievement data across app sessions
+
+Event System:
+Create achievement event listeners
+Trigger achievements based on roll events
+Batch achievement checks for performance
+
+Notification System:
+Toast notifications for new achievements
+Achievement sound effects
+Visual feedback with animations

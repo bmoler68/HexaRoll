@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,7 +28,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.brianmoler.hexaroll.data.*
+import com.brianmoler.hexaroll.ui.components.AchievementNotification
 import com.brianmoler.hexaroll.ui.components.DiceArena
+import com.brianmoler.hexaroll.ui.screens.AchievementScreen
 import com.brianmoler.hexaroll.ui.theme.*
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
 import java.text.SimpleDateFormat
@@ -103,12 +106,14 @@ fun MainScreen(
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
     val customization by viewModel.customization.collectAsState()
+    val newlyUnlockedAchievements by viewModel.newlyUnlockedAchievements.collectAsState()
     
     val tabs = listOf(
         TabItem(Icons.Filled.PlayArrow, "Roll"),
         TabItem(Icons.Filled.Edit, "Customize"),
         TabItem(Icons.Filled.Favorite, "Favorites"),
-        TabItem(Icons.Filled.List, "History")
+        TabItem(Icons.Filled.List, "History"),
+        TabItem(Icons.Filled.EmojiEvents, "Achievements")
     )
     
     Column(
@@ -178,7 +183,15 @@ fun MainScreen(
             1 -> CustomizeScreen(viewModel)
             2 -> PresetsScreen(viewModel)
             3 -> HistoryScreen(viewModel)
+            4 -> AchievementsScreen(viewModel)
         }
+        
+        // Achievement popup
+        AchievementNotification(
+            achievements = newlyUnlockedAchievements,
+            onDismiss = { /* Achievement popup will auto-dismiss */ },
+            theme = customization.theme
+        )
     }
 }
 
@@ -634,6 +647,11 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
     val rollHistory by viewModel.rollHistory.collectAsState()
     val customization by viewModel.customization.collectAsState()
     var showClearHistoryDialog by remember { mutableStateOf(false) }
+    
+    // Track history view for achievements
+    LaunchedEffect(Unit) {
+        viewModel.onHistoryViewed()
+    }
     
     Column(
         modifier = Modifier

@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.brianmoler.hexaroll.data.*
+import com.brianmoler.hexaroll.utils.AchievementManager
+import com.brianmoler.hexaroll.utils.AchievementStorage
 import com.brianmoler.hexaroll.utils.PresetStorage
 import com.brianmoler.hexaroll.utils.RollHistoryStorage
 import com.brianmoler.hexaroll.utils.ThemeStorage
@@ -20,6 +22,8 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     private val presetStorage = PresetStorage(application)
     private val rollHistoryStorage = RollHistoryStorage(application)
     private val themeStorage = ThemeStorage(application)
+    private val achievementStorage = AchievementStorage(application)
+    private val achievementManager = AchievementManager(achievementStorage)
     
     private val _diceSelections = MutableStateFlow(
         DiceType.values().associateWith { DiceSelection(it, 0) }
@@ -43,6 +47,13 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     
     private val _presetLoadedMessage = MutableStateFlow<String?>(null)
     val presetLoadedMessage: StateFlow<String?> = _presetLoadedMessage.asStateFlow()
+    
+    // Achievement-related StateFlows
+    val achievements = achievementManager.achievements
+    val achievementStats = achievementManager.achievementStats
+    val unlockedAchievements = achievementManager.unlockedAchievements
+    val newlyUnlockedAchievements = achievementManager.newlyUnlockedAchievements
+    val userTitles = achievementManager.userTitles
     
     init {
         loadPresetsFromStorage()
@@ -152,6 +163,9 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         // Save to persistent storage
         saveRollHistoryToStorage()
         
+        // Trigger achievement checks
+        achievementManager.onRollCompleted(rollResult)
+        
         // Set the current result for display
         _currentResult.value = rollResult
     }
@@ -188,6 +202,11 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
             presets + preset
         }
         savePresetsToStorage()
+        
+        // Track favorite creation for achievements
+        viewModelScope.launch {
+            achievementManager.onFavoriteCreated()
+        }
     }
     
     fun loadPresetRoll(preset: PresetRoll) {
@@ -306,6 +325,11 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     fun updateTheme(theme: AppTheme) {
         _customization.value = DiceCustomization(theme = theme)
         saveThemeToStorage(theme)
+        
+        // Track theme change for achievements
+        viewModelScope.launch {
+            achievementManager.onThemeChanged()
+        }
     }
     
     fun getTotalDiceCount(): Int {
@@ -362,5 +386,24 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
                 Log.e("DiceRollViewModel", "Error clearing roll history", e)
             }
         }
+    }
+    
+    // Achievement-related functions
+    fun onHistoryViewed() {
+        viewModelScope.launch {
+            achievementManager.onHistoryViewed()
+        }
+    }
+    
+    fun getAchievementProgress(achievementId: String) = achievementManager.getAchievementProgress(achievementId)
+    
+    fun getAchievementsByCategory(category: AchievementCategory) = achievementManager.getAchievementsByCategory(category)
+    
+    fun getUnlockedAchievements() = achievementManager.getUnlockedAchievements()
+    
+    fun getCompletionPercentage() = achievementManager.getCompletionPercentage()
+    
+    suspend fun saveAchievementData() {
+        achievementManager.saveAchievementData()
     }
 } 
