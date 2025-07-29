@@ -27,6 +27,7 @@ import com.brianmoler.hexaroll.data.DiceType
 import com.brianmoler.hexaroll.ui.theme.CyberpunkColors
 import com.brianmoler.hexaroll.ui.theme.FantasyColors
 import com.brianmoler.hexaroll.ui.theme.SciFiColors
+import com.brianmoler.hexaroll.ui.theme.WesternColors
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
 
 @Composable
@@ -43,6 +44,7 @@ fun DiceArena(viewModel: DiceRollViewModel) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
                     AppTheme.FANTASY -> FantasyColors.CardBackground
                     AppTheme.SCI_FI -> SciFiColors.CardBackground
+                    AppTheme.WESTERN -> WesternColors.CardBackground
                 },
                 shape = RoundedCornerShape(12.dp)
             )
@@ -52,6 +54,7 @@ fun DiceArena(viewModel: DiceRollViewModel) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
                     AppTheme.FANTASY -> FantasyColors.BorderBlue
                     AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                    AppTheme.WESTERN -> WesternColors.BorderBlue
                 },
                 shape = RoundedCornerShape(12.dp)
             )
@@ -64,6 +67,7 @@ fun DiceArena(viewModel: DiceRollViewModel) {
                 AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
                 AppTheme.FANTASY -> FantasyColors.NeonYellow
                 AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                AppTheme.WESTERN -> WesternColors.NeonYellow
             },
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
@@ -105,6 +109,7 @@ fun DiceArena(viewModel: DiceRollViewModel) {
                                     AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground.copy(alpha = 0.8f)
                                     AppTheme.FANTASY -> FantasyColors.CardBackground.copy(alpha = 0.8f)
                                     AppTheme.SCI_FI -> SciFiColors.CardBackground.copy(alpha = 0.8f)
+                                    AppTheme.WESTERN -> WesternColors.CardBackground.copy(alpha = 0.8f)
                                 }
                             )
                         )
@@ -184,6 +189,7 @@ fun DiceCard(
                 AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
                 AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
                 AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -192,6 +198,7 @@ fun DiceCard(
                 AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
                 AppTheme.FANTASY -> FantasyColors.BorderBlue
                 AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                AppTheme.WESTERN -> WesternColors.BorderBlue
             }
         )
     ) {
@@ -216,6 +223,7 @@ fun DiceCard(
                     AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
                     AppTheme.FANTASY -> FantasyColors.PrimaryText
                     AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                    AppTheme.WESTERN -> WesternColors.PrimaryText
                 },
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
@@ -234,6 +242,7 @@ fun DiceCard(
                                 AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed
                                 AppTheme.FANTASY -> FantasyColors.ButtonRed
                                 AppTheme.SCI_FI -> SciFiColors.ButtonRed
+                                AppTheme.WESTERN -> WesternColors.ButtonRed
                             },
                             shape = RoundedCornerShape(4.dp)
                         )
@@ -243,6 +252,7 @@ fun DiceCard(
                                 AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed
                                 AppTheme.FANTASY -> FantasyColors.NeonRed
                                 AppTheme.SCI_FI -> SciFiColors.NeonRed
+                                AppTheme.WESTERN -> WesternColors.NeonRed
                             },
                             shape = RoundedCornerShape(4.dp)
                         )
@@ -258,6 +268,7 @@ fun DiceCard(
                         AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
                         AppTheme.FANTASY -> FantasyColors.NeonYellow
                         AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                        AppTheme.WESTERN -> WesternColors.NeonYellow
                     },
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
@@ -273,6 +284,7 @@ fun DiceCard(
                                 AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen
                                 AppTheme.FANTASY -> FantasyColors.ButtonGreen
                                 AppTheme.SCI_FI -> SciFiColors.ButtonGreen
+                                AppTheme.WESTERN -> WesternColors.ButtonGreen
                             },
                             shape = RoundedCornerShape(4.dp)
                         )
@@ -282,6 +294,7 @@ fun DiceCard(
                                 AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen
                                 AppTheme.FANTASY -> FantasyColors.NeonGreen
                                 AppTheme.SCI_FI -> SciFiColors.NeonGreen
+                                AppTheme.WESTERN -> WesternColors.NeonGreen
                             },
                             shape = RoundedCornerShape(4.dp)
                         )
@@ -310,6 +323,7 @@ fun ModifierSection(
                     AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
                     AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
                     AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+                    AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
                 },
                 shape = RoundedCornerShape(8.dp)
             )
@@ -319,6 +333,7 @@ fun ModifierSection(
                     AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
                     AppTheme.FANTASY -> FantasyColors.BorderBlue
                     AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                    AppTheme.WESTERN -> WesternColors.BorderBlue
                 },
                 shape = RoundedCornerShape(8.dp)
             )
@@ -332,6 +347,7 @@ fun ModifierSection(
                 AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
                 AppTheme.FANTASY -> FantasyColors.NeonBlue
                 AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                AppTheme.WESTERN -> WesternColors.NeonBlue
             },
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
@@ -349,6 +365,7 @@ fun ModifierSection(
                         AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed
                         AppTheme.FANTASY -> FantasyColors.ButtonRed
                         AppTheme.SCI_FI -> SciFiColors.ButtonRed
+                        AppTheme.WESTERN -> WesternColors.ButtonRed
                     }
                 ),
                 contentPadding = PaddingValues(0.dp),
@@ -358,6 +375,7 @@ fun ModifierSection(
                         AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed
                         AppTheme.FANTASY -> FantasyColors.NeonRed
                         AppTheme.SCI_FI -> SciFiColors.NeonRed
+                        AppTheme.WESTERN -> WesternColors.NeonRed
                     }
                 )
             ) {
@@ -370,6 +388,7 @@ fun ModifierSection(
                     AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
                     AppTheme.FANTASY -> FantasyColors.NeonYellow
                     AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                    AppTheme.WESTERN -> WesternColors.NeonYellow
                 },
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
@@ -385,6 +404,7 @@ fun ModifierSection(
                         AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen
                         AppTheme.FANTASY -> FantasyColors.ButtonGreen
                         AppTheme.SCI_FI -> SciFiColors.ButtonGreen
+                        AppTheme.WESTERN -> WesternColors.ButtonGreen
                     }
                 ),
                 contentPadding = PaddingValues(0.dp),
@@ -394,6 +414,7 @@ fun ModifierSection(
                         AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen
                         AppTheme.FANTASY -> FantasyColors.NeonGreen
                         AppTheme.SCI_FI -> SciFiColors.NeonGreen
+                        AppTheme.WESTERN -> WesternColors.NeonGreen
                     }
                 )
             ) {
@@ -431,6 +452,7 @@ fun TotalDisplay(
                 AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
                 AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
                 AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -439,6 +461,7 @@ fun TotalDisplay(
                 AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
                 AppTheme.FANTASY -> FantasyColors.NeonYellow
                 AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                AppTheme.WESTERN -> WesternColors.NeonYellow
             }
         )
     ) {
@@ -452,6 +475,7 @@ fun TotalDisplay(
                     AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
                     AppTheme.FANTASY -> FantasyColors.NeonYellow
                     AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                    AppTheme.WESTERN -> WesternColors.NeonYellow
                 },
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
@@ -465,6 +489,7 @@ fun TotalDisplay(
                         AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
                         AppTheme.FANTASY -> FantasyColors.NeonBlue
                         AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                        AppTheme.WESTERN -> WesternColors.NeonBlue
                     },
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
@@ -477,6 +502,7 @@ fun TotalDisplay(
                         AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                         AppTheme.FANTASY -> FantasyColors.SecondaryText
                         AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                        AppTheme.WESTERN -> WesternColors.SecondaryText
                     },
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
@@ -489,6 +515,7 @@ fun TotalDisplay(
                     AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
                     AppTheme.FANTASY -> FantasyColors.PrimaryText
                     AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                    AppTheme.WESTERN -> WesternColors.PrimaryText
                 },
                 fontSize = 12.sp,
                 textAlign = TextAlign.Center,
@@ -501,6 +528,7 @@ fun TotalDisplay(
                         AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
                         AppTheme.FANTASY -> FantasyColors.NeonBlue
                         AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                        AppTheme.WESTERN -> WesternColors.NeonBlue
                     },
                     fontSize = 11.sp,
                     textAlign = TextAlign.Center,
@@ -526,6 +554,7 @@ fun ResultDisplay(
                 AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
                 AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
                 AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -534,6 +563,7 @@ fun ResultDisplay(
                 AppTheme.CYBERPUNK -> CyberpunkColors.NeonPurple
                 AppTheme.FANTASY -> FantasyColors.NeonPurple
                 AppTheme.SCI_FI -> SciFiColors.NeonPurple
+                AppTheme.WESTERN -> WesternColors.NeonPurple
             }
         )
     ) {
@@ -547,6 +577,7 @@ fun ResultDisplay(
                     AppTheme.CYBERPUNK -> CyberpunkColors.NeonPurple
                     AppTheme.FANTASY -> FantasyColors.NeonPurple
                     AppTheme.SCI_FI -> SciFiColors.NeonPurple
+                    AppTheme.WESTERN -> WesternColors.NeonPurple
                 },
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
@@ -561,6 +592,7 @@ fun ResultDisplay(
                         AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
                         AppTheme.FANTASY -> FantasyColors.NeonYellow
                         AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                        AppTheme.WESTERN -> WesternColors.NeonYellow
                     },
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -573,6 +605,7 @@ fun ResultDisplay(
                         AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
                         AppTheme.FANTASY -> FantasyColors.NeonBlue
                         AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                        AppTheme.WESTERN -> WesternColors.NeonBlue
                     },
                     fontSize = 10.sp,
                     textAlign = TextAlign.Center,
@@ -598,6 +631,7 @@ fun ResultDisplay(
                             AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                             AppTheme.FANTASY -> FantasyColors.SecondaryText
                             AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                            AppTheme.WESTERN -> WesternColors.SecondaryText
                         },
                         fontSize = 9.sp,
                         textAlign = TextAlign.Center,
@@ -611,6 +645,7 @@ fun ResultDisplay(
                         AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                         AppTheme.FANTASY -> FantasyColors.SecondaryText
                         AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                        AppTheme.WESTERN -> WesternColors.SecondaryText
                     },
                     fontSize = 12.sp,
                     textAlign = TextAlign.Center,
@@ -637,6 +672,7 @@ fun ClearArenaButton(
                 AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed
                 AppTheme.FANTASY -> FantasyColors.ButtonRed
                 AppTheme.SCI_FI -> SciFiColors.ButtonRed
+                AppTheme.WESTERN -> WesternColors.ButtonRed
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -645,6 +681,7 @@ fun ClearArenaButton(
                 AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed
                 AppTheme.FANTASY -> FantasyColors.NeonRed
                 AppTheme.SCI_FI -> SciFiColors.NeonRed
+                AppTheme.WESTERN -> WesternColors.NeonRed
             }
         )
     ) {
@@ -677,18 +714,21 @@ fun RollButton(
                     AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen
                     AppTheme.FANTASY -> FantasyColors.ButtonGreen
                     AppTheme.SCI_FI -> SciFiColors.ButtonGreen
+                    AppTheme.WESTERN -> WesternColors.ButtonGreen
                 }
             } else {
                 when (customization.theme) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
                     AppTheme.FANTASY -> FantasyColors.CardBackground
                     AppTheme.SCI_FI -> SciFiColors.CardBackground
+                    AppTheme.WESTERN -> WesternColors.CardBackground
                 }
             },
             disabledContainerColor = when (customization.theme) {
                 AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
                 AppTheme.FANTASY -> FantasyColors.CardBackground
                 AppTheme.SCI_FI -> SciFiColors.CardBackground
+                AppTheme.WESTERN -> WesternColors.CardBackground
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -698,12 +738,14 @@ fun RollButton(
                     AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen
                     AppTheme.FANTASY -> FantasyColors.NeonGreen
                     AppTheme.SCI_FI -> SciFiColors.NeonGreen
+                    AppTheme.WESTERN -> WesternColors.NeonGreen
                 }
             } else {
                 when (customization.theme) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
                     AppTheme.FANTASY -> FantasyColors.BorderBlue
                     AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                    AppTheme.WESTERN -> WesternColors.BorderBlue
                 }
             }
         )
@@ -715,6 +757,7 @@ fun RollButton(
                     AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                     AppTheme.FANTASY -> FantasyColors.SecondaryText
                     AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                    AppTheme.WESTERN -> WesternColors.SecondaryText
                 }
             },
             fontSize = 18.sp,

@@ -39,6 +39,16 @@ fun DiceShape(
             DiceType.D30 -> R.drawable.d30_scifi
             DiceType.D100 -> R.drawable.d100_scifi
         }
+        AppTheme.WESTERN -> when (diceType) {
+            DiceType.D4 -> R.drawable.d4_western
+            DiceType.D6 -> R.drawable.d6_western
+            DiceType.D8 -> R.drawable.d8_western
+            DiceType.D10 -> R.drawable.d10_western
+            DiceType.D12 -> R.drawable.d12_western
+            DiceType.D20 -> R.drawable.d20_western
+            DiceType.D30 -> R.drawable.d30_western
+            DiceType.D100 -> R.drawable.d100_western
+        }
         else -> when (diceType) {  // CYBERPUNK theme
             DiceType.D4 -> R.drawable.d4_cyberpunk
             DiceType.D6 -> R.drawable.d6_cyberpunk

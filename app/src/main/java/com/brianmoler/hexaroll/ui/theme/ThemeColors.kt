@@ -54,11 +54,29 @@ object SciFiColors {
     val ButtonGreen = Color(0xFF006400) // Dark green (safe)
 }
 
+// Western Theme Colors - Warm rustic background for wooden/brass dice
+object WesternColors {
+    val PrimaryText = Color(0xFFF5F5DC) // Beige (light text for dark background)
+    val SecondaryText = Color(0xFFDEB887) // Burlywood (light secondary text)
+    val CardBackground = Color(0xFF8D6E63) // Brown (warm wood background)
+    val ElevatedCardBackground = Color(0xFF6D4C41) // Dark brown (elevated wood)
+    val BorderBlue = Color(0xFF4E342E) // Dark brown (wood border)
+    val NeonYellow = Color(0xFFFFD700) // Bright gold (brass accent)
+    val NeonBlue = Color(0xFF87CEEB) // Sky blue (bright blue for contrast)
+    val NeonGreen = Color(0xFF90EE90) // Light green (bright green for contrast)
+    val NeonRed = Color(0xFFFF6347) // Tomato red (bright red for contrast)
+    val NeonCyan = Color(0xFF40E0D0) // Turquoise (bright cyan for contrast)
+    val NeonPurple = Color(0xFFDDA0DD) // Plum (bright purple for contrast)
+    val ButtonRed = Color(0xFF8B0000) // Dark red (danger)
+    val ButtonGreen = Color(0xFF006400) // Dark green (safe)
+}
+
 // Theme Color Manager
 object ThemeColors {
     fun getColors(theme: AppTheme) = when (theme) {
         AppTheme.CYBERPUNK -> CyberpunkColors
         AppTheme.FANTASY -> FantasyColors
         AppTheme.SCI_FI -> SciFiColors
+        AppTheme.WESTERN -> WesternColors
     }
 } 
