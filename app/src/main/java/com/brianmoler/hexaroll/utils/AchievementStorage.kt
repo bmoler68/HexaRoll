@@ -10,6 +10,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import com.google.gson.*
+
 
 class AchievementStorage(private val context: Context) {
     
@@ -18,7 +20,9 @@ class AchievementStorage(private val context: Context) {
         Context.MODE_PRIVATE
     )
     
-    private val gson = Gson()
+    private val gson = Gson().newBuilder()
+        .serializeNulls()
+        .create()
     private val achievementProgressListType = object : TypeToken<List<AchievementProgress>>() {}.type
     private val userTitlesListType = object : TypeToken<List<UserTitle>>() {}.type
     private val achievementStatsType = object : TypeToken<AchievementStats>() {}.type
@@ -84,6 +88,30 @@ class AchievementStorage(private val context: Context) {
             sharedPreferences.edit()
                 .putString(KEY_ACHIEVEMENT_STATS, json)
                 .apply()
+            
+            android.util.Log.d("AchievementStorage", "=== SAVING STATS ===")
+            android.util.Log.d("AchievementStorage", "Stats object: $stats")
+            android.util.Log.d("AchievementStorage", "sessionRolls value: ${stats.sessionRolls}")
+            android.util.Log.d("AchievementStorage", "totalSessionRolls value: ${stats.totalSessionRolls}")
+            android.util.Log.d("AchievementStorage", "Saved JSON: $json")
+            
+            // Check if sessionRolls appears in the JSON
+            if (json.contains("sessionRolls")) {
+                android.util.Log.d("AchievementStorage", "✅ sessionRolls found in JSON")
+            } else {
+                android.util.Log.d("AchievementStorage", "❌ sessionRolls NOT found in JSON")
+            }
+            
+            // Check if totalSessionRolls appears in the JSON
+            if (json.contains("totalSessionRolls")) {
+                android.util.Log.d("AchievementStorage", "✅ totalSessionRolls found in JSON")
+            } else {
+                android.util.Log.d("AchievementStorage", "❌ totalSessionRolls NOT found in JSON")
+            }
+            
+            // Log all field names in the JSON
+            val jsonObject = com.google.gson.JsonParser.parseString(json).asJsonObject
+            android.util.Log.d("AchievementStorage", "All fields in JSON: ${jsonObject.keySet()}")
         }
     }
     
@@ -92,11 +120,40 @@ class AchievementStorage(private val context: Context) {
             val json = sharedPreferences.getString(KEY_ACHIEVEMENT_STATS, null)
             if (json != null) {
                 try {
-                    gson.fromJson(json, achievementStatsType) ?: AchievementStats()
+                    android.util.Log.d("AchievementStorage", "=== LOADING STATS ===")
+                    android.util.Log.d("AchievementStorage", "Loading JSON: $json")
+                    
+                    // Check if sessionRolls appears in the JSON
+                    if (json.contains("sessionRolls")) {
+                        android.util.Log.d("AchievementStorage", "✅ sessionRolls found in JSON")
+                    } else {
+                        android.util.Log.d("AchievementStorage", "❌ sessionRolls NOT found in JSON")
+                    }
+                    
+                    // Check if totalSessionRolls appears in the JSON
+                    if (json.contains("totalSessionRolls")) {
+                        android.util.Log.d("AchievementStorage", "✅ totalSessionRolls found in JSON")
+                    } else {
+                        android.util.Log.d("AchievementStorage", "❌ totalSessionRolls NOT found in JSON")
+                    }
+                    
+                    // Parse the JSON manually to see the values
+                    val jsonObject = com.google.gson.JsonParser.parseString(json).asJsonObject
+                    val sessionRollsFromJson = jsonObject.get("sessionRolls")?.asInt
+                    val totalSessionRollsFromJson = jsonObject.get("totalSessionRolls")?.asInt
+                    android.util.Log.d("AchievementStorage", "sessionRolls value from JSON: $sessionRollsFromJson")
+                    android.util.Log.d("AchievementStorage", "totalSessionRolls value from JSON: $totalSessionRollsFromJson")
+                    
+                    val stats = gson.fromJson(json, achievementStatsType) ?: AchievementStats()
+                    android.util.Log.d("AchievementStorage", "Loaded stats: totalRolls=${stats.totalRolls}, sessionRolls=${stats.sessionRolls}, totalSessionRolls=${stats.totalSessionRolls}")
+                    android.util.Log.d("AchievementStorage", "Deserialization mismatch: JSON has sessionRolls=$sessionRollsFromJson, totalSessionRolls=$totalSessionRollsFromJson, but stats object has sessionRolls=${stats.sessionRolls}, totalSessionRolls=${stats.totalSessionRolls}")
+                    stats
                 } catch (e: Exception) {
+                    android.util.Log.e("AchievementStorage", "Error loading stats", e)
                     AchievementStats()
                 }
             } else {
+                android.util.Log.d("AchievementStorage", "No stats found in storage")
                 AchievementStats()
             }
         }

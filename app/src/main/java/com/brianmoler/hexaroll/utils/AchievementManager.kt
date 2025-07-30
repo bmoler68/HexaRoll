@@ -28,6 +28,8 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
     val userTitles: StateFlow<List<UserTitle>> = _userTitles.asStateFlow()
     val completionPercentage: StateFlow<Float> = _completionPercentage.asStateFlow()
     
+    private var isDataLoaded = false
+    
     private val recentRolls = mutableListOf<RollResult>()
     private val recentRollTimes = mutableListOf<Long>()
     private val lastRollResults = mutableListOf<Int>()
@@ -50,17 +52,37 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             val unlockedIds = achievementStorage.loadUnlockedAchievements()
             val titles = achievementStorage.loadUserTitles()
             
-            _achievementStats.value = stats
+            Log.d("AchievementManager", "=== LOADING ACHIEVEMENT DATA ===")
+            Log.d("AchievementManager", "Raw stats from storage: $stats")
+            Log.d("AchievementManager", "sessionRolls from storage: ${stats.sessionRolls}")
+            
+            // Reset sessionRolls on app start (single session tracking)
+            val statsWithResetSession = stats.copy(sessionRolls = 0)
+            _achievementStats.value = statsWithResetSession
             _unlockedAchievements.value = unlockedIds
             _userTitles.value = titles
             
-            // Update achievements with progress from storage
+            Log.d("AchievementManager", "Loaded stats on startup: totalRolls=${stats.totalRolls}, d6 rolls=${stats.rollsByDiceType[DiceType.D6]}, sessionRolls=${stats.sessionRolls}, totalSessionRolls=${stats.totalSessionRolls}")
+            Log.d("AchievementManager", "After session reset: sessionRolls=0, totalSessionRolls=${stats.totalSessionRolls}")
+            
+            // Update achievements with progress from storage (no recalculation on startup)
             updateAchievementsWithProgress(progressList)
             
             // Update completion percentage
             updateCompletionPercentage()
             
+            // Mark data as loaded
+            isDataLoaded = true
+            
             Log.d("AchievementManager", "Loaded achievement data: ${progressList.size} progress entries, ${stats.totalRolls} total rolls")
+            Log.d("AchievementManager", "Loaded stats - totalRolls: ${stats.totalRolls}, d6 rolls: ${stats.rollsByDiceType[DiceType.D6]}")
+            
+            // Debug: Log specific achievement progress being loaded
+            progressList.filter { it.achievementId == "roll_master_100" || it.achievementId == "d6_specialist" }
+                .forEach { progress ->
+                    Log.d("AchievementManager", "Loading ${progress.achievementId}: progress=${progress.currentProgress}, unlocked=${progress.isUnlocked}")
+                }
+            
         } catch (e: Exception) {
             Log.e("AchievementManager", "Error loading achievement data", e)
         }
@@ -75,7 +97,12 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             val isUnlocked = progress?.isUnlocked ?: false
             val unlockedAt = progress?.unlockedAt
             
-            // If achievement is unlocked, add to unlocked set
+            // Debug logging for restoration
+            if (achievement.id == "roll_master_100" || achievement.id == "d6_specialist") {
+                Log.d("AchievementManager", "Restoring ${achievement.id}: progress=$restoredProgress, unlocked=$isUnlocked")
+            }
+            
+            // If achievement is unlocked, add to unlocked set (but don't auto-unlock on startup)
             if (isUnlocked && !_unlockedAchievements.value.contains(achievement.id)) {
                 _unlockedAchievements.update { unlocked ->
                     unlocked + achievement.id
@@ -90,19 +117,27 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         }
         
         Log.d("AchievementManager", "Restored progress for ${progressList.size} achievements")
+        
+        // Debug: Log final achievement state after restoration
+        _achievements.value.filter { it.id == "roll_master_100" || it.id == "d6_specialist" }
+            .forEach { achievement ->
+                Log.d("AchievementManager", "After restoration ${achievement.id}: progress=${achievement.progress}, unlocked=${achievement.isUnlocked}")
+            }
     }
     
-    private fun updateAchievementProgress(stats: AchievementStats) {
+    private fun updateAchievementProgressAfterRoll(stats: AchievementStats) {
         _achievements.update { achievements ->
             achievements.map { achievement ->
-                val progress = when (achievement.id) {
+                // Calculate what the progress should be based on current stats
+                val calculatedProgress = when (achievement.id) {
                     "first_roll" -> if (stats.totalRolls >= 1) 1 else 0
                     "roll_master_100" -> minOf(stats.totalRolls, 100)
                     "roll_master_500" -> minOf(stats.totalRolls, 500)
                     "roll_master_1000" -> minOf(stats.totalRolls, 1000)
                     "roll_master_5000" -> minOf(stats.totalRolls, 5000)
                     "roll_master_10000" -> minOf(stats.totalRolls, 10000)
-                    "session_champion" -> minOf(stats.sessionRolls, 50)
+                    "session_champion" -> minOf(stats.sessionRolls, 50) // Single session achievement
+                    "persistent_roller" -> minOf(stats.totalSessionRolls, 100) // Cross-session achievement
                     "d4_devotee" -> minOf(stats.rollsByDiceType[DiceType.D4] ?: 0, 50)
                     "d6_specialist" -> minOf(stats.rollsByDiceType[DiceType.D6] ?: 0, 100)
                     "d8_enthusiast" -> minOf(stats.rollsByDiceType[DiceType.D8] ?: 0, 75)
@@ -123,15 +158,28 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
                     "preset_collector_25" -> minOf(stats.totalFavorites, 25)
                     "history_buff" -> minOf(stats.historyViews, 50)
                     "memory_master" -> minOf(stats.totalRolls, 50)
-                    "weekend_warrior" -> minOf(stats.weeklyRolls.size, 50)
+                    "weekend_warrior" -> minOf(stats.weekendRolls.size, 50)
                     "daily_grinder" -> minOf(stats.dailyRolls.size, 7)
                     "monthly_master" -> minOf(stats.monthlyRolls.size, 30)
                     "balanced" -> minOf(stats.modifierUsageCount, 10)
                     else -> achievement.progress
                 }
                 
-                // Auto-unlock achievement if progress is satisfied but achievement is locked
-                val shouldBeUnlocked = progress >= achievement.maxProgress
+                // Only increment progress if calculated progress is greater than persisted value
+                val finalProgress = if (calculatedProgress > achievement.progress) {
+                    Log.d("AchievementManager", "${achievement.id}: Progress increased from ${achievement.progress} to $calculatedProgress")
+                    calculatedProgress
+                } else {
+                    achievement.progress
+                }
+                
+                // Debug logging for progress tracking
+                if (achievement.id == "roll_master_100" || achievement.id == "d6_specialist" || achievement.id == "session_champion" || achievement.id == "persistent_roller" || achievement.id == "history_buff" || achievement.id == "preset_collector_5" || achievement.id == "preset_collector_10" || achievement.id == "preset_collector_25") {
+                    Log.d("AchievementManager", "${achievement.id}: calculated=$calculatedProgress, persisted=${achievement.progress}, final=$finalProgress")
+                }
+                
+                // Check if achievement should be unlocked based on final progress
+                val shouldBeUnlocked = finalProgress >= achievement.maxProgress
                 val isUnlocked = achievement.isUnlocked || shouldBeUnlocked
                 val unlockedAt = if (shouldBeUnlocked && !achievement.isUnlocked) {
                     System.currentTimeMillis()
@@ -140,7 +188,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
                 }
                 
                 achievement.copy(
-                    progress = progress,
+                    progress = finalProgress,
                     isUnlocked = isUnlocked,
                     unlockedAt = unlockedAt
                 )
@@ -172,6 +220,11 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
     suspend fun onRollCompleted(rollResult: RollResult, currentTheme: AppTheme) {
         val stats = _achievementStats.value
         
+        Log.d("AchievementManager", "=== ROLL COMPLETED ===")
+        Log.d("AchievementManager", "Stats before roll: $stats")
+        Log.d("AchievementManager", "sessionRolls before roll: ${stats.sessionRolls}")
+        Log.d("AchievementManager", "totalSessionRolls before roll: ${stats.totalSessionRolls}")
+        
         // Update theme usage for the current theme
         val updatedThemeUsage = stats.themeUsage.toMutableMap()
         val currentThemeCount = updatedThemeUsage[currentTheme] ?: 0
@@ -181,6 +234,14 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             themeUsage = updatedThemeUsage
         )
         _achievementStats.value = updatedStats
+        
+        Log.d("AchievementManager", "Stats after roll: $updatedStats")
+        Log.d("AchievementManager", "sessionRolls after roll: ${updatedStats.sessionRolls}")
+        Log.d("AchievementManager", "totalSessionRolls after roll: ${updatedStats.totalSessionRolls}")
+        
+        Log.d("AchievementManager", "After roll - totalRolls: ${updatedStats.totalRolls}, d6 rolls: ${updatedStats.rollsByDiceType[DiceType.D6]}, sessionRolls: ${updatedStats.sessionRolls}")
+        Log.d("AchievementManager", "Stats before roll: totalRolls=${stats.totalRolls}, d6 rolls=${stats.rollsByDiceType[DiceType.D6]}, sessionRolls=${stats.sessionRolls}")
+        Log.d("AchievementManager", "Stats after roll: totalRolls=${updatedStats.totalRolls}, d6 rolls=${updatedStats.rollsByDiceType[DiceType.D6]}, sessionRolls=${updatedStats.sessionRolls}")
         
         // Track recent rolls for streak achievements
         recentRolls.add(rollResult)
@@ -207,15 +268,16 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         checkFavoritesHistoryAchievements(updatedStats)
         checkSpecialEventAchievements(rollResult, updatedStats)
         
-        // Update achievement progress
-        updateAchievementProgress(updatedStats)
+        // Update achievement progress after roll
+        Log.d("AchievementManager", "About to update achievement progress with stats: totalRolls=${updatedStats.totalRolls}")
+        updateAchievementProgressAfterRoll(updatedStats)
         
-        // Save achievement data to persist progress
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-            saveAchievementData()
-        }
+        // Save achievement data to persist progress (ONLY after rolls)
+        Log.d("AchievementManager", "About to save achievement data after roll")
+        saveAchievementData()
         
         // Save updated stats
+        Log.d("AchievementManager", "About to save stats: sessionRolls=${updatedStats.sessionRolls}, totalSessionRolls=${updatedStats.totalSessionRolls}")
         achievementStorage.saveAchievementStats(updatedStats)
     }
     
@@ -229,6 +291,12 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         val today = dateFormat.format(Date(currentTime))
         val thisWeek = weekFormat.format(Date(currentTime))
         val thisMonth = monthFormat.format(Date(currentTime))
+        
+        // Check if today is a weekend (Saturday = 7, Sunday = 1)
+        val isWeekend = calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || 
+                       calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
+        
+        Log.d("AchievementManager", "Weekend check: dayOfWeek=${calendar.get(Calendar.DAY_OF_WEEK)}, isWeekend=$isWeekend")
         
         // Update dice type usage
         val updatedRollsByDiceType = stats.rollsByDiceType.toMutableMap()
@@ -261,14 +329,15 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             }
         }
         
-        return stats.copy(
+        val newStats = stats.copy(
             totalRolls = stats.totalRolls + 1,
             rollsByDiceType = updatedRollsByDiceType,
             totalModifier = stats.totalModifier + rollResult.modifier,
             positiveModifier = stats.positiveModifier + (if (rollResult.modifier > 0) rollResult.modifier else 0),
             negativeModifier = stats.negativeModifier + (if (rollResult.modifier < 0) -rollResult.modifier else 0),
             modifierUsageCount = stats.modifierUsageCount + (if (rollResult.modifier != 0) 1 else 0),
-            sessionRolls = stats.sessionRolls + 1,
+            sessionRolls = stats.sessionRolls + 1, // Single session
+            totalSessionRolls = stats.totalSessionRolls + 1, // Cross-session
             lastRollTime = currentTime,
             maxRollsInSession = maxOf(stats.maxRollsInSession, stats.sessionRolls + 1),
             polyhedralDiceUsed = updatedPolyhedralDiceUsed,
@@ -277,8 +346,19 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             averageRolls = averageRolls,
             dailyRolls = stats.dailyRolls.apply { add(today) },
             weeklyRolls = stats.weeklyRolls.apply { add(thisWeek) },
-            monthlyRolls = stats.monthlyRolls.apply { add(thisMonth) }
+            monthlyRolls = stats.monthlyRolls.apply { add(thisMonth) },
+            weekendRolls = if (isWeekend) stats.weekendRolls.apply { add(today) } else stats.weekendRolls
         )
+        
+        Log.d("AchievementManager", "updateStatsAfterRoll: old totalRolls=${stats.totalRolls}, new totalRolls=${newStats.totalRolls}")
+        Log.d("AchievementManager", "updateStatsAfterRoll: old d6 rolls=${stats.rollsByDiceType[DiceType.D6]}, new d6 rolls=${newStats.rollsByDiceType[DiceType.D6]}")
+        Log.d("AchievementManager", "updateStatsAfterRoll: old sessionRolls=${stats.sessionRolls}, new sessionRolls=${newStats.sessionRolls}")
+        Log.d("AchievementManager", "updateStatsAfterRoll: increment calculation: ${stats.sessionRolls} + 1 = ${stats.sessionRolls + 1}")
+        Log.d("AchievementManager", "updateStatsAfterRoll: old totalSessionRolls=${stats.totalSessionRolls}, new totalSessionRolls=${newStats.totalSessionRolls}")
+        Log.d("AchievementManager", "updateStatsAfterRoll: totalSessionRolls increment calculation: ${stats.totalSessionRolls} + 1 = ${stats.totalSessionRolls + 1}")
+        Log.d("AchievementManager", "updateStatsAfterRoll: First roll check - totalRolls=${stats.totalRolls}, sessionRolls=${stats.sessionRolls}, totalSessionRolls=${stats.totalSessionRolls}")
+        
+        return newStats
     }
     
     private fun checkRollingMilestoneAchievements(rollResult: RollResult, stats: AchievementStats) {
@@ -304,7 +384,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         }
         
         // Session Champion
-        if (stats.sessionRolls >= 50) {
+        if ((if (stats.sessionRolls < 0) 0 else stats.sessionRolls) >= 50) {
             unlockAchievement("session_champion")
         }
     }
@@ -572,18 +652,15 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         )
         _achievementStats.value = updatedStats
         
-        // Update achievement progress
-        updateAchievementProgress(updatedStats)
-        
         // Check theme-based achievements
         checkThemeBasedAchievements(updatedStats)
         
-        // Save achievement data to persist progress
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-            saveAchievementData()
+        // Only save stats if data has been loaded
+        if (isDataLoaded) {
+            achievementStorage.saveAchievementStats(updatedStats)
+        } else {
+            Log.d("AchievementManager", "Skipping stats save in onThemeChanged - data not yet loaded")
         }
-        
-        achievementStorage.saveAchievementStats(updatedStats)
     }
     
     suspend fun onHistoryViewed() {
@@ -591,18 +668,19 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         val updatedStats = stats.copy(historyViews = stats.historyViews + 1)
         _achievementStats.value = updatedStats
         
-        // Update achievement progress
-        updateAchievementProgress(updatedStats)
-        
         // Check favorites/history achievements
         checkFavoritesHistoryAchievements(updatedStats)
         
-        // Save achievement data to persist progress
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-            saveAchievementData()
-        }
+        // Update achievement progress
+        updateAchievementProgressAfterRoll(updatedStats)
         
-        achievementStorage.saveAchievementStats(updatedStats)
+        // Only save stats if data has been loaded
+        if (isDataLoaded) {
+            achievementStorage.saveAchievementStats(updatedStats)
+            saveAchievementData()
+        } else {
+            Log.d("AchievementManager", "Skipping stats save in onHistoryViewed - data not yet loaded")
+        }
     }
     
     suspend fun onFavoriteCreated() {
@@ -610,18 +688,19 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         val updatedStats = stats.copy(totalFavorites = stats.totalFavorites + 1)
         _achievementStats.value = updatedStats
         
-        // Update achievement progress
-        updateAchievementProgress(updatedStats)
-        
         // Check favorites/history achievements
         checkFavoritesHistoryAchievements(updatedStats)
         
-        // Save achievement data to persist progress
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-            saveAchievementData()
-        }
+        // Update achievement progress
+        updateAchievementProgressAfterRoll(updatedStats)
         
-        achievementStorage.saveAchievementStats(updatedStats)
+        // Only save stats if data has been loaded
+        if (isDataLoaded) {
+            achievementStorage.saveAchievementStats(updatedStats)
+            saveAchievementData()
+        } else {
+            Log.d("AchievementManager", "Skipping stats save in onFavoriteCreated - data not yet loaded")
+        }
     }
     
     suspend fun onFavoritesLoaded(favoritesCount: Int) {
@@ -629,18 +708,19 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         val updatedStats = stats.copy(totalFavorites = favoritesCount)
         _achievementStats.value = updatedStats
         
-        // Update achievement progress
-        updateAchievementProgress(updatedStats)
-        
         // Check favorites/history achievements
         checkFavoritesHistoryAchievements(updatedStats)
         
-        // Save achievement data to persist progress
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-            saveAchievementData()
-        }
+        // Update achievement progress
+        updateAchievementProgressAfterRoll(updatedStats)
         
-        achievementStorage.saveAchievementStats(updatedStats)
+        // Only save stats if data has been loaded
+        if (isDataLoaded) {
+            achievementStorage.saveAchievementStats(updatedStats)
+            saveAchievementData()
+        } else {
+            Log.d("AchievementManager", "Skipping stats save in onFavoritesLoaded - data not yet loaded")
+        }
     }
     
     suspend fun onThemeLoaded(theme: AppTheme) {
@@ -652,23 +732,20 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         val updatedStats = stats.copy(themeUsage = updatedThemeUsage)
         _achievementStats.value = updatedStats
         
-        // Update achievement progress
-        updateAchievementProgress(updatedStats)
-        
         // Check theme-based achievements
         checkThemeBasedAchievements(updatedStats)
         
-        // Save achievement data to persist progress
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-            saveAchievementData()
+        // Only save stats if data has been loaded
+        if (isDataLoaded) {
+            achievementStorage.saveAchievementStats(updatedStats)
+        } else {
+            Log.d("AchievementManager", "Skipping stats save in onThemeLoaded - data not yet loaded")
         }
-        
-        achievementStorage.saveAchievementStats(updatedStats)
     }
     
     suspend fun saveAchievementData() {
         try {
-            achievementStorage.saveAchievementProgress(_achievements.value.map { achievement ->
+            val progressList = _achievements.value.map { achievement ->
                 AchievementProgress(
                     achievementId = achievement.id,
                     currentProgress = achievement.progress,
@@ -676,9 +753,19 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
                     isUnlocked = achievement.isUnlocked,
                     unlockedAt = achievement.unlockedAt
                 )
-            })
+            }
+            
+            achievementStorage.saveAchievementProgress(progressList)
             achievementStorage.saveUnlockedAchievements(_unlockedAchievements.value)
             achievementStorage.saveUserTitles(_userTitles.value)
+            
+            Log.d("AchievementManager", "Saved achievement data: ${progressList.size} progress entries")
+            
+            // Debug: Log specific achievement progress being saved
+            progressList.filter { it.achievementId == "roll_master_100" || it.achievementId == "d6_specialist" }
+                .forEach { progress ->
+                    Log.d("AchievementManager", "Saving ${progress.achievementId}: progress=${progress.currentProgress}, unlocked=${progress.isUnlocked}")
+                }
         } catch (e: Exception) {
             Log.e("AchievementManager", "Error saving achievement data", e)
         }

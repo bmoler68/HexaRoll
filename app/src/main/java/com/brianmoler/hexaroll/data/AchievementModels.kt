@@ -51,7 +51,8 @@ data class AchievementStats(
     val negativeModifier: Int = 0,
     val modifierUsageCount: Int = 0, // Count of rolls that used modifiers
     val themeUsage: Map<AppTheme, Int> = emptyMap(),
-    val sessionRolls: Int = 0,
+    val sessionRolls: Int = 0, // Single session tracking (resets on app restart)
+    val totalSessionRolls: Int = 0, // Cross-session tracking (persists across app restarts) // Will be renamed to sessionRollsCount
     val sessionStartTime: Long = System.currentTimeMillis(),
     val lastRollTime: Long = 0,
     val consecutiveSameNumber: Int = 0,
@@ -69,7 +70,8 @@ data class AchievementStats(
     val averageRolls: Int = 0, // Rolling average value
     val dailyRolls: MutableSet<String> = mutableSetOf(), // Date strings
     val weeklyRolls: MutableSet<String> = mutableSetOf(), // Week strings
-    val monthlyRolls: MutableSet<String> = mutableSetOf() // Month strings
+    val monthlyRolls: MutableSet<String> = mutableSetOf(), // Month strings
+    val weekendRolls: MutableSet<String> = mutableSetOf() // Weekend date strings
 )
 
 data class UserTitle(
@@ -169,6 +171,16 @@ object AchievementDefinitions {
         tier = AchievementTier.SILVER,
         icon = "👑",
         maxProgress = 50
+    )
+    
+    val PERSISTENT_ROLLER = Achievement(
+        id = "persistent_roller",
+        name = "Persistent Roller",
+        description = "Roll 100+ times across all sessions",
+        category = AchievementCategory.ROLLING_MILESTONES,
+        tier = AchievementTier.GOLD,
+        icon = "🔄",
+        maxProgress = 100
     )
     
     // Dice Type Specialists
@@ -584,7 +596,7 @@ object AchievementDefinitions {
     val ALL_ACHIEVEMENTS = listOf(
         FIRST_ROLL,
         ROLL_MASTER_100, ROLL_MASTER_500, ROLL_MASTER_1000, ROLL_MASTER_5000, ROLL_MASTER_10000,
-        SPEED_DEMON, MARATHON_ROLLER, SESSION_CHAMPION,
+        SPEED_DEMON, MARATHON_ROLLER, SESSION_CHAMPION, PERSISTENT_ROLLER,
         D4_DEVOTEE, D6_SPECIALIST, D8_ENTHUSIAST, D10_MASTER, D12_EXPERT, D20_LEGEND, D30_PIONEER, D100_CENTURION, POLYHEDRAL_MASTER,
         SNAKE_EYES, BOXCARS, NATURAL_20, CRITICAL_FAIL, PERFECT_100, HIGH_ROLLER, LOW_BALLER, AVERAGE_JOE,
         HOT_STREAK, COLD_STREAK, ALTERNATING, CONSISTENT, UNPREDICTABLE,

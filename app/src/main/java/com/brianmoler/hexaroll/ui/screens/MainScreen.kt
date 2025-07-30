@@ -663,16 +663,16 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "ROLL HISTORY",
-                color = when (customization.theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
-                    AppTheme.FANTASY -> FantasyColors.NeonYellow
-                    AppTheme.SCI_FI -> SciFiColors.NeonYellow
+    ) {
+        Text(
+            text = "ROLL HISTORY",
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                AppTheme.SCI_FI -> SciFiColors.NeonYellow
                     AppTheme.WESTERN -> WesternColors.NeonYellow
-                },
-                fontSize = 24.sp,
+            },
+            fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
             
