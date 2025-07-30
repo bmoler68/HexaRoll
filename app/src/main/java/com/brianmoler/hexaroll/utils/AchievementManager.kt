@@ -54,19 +54,13 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             _unlockedAchievements.value = unlockedIds
             _userTitles.value = titles
             
-            // Update achievements with progress
+            // Update achievements with progress from storage
             updateAchievementsWithProgress(progressList)
-            
-            // Update achievement progress based on loaded stats
-            updateAchievementProgress(stats)
             
             // Update completion percentage
             updateCompletionPercentage()
             
-            // Save achievement data to persist restored progress
-            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-                saveAchievementData()
-            }
+            Log.d("AchievementManager", "Loaded achievement data: ${progressList.size} progress entries, ${stats.totalRolls} total rolls")
         } catch (e: Exception) {
             Log.e("AchievementManager", "Error loading achievement data", e)
         }
@@ -77,12 +71,25 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         
         _achievements.value = _achievements.value.map { achievement ->
             val progress = progressMap[achievement.id]
+            val restoredProgress = progress?.currentProgress ?: 0
+            val isUnlocked = progress?.isUnlocked ?: false
+            val unlockedAt = progress?.unlockedAt
+            
+            // If achievement is unlocked, add to unlocked set
+            if (isUnlocked && !_unlockedAchievements.value.contains(achievement.id)) {
+                _unlockedAchievements.update { unlocked ->
+                    unlocked + achievement.id
+                }
+            }
+            
             achievement.copy(
-                isUnlocked = progress?.isUnlocked ?: false,
-                progress = progress?.currentProgress ?: 0,
-                unlockedAt = progress?.unlockedAt
+                isUnlocked = isUnlocked,
+                progress = restoredProgress,
+                unlockedAt = unlockedAt
             )
         }
+        
+        Log.d("AchievementManager", "Restored progress for ${progressList.size} achievements")
     }
     
     private fun updateAchievementProgress(stats: AchievementStats) {
@@ -154,17 +161,12 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
                     newlyUnlocked + achievement
                 }
                 
-                // Save achievement data
-                kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-                    saveAchievementData()
-                }
-                
-                // Update completion percentage
-                updateCompletionPercentage()
-                
                 Log.d("AchievementManager", "Auto-unlocked achievement: ${achievement.name}")
             }
         }
+        
+        // Update completion percentage
+        updateCompletionPercentage()
     }
     
     suspend fun onRollCompleted(rollResult: RollResult, currentTheme: AppTheme) {
