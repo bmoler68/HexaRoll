@@ -75,6 +75,9 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 - **Persistent Data**: Roll history, achievements, and preferences saved across sessions
 - **Achievement System**: Comprehensive tracking and notification system
 - **Custom Dice Assets**: Theme-specific dice images for enhanced visual appeal
+- **Production Ready**: Code obfuscation, error handling, input validation, and performance monitoring
+- **Accessibility**: Full accessibility support with content descriptions and screen reader compatibility
+- **Security**: Input validation, error handling, and secure data storage practices
 
 ## Theme System
 
@@ -145,6 +148,36 @@ The app features five distinct visual themes, each with its own color palette an
 6. **Customize Theme**: Visit the Customize tab to choose your preferred visual theme
 7. **Track Achievements**: Monitor your progress in the Achievements tab
 8. **Explore Themes**: Try all five themes to unlock theme-based achievements
+
+## Development
+
+### Building for Production
+
+```bash
+# Build release APK
+./gradlew assembleRelease
+
+# Build release bundle (recommended for Play Store)
+./gradlew bundleRelease
+```
+
+### Testing
+
+```bash
+# Run unit tests
+./gradlew test
+
+# Run instrumented tests
+./gradlew connectedAndroidTest
+```
+
+### Code Quality
+
+- **Error Handling**: Comprehensive error handling with ErrorHandler utility
+- **Input Validation**: All user inputs validated with ErrorHandler
+- **Accessibility**: Full accessibility support with AccessibilityHelper
+- **Performance**: Performance monitoring with PerformanceMonitor
+- **Testing**: Unit tests for utilities and data validation
 
 ## Development
 

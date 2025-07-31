@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.brianmoler.hexaroll.data.*
 import com.brianmoler.hexaroll.utils.AchievementManager
 import com.brianmoler.hexaroll.utils.AchievementStorage
+import com.brianmoler.hexaroll.utils.ErrorHandler
 import com.brianmoler.hexaroll.utils.PresetStorage
 import com.brianmoler.hexaroll.utils.RollHistoryStorage
 import com.brianmoler.hexaroll.utils.ThemeStorage
@@ -62,7 +63,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     }
     
     private fun loadPresetsFromStorage() {
-        viewModelScope.launch {
+        viewModelScope.launch(ErrorHandler.coroutineExceptionHandler) {
             try {
                 val presets = presetStorage.loadPresets()
                 _presetRolls.value = presets
@@ -72,23 +73,28 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
                     achievementManager.onFavoritesLoaded(presets.size)
                 }
             } catch (e: Exception) {
-                Log.e("DiceRollViewModel", "Error loading presets", e)
+                ErrorHandler.handleStorageError(getApplication(), "loading presets", e)
                 _presetRolls.value = emptyList()
             }
         }
     }
     
     private fun savePresetsToStorage() {
-        viewModelScope.launch {
+        viewModelScope.launch(ErrorHandler.coroutineExceptionHandler) {
             try {
                 presetStorage.savePresets(_presetRolls.value)
             } catch (e: Exception) {
-                Log.e("DiceRollViewModel", "Error saving presets", e)
+                ErrorHandler.handleStorageError(getApplication(), "saving presets", e)
             }
         }
     }
     
     fun updateDiceCount(diceType: DiceType, newCount: Int) {
+        if (!ErrorHandler.validateDiceCount(newCount)) {
+            ErrorHandler.handleValidationError(getApplication(), "dice count", newCount)
+            return
+        }
+        
         _diceSelections.update { selections ->
             selections.toMutableMap().apply {
                 put(diceType, DiceSelection(diceType, newCount.coerceAtLeast(0)))
@@ -107,6 +113,10 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     }
     
     fun updateModifier(newModifier: Int) {
+        if (!ErrorHandler.validateModifier(newModifier)) {
+            ErrorHandler.handleValidationError(getApplication(), "modifier", newModifier)
+            return
+        }
         _modifier.value = newModifier
     }
     
@@ -197,6 +207,16 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     }
     
     fun addPresetRoll(name: String, description: String) {
+        if (!ErrorHandler.validatePresetName(name)) {
+            ErrorHandler.handleValidationError(getApplication(), "preset name", name)
+            return
+        }
+        
+        if (!ErrorHandler.validatePresetDescription(description)) {
+            ErrorHandler.handleValidationError(getApplication(), "preset description", description)
+            return
+        }
+        
         val selections = _diceSelections.value.values.filter { it.count > 0 }
         val preset = PresetRoll(
             name = name,
@@ -211,7 +231,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         savePresetsToStorage()
         
         // Track favorite creation for achievements
-        viewModelScope.launch {
+        viewModelScope.launch(ErrorHandler.coroutineExceptionHandler) {
             achievementManager.onFavoriteCreated()
         }
     }
