@@ -490,6 +490,19 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             }
         }
         
+        // Check for 2D6 = 7 (Lucky Sevens)
+        if (rollResult.diceSelections.any { it.diceType == DiceType.D6 && it.count >= 2 }) {
+            val d6Rolls = rollResult.individualRolls.find { rolls ->
+                rollResult.diceSelections[rollResult.individualRolls.indexOf(rolls)]?.diceType == DiceType.D6
+            }
+            val d6Sum = d6Rolls?.sum() ?: 0
+            Log.d("AchievementManager", "Lucky Sevens check: D6 rolls=$d6Rolls, sum=$d6Sum")
+            if (d6Sum == 7) {
+                Log.d("AchievementManager", "Lucky Sevens achievement unlocked! 2D6 = 7")
+                unlockAchievement("lucky_sevens")
+            }
+        }
+        
         // High Roller, Low Baller, Average Joe
         if (stats.perfectRolls >= 10) unlockAchievement("high_roller")
         if (stats.minimumRolls >= 10) unlockAchievement("low_baller")

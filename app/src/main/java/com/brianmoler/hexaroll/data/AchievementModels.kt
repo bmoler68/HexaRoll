@@ -350,6 +350,15 @@ object AchievementDefinitions {
         maxProgress = 10
     )
     
+    val LUCKY_SEVENS = Achievement(
+        id = "lucky_sevens",
+        name = "Lucky Sevens",
+        description = "Roll 7 on 2D6",
+        category = AchievementCategory.RESULT_BASED,
+        tier = AchievementTier.BRONZE,
+        icon = "🍀"
+    )
+    
     // Streak & Pattern Achievements
     val HOT_STREAK = Achievement(
         id = "hot_streak",
@@ -598,7 +607,7 @@ object AchievementDefinitions {
         ROLL_MASTER_100, ROLL_MASTER_500, ROLL_MASTER_1000, ROLL_MASTER_5000, ROLL_MASTER_10000,
         SPEED_DEMON, MARATHON_ROLLER, SESSION_CHAMPION, PERSISTENT_ROLLER,
         D4_DEVOTEE, D6_SPECIALIST, D8_ENTHUSIAST, D10_MASTER, D12_EXPERT, D20_LEGEND, D30_PIONEER, D100_CENTURION, POLYHEDRAL_MASTER,
-        SNAKE_EYES, BOXCARS, NATURAL_20, CRITICAL_FAIL, PERFECT_100, HIGH_ROLLER, LOW_BALLER, AVERAGE_JOE,
+        SNAKE_EYES, BOXCARS, NATURAL_20, CRITICAL_FAIL, PERFECT_100, HIGH_ROLLER, LOW_BALLER, AVERAGE_JOE, LUCKY_SEVENS,
         HOT_STREAK, COLD_STREAK, ALTERNATING, CONSISTENT, UNPREDICTABLE,
         MODIFIER_MASTER, NEGATIVE_NANCY, BALANCED, EXTREME, MIXED_BAG, DICE_HOARDER,
         THEME_EXPLORER, THEME_LOYALIST, THEME_SWITCHER,
