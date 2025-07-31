@@ -94,6 +94,7 @@ fun AchievementPopupContent(
                 AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
                 AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
                 AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -153,6 +154,7 @@ fun AchievementPopupContent(
                     AppTheme.FANTASY -> FantasyColors.NeonYellow
                     AppTheme.SCI_FI -> SciFiColors.NeonYellow
                     AppTheme.WESTERN -> WesternColors.NeonYellow
+                    AppTheme.ANCIENT -> AncientColors.NeonYellow
                 },
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
@@ -180,6 +182,7 @@ fun AchievementPopupContent(
                     AppTheme.FANTASY -> FantasyColors.PrimaryText
                     AppTheme.SCI_FI -> SciFiColors.PrimaryText
                     AppTheme.WESTERN -> WesternColors.PrimaryText
+                    AppTheme.ANCIENT -> AncientColors.PrimaryText
                 },
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center

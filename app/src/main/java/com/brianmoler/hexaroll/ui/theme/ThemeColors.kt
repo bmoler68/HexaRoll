@@ -71,6 +71,23 @@ object WesternColors {
     val ButtonGreen = Color(0xFF006400) // Dark green (safe)
 }
 
+// Ancient Theme Colors - Roman marble and golden laurels
+object AncientColors {
+    val PrimaryText = Color(0xFFF5F5F5) // Pure white (marble text)
+    val SecondaryText = Color(0xFFE8E8E8) // Light gray (aged marble)
+    val CardBackground = Color(0xFF2C2C2C) // Dark stone (marble base)
+    val ElevatedCardBackground = Color(0xFF3A3A3A) // Medium stone (elevated marble)
+    val BorderBlue = Color(0xFF1A1A1A) // Dark border (stone edge)
+    val NeonYellow = Color(0xFFFFD700) // Bright gold (laurel crown)
+    val NeonBlue = Color(0xFF87CEEB) // Sky blue (Roman sky)
+    val NeonGreen = Color(0xFF90EE90) // Light green (olive branch)
+    val NeonRed = Color(0xFFFF6347) // Tomato red (Roman red)
+    val NeonCyan = Color(0xFF40E0D0) // Turquoise (Mediterranean)
+    val NeonPurple = Color(0xFFDDA0DD) // Plum (imperial purple)
+    val ButtonRed = Color(0xFF8B0000) // Dark red (danger)
+    val ButtonGreen = Color(0xFF006400) // Dark green (safe)
+}
+
 // Theme Color Manager
 object ThemeColors {
     fun getColors(theme: AppTheme) = when (theme) {
@@ -78,5 +95,6 @@ object ThemeColors {
         AppTheme.FANTASY -> FantasyColors
         AppTheme.SCI_FI -> SciFiColors
         AppTheme.WESTERN -> WesternColors
+        AppTheme.ANCIENT -> AncientColors
     }
 } 

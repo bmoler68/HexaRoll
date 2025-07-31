@@ -157,7 +157,7 @@ object AchievementDefinitions {
     val MARATHON_ROLLER = Achievement(
         id = "marathon_roller",
         name = "Marathon Roller",
-        description = "Roll continuously for 5 minutes",
+        description = "Roll continuously for 1 minute",
         category = AchievementCategory.ROLLING_MILESTONES,
         tier = AchievementTier.GOLD,
         icon = "🏃"
@@ -278,7 +278,7 @@ object AchievementDefinitions {
     val SNAKE_EYES = Achievement(
         id = "snake_eyes",
         name = "Snake Eyes",
-        description = "Roll 1 on D6",
+        description = "Roll 2 on 2D6",
         category = AchievementCategory.RESULT_BASED,
         tier = AchievementTier.BRONZE,
         icon = "🐍"
@@ -456,11 +456,11 @@ object AchievementDefinitions {
     val THEME_EXPLORER = Achievement(
         id = "theme_explorer",
         name = "Theme Explorer",
-        description = "Use all four themes (Cyberpunk, Fantasy, Sci-Fi, Western)",
+        description = "Use all five themes (Cyberpunk, Fantasy, Sci-Fi, Western, Ancient)",
         category = AchievementCategory.THEME_BASED,
         tier = AchievementTier.SILVER,
         icon = "🎨",
-        maxProgress = 4
+        maxProgress = 5
     )
     
     val THEME_LOYALIST = Achievement(

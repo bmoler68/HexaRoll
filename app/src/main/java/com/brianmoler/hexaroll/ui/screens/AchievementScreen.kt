@@ -49,6 +49,7 @@ fun AchievementScreen(viewModel: DiceRollViewModel) {
                     AppTheme.FANTASY -> FantasyColors.CardBackground
                     AppTheme.SCI_FI -> SciFiColors.CardBackground
                     AppTheme.WESTERN -> WesternColors.CardBackground
+                    AppTheme.ANCIENT -> AncientColors.CardBackground
                 }
             )
     ) {
@@ -228,6 +229,7 @@ fun FilterButton(
                     AppTheme.FANTASY -> FantasyColors.NeonYellow
                     AppTheme.SCI_FI -> SciFiColors.NeonYellow
                     AppTheme.WESTERN -> WesternColors.NeonYellow
+                    AppTheme.ANCIENT -> AncientColors.NeonYellow
                 }
             } else {
                 when (theme) {
@@ -235,6 +237,7 @@ fun FilterButton(
                     AppTheme.FANTASY -> FantasyColors.CardBackground
                     AppTheme.SCI_FI -> SciFiColors.CardBackground
                     AppTheme.WESTERN -> WesternColors.CardBackground
+                    AppTheme.ANCIENT -> AncientColors.CardBackground
                 }
             }
         ),
@@ -245,6 +248,7 @@ fun FilterButton(
                 AppTheme.FANTASY -> FantasyColors.BorderBlue
                 AppTheme.SCI_FI -> SciFiColors.BorderBlue
                 AppTheme.WESTERN -> WesternColors.BorderBlue
+                AppTheme.ANCIENT -> AncientColors.BorderBlue
             }
         ),
         modifier = Modifier.padding(vertical = 4.dp)
@@ -259,6 +263,7 @@ fun FilterButton(
                     AppTheme.FANTASY -> FantasyColors.PrimaryText
                     AppTheme.SCI_FI -> SciFiColors.PrimaryText
                     AppTheme.WESTERN -> WesternColors.PrimaryText
+                    AppTheme.ANCIENT -> AncientColors.PrimaryText
                 }
             },
             fontSize = 12.sp
@@ -280,6 +285,7 @@ fun AchievementCard(
                     AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
                     AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
                     AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
+                    AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
                 }
             } else {
                 when (theme) {
@@ -287,6 +293,7 @@ fun AchievementCard(
                     AppTheme.FANTASY -> FantasyColors.CardBackground
                     AppTheme.SCI_FI -> SciFiColors.CardBackground
                     AppTheme.WESTERN -> WesternColors.CardBackground
+                    AppTheme.ANCIENT -> AncientColors.CardBackground
                 }
             }
         ),
@@ -300,6 +307,7 @@ fun AchievementCard(
                     AppTheme.FANTASY -> FantasyColors.BorderBlue
                     AppTheme.SCI_FI -> SciFiColors.BorderBlue
                     AppTheme.WESTERN -> WesternColors.BorderBlue
+                    AppTheme.ANCIENT -> AncientColors.BorderBlue
                 }
             }
         )
@@ -332,6 +340,7 @@ fun AchievementCard(
                                 AppTheme.FANTASY -> FantasyColors.SecondaryText
                                 AppTheme.SCI_FI -> SciFiColors.SecondaryText
                                 AppTheme.WESTERN -> WesternColors.SecondaryText
+                                AppTheme.ANCIENT -> AncientColors.SecondaryText
                             }
                         },
                         fontSize = 16.sp,
@@ -364,6 +373,7 @@ fun AchievementCard(
                         AppTheme.FANTASY -> FantasyColors.SecondaryText
                         AppTheme.SCI_FI -> SciFiColors.SecondaryText
                         AppTheme.WESTERN -> WesternColors.SecondaryText
+                        AppTheme.ANCIENT -> AncientColors.SecondaryText
                     },
                     fontSize = 12.sp
                 )
@@ -384,6 +394,7 @@ fun AchievementCard(
                                 AppTheme.FANTASY -> FantasyColors.NeonBlue
                                 AppTheme.SCI_FI -> SciFiColors.NeonBlue
                                 AppTheme.WESTERN -> WesternColors.NeonBlue
+                                AppTheme.ANCIENT -> AncientColors.NeonBlue
                             }
                         },
                         trackColor = when (theme) {
@@ -391,6 +402,7 @@ fun AchievementCard(
                             AppTheme.FANTASY -> FantasyColors.BorderBlue
                             AppTheme.SCI_FI -> SciFiColors.BorderBlue
                             AppTheme.WESTERN -> WesternColors.BorderBlue
+                            AppTheme.ANCIENT -> AncientColors.BorderBlue
                         }
                     )
                     
@@ -401,6 +413,7 @@ fun AchievementCard(
                             AppTheme.FANTASY -> FantasyColors.SecondaryText
                             AppTheme.SCI_FI -> SciFiColors.SecondaryText
                             AppTheme.WESTERN -> WesternColors.SecondaryText
+                            AppTheme.ANCIENT -> AncientColors.SecondaryText
                         },
                         fontSize = 10.sp,
                         textAlign = TextAlign.End,

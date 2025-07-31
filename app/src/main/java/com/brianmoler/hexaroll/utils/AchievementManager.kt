@@ -33,6 +33,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
     private val recentRolls = mutableListOf<RollResult>()
     private val recentRollTimes = mutableListOf<Long>()
     private val lastRollResults = mutableListOf<Int>()
+    private val lastRollDiceTypes = mutableListOf<DiceType>()
     
     init {
         initializeAchievements()
@@ -56,8 +57,8 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             Log.d("AchievementManager", "Raw stats from storage: $stats")
             Log.d("AchievementManager", "sessionRolls from storage: ${stats.sessionRolls}")
             
-            // Reset sessionRolls on app start (single session tracking)
-            val statsWithResetSession = stats.copy(sessionRolls = 0)
+            // Reset session-based stats on app start (single session tracking)
+            val statsWithResetSession = stats.copy(sessionRolls = 0, themeChanges = 0)
             _achievementStats.value = statsWithResetSession
             _unlockedAchievements.value = unlockedIds
             _userTitles.value = titles
@@ -93,13 +94,21 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         
         _achievements.value = _achievements.value.map { achievement ->
             val progress = progressMap[achievement.id]
-            val restoredProgress = progress?.currentProgress ?: 0
+            
+            // For session-based achievements, always start with 0 progress on app restart
+            val isSessionBasedAchievement = achievement.id == "session_champion" || achievement.id == "theme_switcher"
+            val restoredProgress = if (isSessionBasedAchievement) {
+                0 // Session achievements should always start at 0
+            } else {
+                progress?.currentProgress ?: 0
+            }
+            
             val isUnlocked = progress?.isUnlocked ?: false
             val unlockedAt = progress?.unlockedAt
             
             // Debug logging for restoration
-            if (achievement.id == "roll_master_100" || achievement.id == "d6_specialist") {
-                Log.d("AchievementManager", "Restoring ${achievement.id}: progress=$restoredProgress, unlocked=$isUnlocked")
+            if (achievement.id == "roll_master_100" || achievement.id == "d6_specialist" || achievement.id == "session_champion" || achievement.id == "theme_switcher") {
+                Log.d("AchievementManager", "Restoring ${achievement.id}: progress=$restoredProgress, unlocked=$isUnlocked (session-based: $isSessionBasedAchievement)")
             }
             
             // If achievement is unlocked, add to unlocked set (but don't auto-unlock on startup)
@@ -119,7 +128,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         Log.d("AchievementManager", "Restored progress for ${progressList.size} achievements")
         
         // Debug: Log final achievement state after restoration
-        _achievements.value.filter { it.id == "roll_master_100" || it.id == "d6_specialist" }
+        _achievements.value.filter { it.id == "roll_master_100" || it.id == "d6_specialist" || it.id == "session_champion" || it.id == "theme_switcher" }
             .forEach { achievement ->
                 Log.d("AchievementManager", "After restoration ${achievement.id}: progress=${achievement.progress}, unlocked=${achievement.isUnlocked}")
             }
@@ -150,8 +159,8 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
                     "high_roller" -> minOf(stats.perfectRolls, 10)
                     "low_baller" -> minOf(stats.minimumRolls, 10)
                     "average_joe" -> minOf(stats.averageRolls, 10)
-                    "theme_explorer" -> stats.themeUsage.size
-                    "theme_loyalist" -> stats.themeUsage.values.maxOrNull() ?: 0
+                    "theme_explorer" -> minOf(stats.themeUsage.size, 5)
+                    "theme_loyalist" -> minOf(stats.themeUsage.values.maxOrNull() ?: 0, 100)
                     "theme_switcher" -> minOf(stats.themeChanges, 10)
                     "preset_collector_5" -> minOf(stats.totalFavorites, 5)
                     "preset_collector_10" -> minOf(stats.totalFavorites, 10)
@@ -174,8 +183,13 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
                 }
                 
                 // Debug logging for progress tracking
-                if (achievement.id == "roll_master_100" || achievement.id == "d6_specialist" || achievement.id == "session_champion" || achievement.id == "persistent_roller" || achievement.id == "history_buff" || achievement.id == "preset_collector_5" || achievement.id == "preset_collector_10" || achievement.id == "preset_collector_25") {
+                if (achievement.id == "roll_master_100" || achievement.id == "d6_specialist" || achievement.id == "session_champion" || achievement.id == "persistent_roller" || achievement.id == "history_buff" || achievement.id == "preset_collector_5" || achievement.id == "preset_collector_10" || achievement.id == "preset_collector_25" || achievement.id == "theme_loyalist" || achievement.id == "theme_explorer" || achievement.id == "theme_switcher") {
                     Log.d("AchievementManager", "${achievement.id}: calculated=$calculatedProgress, persisted=${achievement.progress}, final=$finalProgress")
+                }
+                
+                // Special debug for Theme Explorer
+                if (achievement.id == "theme_explorer") {
+                    Log.d("AchievementManager", "Theme Explorer: themeUsage.size=${stats.themeUsage.size}, themeUsage=${stats.themeUsage}")
                 }
                 
                 // Check if achievement should be unlocked based on final progress
@@ -230,6 +244,9 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         val currentThemeCount = updatedThemeUsage[currentTheme] ?: 0
         updatedThemeUsage[currentTheme] = currentThemeCount + 1
         
+        Log.d("AchievementManager", "Roll completed with theme: $currentTheme. Theme usage updated: ${currentThemeCount} -> ${currentThemeCount + 1}")
+        Log.d("AchievementManager", "Theme Explorer progress: ${updatedThemeUsage.size}/5 themes used")
+        
         val updatedStats = updateStatsAfterRoll(stats, rollResult).copy(
             themeUsage = updatedThemeUsage
         )
@@ -256,6 +273,16 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         lastRollResults.add(totalRoll)
         if (lastRollResults.size > 5) {
             lastRollResults.removeAt(0)
+        }
+        
+        // Track dice types for unpredictable achievement
+        // Get the primary dice type (first dice selection)
+        val primaryDiceType = rollResult.diceSelections.firstOrNull()?.diceType
+        if (primaryDiceType != null) {
+            lastRollDiceTypes.add(primaryDiceType)
+            if (lastRollDiceTypes.size > 5) {
+                lastRollDiceTypes.removeAt(0)
+            }
         }
         
         // Check for achievements
@@ -387,6 +414,14 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         if ((if (stats.sessionRolls < 0) 0 else stats.sessionRolls) >= 50) {
             unlockAchievement("session_champion")
         }
+        
+        // Marathon Roller - Check if rolling continuously for 1 minute
+        val sessionDuration = currentTime - stats.sessionStartTime
+        Log.d("AchievementManager", "Marathon Roller check: sessionDuration=${sessionDuration}ms (${sessionDuration/1000}s), threshold=60000ms (60s)")
+        if (sessionDuration >= 60000) { // 1 minute = 60000 milliseconds
+            Log.d("AchievementManager", "Marathon Roller achievement unlocked! Session duration: ${sessionDuration/1000} seconds")
+            unlockAchievement("marathon_roller")
+        }
     }
     
     private fun checkDiceSpecialistAchievements(rollResult: RollResult, stats: AchievementStats) {
@@ -425,11 +460,23 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             
             rolls.forEach { roll ->
                 when {
-                    diceType == DiceType.D6 && roll == 1 -> unlockAchievement("snake_eyes")
                     diceType == DiceType.D20 && roll == 20 -> unlockAchievement("natural_20")
                     diceType == DiceType.D20 && roll == 1 -> unlockAchievement("critical_fail")
                     diceType == DiceType.D100 && roll == 100 -> unlockAchievement("perfect_100")
                 }
+            }
+        }
+        
+        // Check for 2D6 = 2 (Snake Eyes)
+        if (rollResult.diceSelections.any { it.diceType == DiceType.D6 && it.count >= 2 }) {
+            val d6Rolls = rollResult.individualRolls.find { rolls ->
+                rollResult.diceSelections[rollResult.individualRolls.indexOf(rolls)]?.diceType == DiceType.D6
+            }
+            val d6Sum = d6Rolls?.sum() ?: 0
+            Log.d("AchievementManager", "Snake Eyes check: D6 rolls=$d6Rolls, sum=$d6Sum")
+            if (d6Sum == 2) {
+                Log.d("AchievementManager", "Snake Eyes achievement unlocked! 2D6 = 2")
+                unlockAchievement("snake_eyes")
             }
         }
         
@@ -492,6 +539,33 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
                 unlockAchievement("consistent")
             }
         }
+        
+        // Unpredictable - Roll maximum range (1 to max) in 3 consecutive rolls
+        if (lastRollResults.size >= 3 && lastRollDiceTypes.size >= 3) {
+            val last3 = lastRollResults.takeLast(3)
+            val last3DiceTypes = lastRollDiceTypes.takeLast(3)
+            
+            Log.d("AchievementManager", "Checking unpredictable: Rolls=$last3, DiceTypes=$last3DiceTypes")
+            
+            // Check if all 3 rolls used the same dice type
+            if (last3DiceTypes.distinct().size == 1) {
+                val diceType = last3DiceTypes.first()
+                val maxValue = diceType.sides
+                
+                // Check if the 3 rolls cover the full range (1 to max)
+                val minRoll = last3.minOrNull() ?: 0
+                val maxRoll = last3.maxOrNull() ?: 0
+                
+                Log.d("AchievementManager", "Unpredictable check: Dice=$diceType, Min=$minRoll, Max=$maxRoll, TargetMax=$maxValue")
+                
+                if (minRoll == 1 && maxRoll == maxValue) {
+                    Log.d("AchievementManager", "Unpredictable achievement unlocked! Dice: $diceType, Rolls: $last3, Range: 1 to $maxValue")
+                    unlockAchievement("unpredictable")
+                }
+            } else {
+                Log.d("AchievementManager", "Unpredictable failed: Different dice types used")
+            }
+        }
     }
     
     private fun checkCombinationModifierAchievements(rollResult: RollResult, stats: AchievementStats) {
@@ -526,7 +600,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
     private fun checkThemeBasedAchievements(stats: AchievementStats) {
         
         // Theme Explorer
-        if (stats.themeUsage.size >= 4) {
+        if (stats.themeUsage.size >= 5) {
             unlockAchievement("theme_explorer")
         }
         
@@ -642,22 +716,29 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
     
     suspend fun onThemeChanged(newTheme: AppTheme) {
         val stats = _achievementStats.value
-        val updatedThemeUsage = stats.themeUsage.toMutableMap()
-        val currentThemeCount = updatedThemeUsage[newTheme] ?: 0
-        updatedThemeUsage[newTheme] = currentThemeCount + 1
+        
+        // Check if this is a new theme (for Theme Explorer achievement)
+        val isNewTheme = !stats.themeUsage.containsKey(newTheme)
         
         val updatedStats = stats.copy(
-            themeChanges = stats.themeChanges + 1,
-            themeUsage = updatedThemeUsage
+            themeChanges = stats.themeChanges + 1
         )
         _achievementStats.value = updatedStats
+        
+        Log.d("AchievementManager", "Theme changed to $newTheme. Theme changes: ${updatedStats.themeChanges}")
+        Log.d("AchievementManager", "Theme Switcher progress: ${updatedStats.themeChanges}/10")
+        Log.d("AchievementManager", "Is new theme: $isNewTheme. Current theme usage: ${stats.themeUsage}")
         
         // Check theme-based achievements
         checkThemeBasedAchievements(updatedStats)
         
+        // Update achievement progress
+        updateAchievementProgressAfterRoll(updatedStats)
+        
         // Only save stats if data has been loaded
         if (isDataLoaded) {
             achievementStorage.saveAchievementStats(updatedStats)
+            saveAchievementData()
         } else {
             Log.d("AchievementManager", "Skipping stats save in onThemeChanged - data not yet loaded")
         }
@@ -725,19 +806,15 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
     
     suspend fun onThemeLoaded(theme: AppTheme) {
         val stats = _achievementStats.value
-        val updatedThemeUsage = stats.themeUsage.toMutableMap()
-        val currentThemeCount = updatedThemeUsage[theme] ?: 0
-        updatedThemeUsage[theme] = currentThemeCount + 1
         
-        val updatedStats = stats.copy(themeUsage = updatedThemeUsage)
-        _achievementStats.value = updatedStats
+        Log.d("AchievementManager", "Theme loaded: $theme. Current theme usage: ${stats.themeUsage}")
         
         // Check theme-based achievements
-        checkThemeBasedAchievements(updatedStats)
+        checkThemeBasedAchievements(stats)
         
         // Only save stats if data has been loaded
         if (isDataLoaded) {
-            achievementStorage.saveAchievementStats(updatedStats)
+            achievementStorage.saveAchievementStats(stats)
         } else {
             Log.d("AchievementManager", "Skipping stats save in onThemeLoaded - data not yet loaded")
         }

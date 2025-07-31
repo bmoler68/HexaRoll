@@ -95,6 +95,20 @@ private fun getThemeColor(theme: AppTheme, colorType: String): Color {
             "ButtonRed" -> WesternColors.ButtonRed
             else -> WesternColors.PrimaryText
         }
+        AppTheme.ANCIENT -> when (colorType) {
+            "PrimaryText" -> AncientColors.PrimaryText
+            "SecondaryText" -> AncientColors.SecondaryText
+            "CardBackground" -> AncientColors.CardBackground
+            "ElevatedCardBackground" -> AncientColors.ElevatedCardBackground
+            "BorderBlue" -> AncientColors.BorderBlue
+            "NeonYellow" -> AncientColors.NeonYellow
+            "NeonBlue" -> AncientColors.NeonBlue
+            "NeonGreen" -> AncientColors.NeonGreen
+            "NeonRed" -> AncientColors.NeonRed
+            "ButtonGreen" -> AncientColors.ButtonGreen
+            "ButtonRed" -> AncientColors.ButtonRed
+            else -> AncientColors.PrimaryText
+        }
     }
 }
 
@@ -124,6 +138,7 @@ fun MainScreen(
                 AppTheme.FANTASY -> FantasyColors.CardBackground
                 AppTheme.SCI_FI -> SciFiColors.CardBackground
                 AppTheme.WESTERN -> WesternColors.CardBackground
+                AppTheme.ANCIENT -> AncientColors.CardBackground
             })
     ) {
         // App Title
@@ -137,6 +152,7 @@ fun MainScreen(
                 AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
                 AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
                 AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
             }),
             containerColor = Color.Transparent,
             contentColor = when (customization.theme) {
@@ -144,6 +160,7 @@ fun MainScreen(
                 AppTheme.FANTASY -> FantasyColors.PrimaryText
                 AppTheme.SCI_FI -> SciFiColors.PrimaryText
                 AppTheme.WESTERN -> WesternColors.PrimaryText
+                AppTheme.ANCIENT -> AncientColors.PrimaryText
             }
         ) {
             tabs.forEachIndexed { index, tab ->
@@ -160,6 +177,7 @@ fun MainScreen(
                                     AppTheme.FANTASY -> FantasyColors.NeonYellow
                                     AppTheme.SCI_FI -> SciFiColors.NeonYellow
                                     AppTheme.WESTERN -> WesternColors.NeonYellow
+                                    AppTheme.ANCIENT -> AncientColors.NeonYellow
                                 }
                             } else {
                                 when (customization.theme) {
@@ -167,6 +185,7 @@ fun MainScreen(
                                     AppTheme.FANTASY -> FantasyColors.NeonBlue
                                     AppTheme.SCI_FI -> SciFiColors.NeonBlue
                                     AppTheme.WESTERN -> WesternColors.NeonBlue
+                                    AppTheme.ANCIENT -> AncientColors.NeonBlue
                                 }
                             },
                             modifier = Modifier.size(20.dp)
@@ -238,6 +257,7 @@ fun CustomizeScreen(viewModel: DiceRollViewModel) {
                 AppTheme.FANTASY -> FantasyColors.NeonYellow
                 AppTheme.SCI_FI -> SciFiColors.NeonYellow
                 AppTheme.WESTERN -> WesternColors.NeonYellow
+                AppTheme.ANCIENT -> AncientColors.NeonYellow
             },
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
@@ -251,6 +271,7 @@ fun CustomizeScreen(viewModel: DiceRollViewModel) {
                 AppTheme.FANTASY -> FantasyColors.SecondaryText
                 AppTheme.SCI_FI -> SciFiColors.SecondaryText
                 AppTheme.WESTERN -> WesternColors.SecondaryText
+                AppTheme.ANCIENT -> AncientColors.SecondaryText
             },
             fontSize = 14.sp,
             modifier = Modifier.padding(bottom = 24.dp)
@@ -287,6 +308,7 @@ fun ThemeSelectionCard(
                     AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
                     AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
                     AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
+                    AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
                 }
             } else {
                 when (themeType) {
@@ -294,6 +316,7 @@ fun ThemeSelectionCard(
                     AppTheme.FANTASY -> FantasyColors.CardBackground
                     AppTheme.SCI_FI -> SciFiColors.CardBackground
                     AppTheme.WESTERN -> WesternColors.CardBackground
+                    AppTheme.ANCIENT -> AncientColors.CardBackground
                 }
             }
         ),
@@ -304,6 +327,7 @@ fun ThemeSelectionCard(
                 AppTheme.FANTASY -> if (isSelected) FantasyColors.NeonYellow else FantasyColors.BorderBlue
                 AppTheme.SCI_FI -> if (isSelected) SciFiColors.NeonYellow else SciFiColors.BorderBlue
                 AppTheme.WESTERN -> if (isSelected) WesternColors.NeonYellow else WesternColors.BorderBlue
+                AppTheme.ANCIENT -> if (isSelected) AncientColors.NeonYellow else AncientColors.BorderBlue
             }
         )
     ) {
@@ -331,6 +355,7 @@ fun ThemeSelectionCard(
                             AppTheme.FANTASY -> FantasyColors.NeonYellow
                             AppTheme.SCI_FI -> SciFiColors.NeonYellow
                             AppTheme.WESTERN -> WesternColors.NeonYellow
+                            AppTheme.ANCIENT -> AncientColors.NeonYellow
                         },
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
@@ -342,6 +367,7 @@ fun ThemeSelectionCard(
                             AppTheme.FANTASY -> FantasyColors.SecondaryText
                             AppTheme.SCI_FI -> SciFiColors.SecondaryText
                             AppTheme.WESTERN -> WesternColors.SecondaryText
+                            AppTheme.ANCIENT -> AncientColors.SecondaryText
                         },
                         fontSize = 14.sp
                     )
@@ -355,6 +381,7 @@ fun ThemeSelectionCard(
                             AppTheme.FANTASY -> FantasyColors.NeonGreen
                             AppTheme.SCI_FI -> SciFiColors.NeonGreen
                             AppTheme.WESTERN -> WesternColors.NeonGreen
+                            AppTheme.ANCIENT -> AncientColors.NeonGreen
                         },
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
@@ -383,6 +410,7 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
                 AppTheme.FANTASY -> FantasyColors.NeonYellow
                 AppTheme.SCI_FI -> SciFiColors.NeonYellow
                 AppTheme.WESTERN -> WesternColors.NeonYellow
+                AppTheme.ANCIENT -> AncientColors.NeonYellow
             },
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
@@ -413,6 +441,7 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
                         AppTheme.FANTASY -> FantasyColors.SecondaryText
                         AppTheme.SCI_FI -> SciFiColors.SecondaryText
                         AppTheme.WESTERN -> WesternColors.SecondaryText
+                        AppTheme.ANCIENT -> AncientColors.SecondaryText
                     },
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
@@ -428,6 +457,7 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
                         AppTheme.FANTASY -> FantasyColors.SecondaryText
                         AppTheme.SCI_FI -> SciFiColors.SecondaryText
                         AppTheme.WESTERN -> WesternColors.SecondaryText
+                        AppTheme.ANCIENT -> AncientColors.SecondaryText
                     },
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
@@ -471,6 +501,7 @@ fun PresetCard(
                 AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
                 AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
                 AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -480,6 +511,7 @@ fun PresetCard(
                 AppTheme.FANTASY -> FantasyColors.BorderBlue
                 AppTheme.SCI_FI -> SciFiColors.BorderBlue
                 AppTheme.WESTERN -> WesternColors.BorderBlue
+                AppTheme.ANCIENT -> AncientColors.BorderBlue
             }
         )
     ) {
@@ -499,6 +531,7 @@ fun PresetCard(
                         AppTheme.FANTASY -> FantasyColors.NeonYellow
                         AppTheme.SCI_FI -> SciFiColors.NeonYellow
                         AppTheme.WESTERN -> WesternColors.NeonYellow
+                        AppTheme.ANCIENT -> AncientColors.NeonYellow
                     },
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
@@ -517,6 +550,7 @@ fun PresetCard(
                                 AppTheme.FANTASY -> FantasyColors.NeonBlue
                                 AppTheme.SCI_FI -> SciFiColors.NeonBlue
                                 AppTheme.WESTERN -> WesternColors.NeonBlue
+                                AppTheme.ANCIENT -> AncientColors.NeonBlue
                             }
                         ),
                         modifier = Modifier.size(32.dp),
@@ -538,6 +572,7 @@ fun PresetCard(
                                 AppTheme.FANTASY -> FantasyColors.ButtonRed
                                 AppTheme.SCI_FI -> SciFiColors.ButtonRed
                                 AppTheme.WESTERN -> WesternColors.ButtonRed
+                                AppTheme.ANCIENT -> AncientColors.ButtonRed
                             }
                         ),
                         modifier = Modifier.size(32.dp),
@@ -560,6 +595,7 @@ fun PresetCard(
                     AppTheme.FANTASY -> FantasyColors.SecondaryText
                     AppTheme.SCI_FI -> SciFiColors.SecondaryText
                     AppTheme.WESTERN -> WesternColors.SecondaryText
+                    AppTheme.ANCIENT -> AncientColors.SecondaryText
                 },
                 fontSize = 14.sp,
                 modifier = Modifier.padding(top = 4.dp)
@@ -573,6 +609,7 @@ fun PresetCard(
                     AppTheme.FANTASY -> FantasyColors.NeonBlue
                     AppTheme.SCI_FI -> SciFiColors.NeonBlue
                     AppTheme.WESTERN -> WesternColors.NeonBlue
+                    AppTheme.ANCIENT -> AncientColors.NeonBlue
                 },
                 fontSize = 12.sp,
                 modifier = Modifier.padding(top = 8.dp)
@@ -590,6 +627,7 @@ fun PresetCard(
                         AppTheme.FANTASY -> FantasyColors.ButtonGreen
                         AppTheme.SCI_FI -> SciFiColors.ButtonGreen
                         AppTheme.WESTERN -> WesternColors.ButtonGreen
+                        AppTheme.ANCIENT -> AncientColors.ButtonGreen
                     }
                 )
             ) {
@@ -671,6 +709,7 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
                 AppTheme.FANTASY -> FantasyColors.NeonYellow
                 AppTheme.SCI_FI -> SciFiColors.NeonYellow
                     AppTheme.WESTERN -> WesternColors.NeonYellow
+                    AppTheme.ANCIENT -> AncientColors.NeonYellow
             },
             fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
@@ -685,6 +724,7 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
                             AppTheme.FANTASY -> FantasyColors.ButtonRed
                             AppTheme.SCI_FI -> SciFiColors.ButtonRed
                             AppTheme.WESTERN -> WesternColors.ButtonRed
+                            AppTheme.ANCIENT -> AncientColors.ButtonRed
                         }
                     ),
                     modifier = Modifier.padding(start = 8.dp)
@@ -708,6 +748,7 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
                     AppTheme.FANTASY -> FantasyColors.SecondaryText
                     AppTheme.SCI_FI -> SciFiColors.SecondaryText
                     AppTheme.WESTERN -> WesternColors.SecondaryText
+                    AppTheme.ANCIENT -> AncientColors.SecondaryText
                 },
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
@@ -738,6 +779,7 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
                         AppTheme.FANTASY -> FantasyColors.NeonRed
                         AppTheme.SCI_FI -> SciFiColors.NeonRed
                         AppTheme.WESTERN -> WesternColors.NeonRed
+                        AppTheme.ANCIENT -> AncientColors.NeonRed
                     },
                     fontWeight = FontWeight.Bold
                 )
@@ -745,12 +787,13 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
             text = {
                 Text(
                     text = "Are you sure you want to clear all roll history? This action cannot be undone.",
-                    color = when (customization.theme) {
-                        AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
-                        AppTheme.FANTASY -> FantasyColors.PrimaryText
-                        AppTheme.SCI_FI -> SciFiColors.PrimaryText
-                        AppTheme.WESTERN -> WesternColors.PrimaryText
-                    }
+                                color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                AppTheme.FANTASY -> FantasyColors.PrimaryText
+                AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                AppTheme.WESTERN -> WesternColors.PrimaryText
+                AppTheme.ANCIENT -> AncientColors.PrimaryText
+            }
                 )
             },
             confirmButton = {
@@ -765,6 +808,7 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
                             AppTheme.FANTASY -> FantasyColors.ButtonRed
                             AppTheme.SCI_FI -> SciFiColors.ButtonRed
                             AppTheme.WESTERN -> WesternColors.ButtonRed
+                            AppTheme.ANCIENT -> AncientColors.ButtonRed
                         }
                     )
                 ) {
@@ -780,6 +824,7 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
                             AppTheme.FANTASY -> FantasyColors.ButtonGreen
                             AppTheme.SCI_FI -> SciFiColors.ButtonGreen
                             AppTheme.WESTERN -> WesternColors.ButtonGreen
+                            AppTheme.ANCIENT -> AncientColors.ButtonGreen
                         }
                     )
                 ) {
@@ -791,6 +836,7 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
                 AppTheme.FANTASY -> FantasyColors.CardBackground
                 AppTheme.SCI_FI -> SciFiColors.CardBackground
                 AppTheme.WESTERN -> WesternColors.CardBackground
+                AppTheme.ANCIENT -> AncientColors.CardBackground
             }
         )
     }
@@ -814,6 +860,7 @@ fun RollHistoryCard(
                 AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
                 AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
                 AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -823,6 +870,7 @@ fun RollHistoryCard(
                 AppTheme.FANTASY -> FantasyColors.BorderBlue
                 AppTheme.SCI_FI -> SciFiColors.BorderBlue
                 AppTheme.WESTERN -> WesternColors.BorderBlue
+                AppTheme.ANCIENT -> AncientColors.BorderBlue
             }
         )
     ) {
@@ -845,6 +893,7 @@ fun RollHistoryCard(
                             AppTheme.FANTASY -> FantasyColors.NeonYellow
                             AppTheme.SCI_FI -> SciFiColors.NeonYellow
                             AppTheme.WESTERN -> WesternColors.NeonYellow
+                            AppTheme.ANCIENT -> AncientColors.NeonYellow
                         },
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
@@ -856,6 +905,7 @@ fun RollHistoryCard(
                             AppTheme.FANTASY -> FantasyColors.NeonBlue
                             AppTheme.SCI_FI -> SciFiColors.NeonBlue
                             AppTheme.WESTERN -> WesternColors.NeonBlue
+                            AppTheme.ANCIENT -> AncientColors.NeonBlue
                         },
                         fontSize = 14.sp
                     )
@@ -871,6 +921,7 @@ fun RollHistoryCard(
                             AppTheme.FANTASY -> FantasyColors.SecondaryText
                             AppTheme.SCI_FI -> SciFiColors.SecondaryText
                             AppTheme.WESTERN -> WesternColors.SecondaryText
+                            AppTheme.ANCIENT -> AncientColors.SecondaryText
                         },
                         fontSize = 12.sp
                     )
@@ -882,6 +933,7 @@ fun RollHistoryCard(
                                 AppTheme.FANTASY -> FantasyColors.ButtonGreen
                                 AppTheme.SCI_FI -> SciFiColors.ButtonGreen
                                 AppTheme.WESTERN -> WesternColors.ButtonGreen
+                                AppTheme.ANCIENT -> AncientColors.ButtonGreen
                             }
                         ),
                         modifier = Modifier.padding(top = 4.dp)
@@ -904,6 +956,7 @@ fun RollHistoryCard(
                         AppTheme.FANTASY -> FantasyColors.PrimaryText
                         AppTheme.SCI_FI -> SciFiColors.PrimaryText
                         AppTheme.WESTERN -> WesternColors.PrimaryText
+                        AppTheme.ANCIENT -> AncientColors.PrimaryText
                     },
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
@@ -928,6 +981,7 @@ fun RollHistoryCard(
                                 AppTheme.FANTASY -> FantasyColors.SecondaryText
                                 AppTheme.SCI_FI -> SciFiColors.SecondaryText
                                 AppTheme.WESTERN -> WesternColors.SecondaryText
+                                AppTheme.ANCIENT -> AncientColors.SecondaryText
                             },
                             fontSize = 11.sp
                         )
@@ -1242,6 +1296,7 @@ fun AppTitle(theme: AppTheme) {
                 AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
                 AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
                 AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
             })
             .padding(8.dp),
         contentAlignment = Alignment.Center
@@ -1253,6 +1308,7 @@ fun AppTitle(theme: AppTheme) {
                 AppTheme.FANTASY -> FantasyColors.NeonYellow
                 AppTheme.SCI_FI -> SciFiColors.NeonYellow
                 AppTheme.WESTERN -> WesternColors.NeonYellow
+                AppTheme.ANCIENT -> AncientColors.NeonYellow
             },
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,

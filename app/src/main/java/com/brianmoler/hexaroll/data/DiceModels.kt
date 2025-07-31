@@ -47,7 +47,8 @@ enum class AppTheme(val displayName: String, val description: String) {
     CYBERPUNK("Cyberpunk", "Vibrant neon colors with electric glow effects"),
     FANTASY("Fantasy", "Warm earthy tones with magical golden accents"),
     SCI_FI("SCI-FI", "Cool futuristic blues with holographic highlights"),
-    WESTERN("Western", "Wood grain and sheriff stars with rustic charm")
+    WESTERN("Western", "Wood grain and sheriff stars with rustic charm"),
+    ANCIENT("Ancient", "Roman marble and golden laurels with classical elegance")
 }
 
 data class DiceCustomization(

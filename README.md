@@ -2,7 +2,7 @@
 
 **Copyright © 2024 Brian Moler. All rights reserved.**
 
-A modern Android dice rolling application with multiple theme options (Cyberpunk, Fantasy, SCI-FI), built using Jetpack Compose.
+A modern Android dice rolling application with multiple theme options (Cyberpunk, Fantasy, SCI-FI, Western, Ancient), built using Jetpack Compose with a comprehensive achievement system and persistent roll history.
 
 > **Note**: This is a private, proprietary project owned by Brian Moler. This codebase is not open source and may not be copied, modified, or distributed without explicit permission.
 
@@ -22,42 +22,63 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 - **Interactive Controls**: +/- buttons to adjust dice quantities
 - **Roll Modifier**: Adjustable modifier with +/- controls
 - **Total Display**: Shows total dice count and final total with modifier
-
 - **Roll Button**: Manual roll button with theme-appropriate styling
+- **Scroll Indicators**: Visual cues for scrollable dice selection areas
 
 ### 🎨 Customization (Second Tab)
-- **Theme Selection**: Choose from three distinct visual themes:
+- **Theme Selection**: Choose from five distinct visual themes:
   - **Cyberpunk**: Vibrant neon colors with electric glow effects
   - **Fantasy**: Warm earthy tones with magical golden accents
   - **SCI-FI**: Cool futuristic blues with holographic highlights
+  - **Western**: Wood grain and sheriff stars with rustic charm
+  - **Ancient**: Roman marble and golden laurels with classical elegance
 - **Persistent Preferences**: Your theme choice is automatically saved
 - **Complete Visual Transformation**: All UI elements adapt to your chosen theme
 
 ### 📋 Preset Rolls (Third Tab)
 - **Pre-configured Rolls**: Save and load common dice combinations
 - **Sample Presets**: 
-  - Pathfinder (1D20)
-  - COC Stats (3D6)
-  - Fireball (8D6)
 - **Custom Presets**: Create your own named presets with descriptions
+- **Preset Management**: Edit, delete, and organize your saved presets
 
 ### 📊 Roll History (Fourth Tab)
-- **Roll Log**: Track all dice rolls with timestamps
+- **Persistent Roll Log**: Track all dice rolls with timestamps (up to 100 rolls)
 - **Detailed Results**: View individual dice results and totals
 - **Preset Creation**: Convert any roll result into a preset
+- **Clear History**: Option to clear roll history with confirmation
+
+### 🏆 Achievements (Fifth Tab)
+- **Comprehensive Achievement System**: 50+ achievements across multiple categories
+- **Achievement Categories**:
+  - **Rolling Milestones**: Track total rolls and session progress
+  - **Dice Type Specialists**: Master specific dice types
+  - **Result-Based**: Achieve specific roll outcomes
+  - **Streak & Pattern**: Consecutive rolls and patterns
+  - **Combination & Modifiers**: Complex dice combinations
+  - **Theme-Based**: Explore all themes and stay loyal
+  - **Favorites & History**: Preset and history management
+  - **Special Events**: Weekend warriors and marathon rollers
+- **Tier System**: Bronze, Silver, Gold, Platinum, Diamond achievements
+- **Progress Tracking**: Visual progress bars for multi-step achievements
+- **Achievement Popups**: Animated notifications for unlocked achievements
+- **Statistics Integration**: Comprehensive tracking of all user actions
+- **Reset Functionality**: Option to reset all achievement progress
 
 ## Technical Features
 
 - **Modern UI**: Built with Jetpack Compose
-- **Multi-Theme System**: Three distinct visual themes with complete UI adaptation
+- **Multi-Theme System**: Five distinct visual themes with complete UI adaptation
 - **Theme Persistence**: Automatic saving and loading of user theme preferences
 - **State Management**: MVVM architecture with ViewModel
 - **Responsive Design**: Adapts to different screen sizes
 - **Theme-Aware Components**: All UI elements dynamically change with theme selection
+- **Persistent Data**: Roll history, achievements, and preferences saved across sessions
+- **Achievement System**: Comprehensive tracking and notification system
+- **Custom Dice Assets**: Theme-specific dice images for enhanced visual appeal
 
 ## Theme System
 
-The app features three distinct visual themes, each with its own color palette and aesthetic:
+The app features five distinct visual themes, each with its own color palette and aesthetic:
 
 ### 🎭 Cyberpunk Theme (Default)
 - **Background**: Deep blue-black with dark blue-gray cards
@@ -73,6 +94,35 @@ The app features three distinct visual themes, each with its own color palette a
 - **Background**: Deep space black with dark metal cards
 - **Primary Colors**: Electric blue, spring green, bright red, cyan (holographic), dark orchid (quantum)
 - **Character**: Cool, high-tech, futuristic, space-themed
+
+### 🤠 Western Theme
+- **Background**: Wood grain textures with rustic card backgrounds
+- **Primary Colors**: Sand tones, sheriff star gold, leather browns, desert reds
+- **Character**: Rustic, frontier, cowboy-inspired, warm and earthy
+
+### 🏛️ Ancient Theme
+- **Background**: Roman marble with classical stone textures
+- **Primary Colors**: Pure white marble text, bright gold laurels, Mediterranean blues, imperial purples
+- **Character**: Classical, elegant, Roman-inspired, marble and gold aesthetic
+
+## Achievement System
+
+### Achievement Categories
+- **Rolling Milestones**: Track progress from first roll to master roller
+- **Dice Type Specialists**: Achieve mastery with specific dice types
+- **Result-Based**: Achieve specific outcomes like "Snake Eyes" (2D6 = 2)
+- **Streak & Pattern**: Consecutive rolls and pattern recognition
+- **Combination & Modifiers**: Complex dice combinations and modifier usage
+- **Theme-Based**: Explore all themes and demonstrate theme loyalty
+- **Favorites & History**: Preset management and history engagement
+- **Special Events**: Weekend activities and marathon rolling sessions
+
+### Achievement Tiers
+- **Bronze**: Basic achievements for new users
+- **Silver**: Intermediate achievements for regular users
+- **Gold**: Advanced achievements for experienced users
+- **Platinum**: Expert-level achievements for dedicated users
+- **Diamond**: Master-level achievements for elite users
 
 ## Installation
 
@@ -93,6 +143,8 @@ The app features three distinct visual themes, each with its own color palette a
 4. **View Results**: Check the History tab for recent rolls
 5. **Save Presets**: Create custom presets for frequently used combinations
 6. **Customize Theme**: Visit the Customize tab to choose your preferred visual theme
+7. **Track Achievements**: Monitor your progress in the Achievements tab
+8. **Explore Themes**: Try all five themes to unlock theme-based achievements
 
 ## Development
 
@@ -103,6 +155,9 @@ The app is built using:
 - **StateFlow** for reactive state management
 - **Theme System** with persistent user preferences
 - **Custom Drawing** for theme-aware dice shapes
+- **Achievement System** with comprehensive tracking
+- **Persistent Storage** using SharedPreferences and Gson
+- **Custom Dice Assets** for enhanced visual themes
 
 ## License
 
