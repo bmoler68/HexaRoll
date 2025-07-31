@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.compose.ui.res.stringResource
 import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.data.DiceType
 import com.brianmoler.hexaroll.ui.theme.CyberpunkColors
@@ -30,6 +31,7 @@ import com.brianmoler.hexaroll.ui.theme.SciFiColors
 import com.brianmoler.hexaroll.ui.theme.WesternColors
 import com.brianmoler.hexaroll.ui.theme.AncientColors
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
+import com.brianmoler.hexaroll.R
 
 @Composable
 fun DiceArena(viewModel: DiceRollViewModel) {
@@ -65,7 +67,7 @@ fun DiceArena(viewModel: DiceRollViewModel) {
     ) {
         // Title
         Text(
-            text = "DICE ARENA",
+            text = stringResource(R.string.tab_dice_arena),
             color = when (customization.theme) {
                 AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
                 AppTheme.FANTASY -> FantasyColors.NeonYellow
@@ -357,7 +359,7 @@ fun ModifierSection(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "MODIFIER",
+            text = stringResource(R.string.modifier_label),
             color = when (theme) {
                 AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
                 AppTheme.FANTASY -> FantasyColors.NeonBlue
@@ -493,7 +495,7 @@ fun TotalDisplay(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "TOTAL",
+                text = stringResource(R.string.total_label),
                 color = when (customization.theme) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
                     AppTheme.FANTASY -> FantasyColors.NeonYellow
@@ -522,7 +524,7 @@ fun TotalDisplay(
                 )
             } else {
                 Text(
-                    text = "No dice selected",
+                    text = stringResource(R.string.no_dice_selected),
                     color = when (customization.theme) {
                         AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                         AppTheme.FANTASY -> FantasyColors.SecondaryText
@@ -602,7 +604,7 @@ fun ResultDisplay(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "RESULT",
+                text = stringResource(R.string.result_label),
                 color = when (customization.theme) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.NeonPurple
                     AppTheme.FANTASY -> FantasyColors.NeonPurple
@@ -674,7 +676,7 @@ fun ResultDisplay(
                 }
             } ?: run {
                 Text(
-                    text = "No rolls yet",
+                    text = stringResource(R.string.no_rolls_yet),
                     color = when (customization.theme) {
                         AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                         AppTheme.FANTASY -> FantasyColors.SecondaryText
@@ -723,7 +725,7 @@ fun ClearArenaButton(
         )
     ) {
         Text(
-            text = "CLEAR",
+            text = stringResource(R.string.action_clear),
             color = Color.White,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
@@ -793,7 +795,7 @@ fun RollButton(
         )
     ) {
         Text(
-            text = "ROLL",
+            text = stringResource(R.string.roll_button),
             color = if (isEnabled) Color.White else {
                 when (customization.theme) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText

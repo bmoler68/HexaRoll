@@ -311,9 +311,9 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
     private fun updateStatsAfterRoll(stats: AchievementStats, rollResult: RollResult): AchievementStats {
         val currentTime = System.currentTimeMillis()
         val calendar = Calendar.getInstance()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val weekFormat = SimpleDateFormat("yyyy-'W'ww", Locale.getDefault())
-        val monthFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val weekFormat = SimpleDateFormat("yyyy-'W'ww", Locale.US)
+        val monthFormat = SimpleDateFormat("yyyy-MM", Locale.US)
         
         val today = dateFormat.format(Date(currentTime))
         val thisWeek = weekFormat.format(Date(currentTime))
@@ -667,7 +667,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         // Lucky Hour
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
-        val timeString = String.format("%02d:%02d", hour, minute)
+        val timeString = String.format(java.util.Locale.US, "%02d:%02d", hour, minute)
         if (timeString in listOf("07:11", "11:11", "12:34", "13:37")) {
             unlockAchievement("lucky_hour")
         }

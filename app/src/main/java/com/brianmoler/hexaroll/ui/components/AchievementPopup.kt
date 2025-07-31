@@ -16,11 +16,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.brianmoler.hexaroll.data.Achievement
 import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.ui.theme.*
+import com.brianmoler.hexaroll.R
 
 @Composable
 fun AchievementPopup(
@@ -148,7 +150,7 @@ fun AchievementPopupContent(
             
             // Achievement name
             Text(
-                text = "ACHIEVEMENT UNLOCKED!",
+                text = stringResource(R.string.achievement_unlocked),
                 color = when (theme) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
                     AppTheme.FANTASY -> FantasyColors.NeonYellow
@@ -199,7 +201,7 @@ fun AchievementPopupContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Awesome!",
+                    text = stringResource(R.string.achievement_awesome),
                     color = Color.White,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold

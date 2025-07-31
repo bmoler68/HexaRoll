@@ -11,6 +11,7 @@ import com.brianmoler.hexaroll.utils.ErrorHandler
 import com.brianmoler.hexaroll.utils.PresetStorage
 import com.brianmoler.hexaroll.utils.RollHistoryStorage
 import com.brianmoler.hexaroll.utils.ThemeStorage
+import com.brianmoler.hexaroll.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -256,7 +257,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         _currentResult.value = null
         
         // Show confirmation message
-        val message = "Favorite '${preset.name}' loaded successfully!"
+        val message = getApplication<Application>().getString(R.string.preset_loaded)
         Log.d("DiceRollViewModel", "Setting preset message: $message")
         _presetLoadedMessage.value = message
         

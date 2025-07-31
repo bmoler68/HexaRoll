@@ -43,12 +43,8 @@ data class PresetRoll(
     val modifier: Int
 )
 
-enum class AppTheme(val displayName: String, val description: String) {
-    CYBERPUNK("Cyberpunk", "Vibrant neon colors with electric glow effects"),
-    FANTASY("Fantasy", "Warm earthy tones with magical golden accents"),
-    SCI_FI("SCI-FI", "Cool futuristic blues with holographic highlights"),
-    WESTERN("Western", "Wood grain and sheriff stars with rustic charm"),
-    ANCIENT("Ancient", "Roman marble and golden laurels with classical elegance")
+enum class AppTheme {
+    CYBERPUNK, FANTASY, SCI_FI, WESTERN, ANCIENT
 }
 
 data class DiceCustomization(

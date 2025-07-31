@@ -13,6 +13,7 @@
     <string name="roll_button">Roll Dice</string>
     <string name="modifier_label">Modifier</string>
     <string name="total_label">Total</string>
+    <string name="result_label">Result</string>
     <string name="dice_count_label">Dice Count</string>
     
     <!-- Theme Names -->
@@ -21,6 +22,13 @@
     <string name="theme_scifi">SCI-FI</string>
     <string name="theme_western">Western</string>
     <string name="theme_ancient">Ancient</string>
+    
+    <!-- Theme Descriptions -->
+    <string name="theme_description_cyberpunk">Vibrant neon colors with electric glow effects</string>
+    <string name="theme_description_fantasy">Warm earthy tones with magical golden accents</string>
+    <string name="theme_description_scifi">Cool futuristic blues with holographic highlights</string>
+    <string name="theme_description_western">Wood grain and sheriff stars with rustic charm</string>
+    <string name="theme_description_ancient">Roman marble and golden laurels with classical elegance</string>
     
     <!-- Achievement Categories -->
     <string name="achievement_category_rolling_milestones">Rolling Milestones</string>
@@ -41,10 +49,29 @@
     
     <!-- Messages -->
     <string name="achievement_unlocked">Achievement Unlocked!</string>
+    <string name="achievement_awesome">Awesome!</string>
     <string name="preset_loaded">Favorite loaded successfully!</string>
     <string name="history_cleared">Roll history cleared</string>
     <string name="preset_saved">Preset saved</string>
     <string name="no_dice_selected">No dice selected</string>
+    <string name="no_presets_available">No favorites yet</string>
+    <string name="no_rolls_yet">No rolls yet</string>
+    <string name="individual_rolls_label">Individual Rolls:</string>
+    <string name="save_preset_dialog_title">Save to Favorites</string>
+    
+    <!-- Accessibility Content Descriptions -->
+    <string name="accessibility_add_dice">Add %1$s</string>
+    <string name="accessibility_dice_selected">%1$d %2$s selected</string>
+    <string name="accessibility_dice_selected_single">1 %1$s selected</string>
+    <string name="accessibility_no_modifier">No modifier</string>
+    <string name="accessibility_modifier_positive">Modifier: +%1$d</string>
+    <string name="accessibility_modifier_negative">Modifier: %1$d</string>
+    <string name="accessibility_no_dice_selected">No dice selected</string>
+    <string name="accessibility_roll_single_die">Roll 1 die%1$s</string>
+    <string name="accessibility_roll_multiple_dice">Roll %1$d dice%2$s</string>
+    <string name="accessibility_switch_theme">Switch to %1$s theme</string>
+    <string name="accessibility_load_preset">Load preset: %1$s</string>
+    <string name="accessibility_achievement_progress">%1$s achievement: %2$d out of %3$d</string>
     
     <!-- Accessibility -->
     <string name="content_description_dice_button">Dice button</string>

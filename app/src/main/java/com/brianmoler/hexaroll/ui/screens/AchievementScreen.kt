@@ -18,6 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.brianmoler.hexaroll.R
 import com.brianmoler.hexaroll.data.*
 import com.brianmoler.hexaroll.ui.theme.*
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
@@ -66,7 +68,7 @@ fun AchievementScreen(viewModel: DiceRollViewModel) {
                 onDismissRequest = { showResetConfirmation = false },
                 title = {
                     Text(
-                        text = "Reset All Progress?",
+                        text = stringResource(R.string.confirm_reset_achievements),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -87,14 +89,14 @@ fun AchievementScreen(viewModel: DiceRollViewModel) {
                             containerColor = MaterialTheme.colorScheme.error
                         )
                     ) {
-                        Text("Reset All Progress")
+                        Text(stringResource(R.string.action_reset))
                     }
                 },
                 dismissButton = {
                     Button(
                         onClick = { showResetConfirmation = false }
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.action_cancel))
                     }
                 }
             )

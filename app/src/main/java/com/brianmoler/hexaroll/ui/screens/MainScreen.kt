@@ -27,6 +27,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.brianmoler.hexaroll.R
 import com.brianmoler.hexaroll.data.*
 import com.brianmoler.hexaroll.ui.components.AchievementNotification
 import com.brianmoler.hexaroll.ui.components.DiceArena
@@ -123,11 +125,11 @@ fun MainScreen(
     val newlyUnlockedAchievements by viewModel.newlyUnlockedAchievements.collectAsState()
     
     val tabs = listOf(
-        TabItem(Icons.Filled.PlayArrow, "Roll"),
-        TabItem(Icons.Filled.Edit, "Customize"),
-        TabItem(Icons.Filled.Favorite, "Favorites"),
-        TabItem(Icons.Filled.List, "History"),
-        TabItem(Icons.Filled.Star, "Achievements")
+        TabItem(Icons.Filled.PlayArrow, stringResource(R.string.tab_dice_arena)),
+        TabItem(Icons.Filled.Edit, stringResource(R.string.tab_customization)),
+        TabItem(Icons.Filled.Favorite, stringResource(R.string.tab_presets)),
+        TabItem(Icons.Filled.List, stringResource(R.string.tab_history)),
+        TabItem(Icons.Filled.Star, stringResource(R.string.tab_achievements))
     )
     
     Column(
@@ -349,7 +351,13 @@ fun ThemeSelectionCard(
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
-                        text = theme.displayName,
+                        text = when (theme) {
+                            AppTheme.CYBERPUNK -> stringResource(R.string.theme_cyberpunk)
+                            AppTheme.FANTASY -> stringResource(R.string.theme_fantasy)
+                            AppTheme.SCI_FI -> stringResource(R.string.theme_scifi)
+                            AppTheme.WESTERN -> stringResource(R.string.theme_western)
+                            AppTheme.ANCIENT -> stringResource(R.string.theme_ancient)
+                        },
                         color = when (themeType) {
                             AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
                             AppTheme.FANTASY -> FantasyColors.NeonYellow
@@ -361,7 +369,13 @@ fun ThemeSelectionCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = theme.description,
+                        text = when (theme) {
+                            AppTheme.CYBERPUNK -> stringResource(R.string.theme_description_cyberpunk)
+                            AppTheme.FANTASY -> stringResource(R.string.theme_description_fantasy)
+                            AppTheme.SCI_FI -> stringResource(R.string.theme_description_scifi)
+                            AppTheme.WESTERN -> stringResource(R.string.theme_description_western)
+                            AppTheme.ANCIENT -> stringResource(R.string.theme_description_ancient)
+                        },
                         color = when (themeType) {
                             AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                             AppTheme.FANTASY -> FantasyColors.SecondaryText
@@ -404,7 +418,7 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
             .padding(16.dp)
     ) {
         Text(
-            text = "FAVORITES",
+            text = stringResource(R.string.tab_presets),
             color = when (customization.theme) {
                 AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
                 AppTheme.FANTASY -> FantasyColors.NeonYellow
@@ -435,7 +449,7 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "No favorites yet",
+                    text = stringResource(R.string.no_presets_available),
                     color = when (customization.theme) {
                         AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                         AppTheme.FANTASY -> FantasyColors.SecondaryText
@@ -703,7 +717,7 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
             verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "ROLL HISTORY",
+            text = stringResource(R.string.tab_history),
             color = when (customization.theme) {
                 AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
                 AppTheme.FANTASY -> FantasyColors.NeonYellow
@@ -730,7 +744,7 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
                     modifier = Modifier.padding(start = 8.dp)
                 ) {
                     Text(
-                        text = "Clear History",
+                        text = stringResource(R.string.action_clear),
                         color = Color.White,
                         fontSize = 12.sp
                     )
@@ -742,7 +756,7 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
         
         if (rollHistory.isEmpty()) {
             Text(
-                text = "No rolls yet",
+                text = stringResource(R.string.no_rolls_yet),
                 color = when (customization.theme) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                     AppTheme.FANTASY -> FantasyColors.SecondaryText
@@ -771,9 +785,9 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
     if (showClearHistoryDialog) {
         AlertDialog(
             onDismissRequest = { showClearHistoryDialog = false },
-            title = {
-                Text(
-                    text = "Clear Roll History",
+                            title = {
+                    Text(
+                        text = stringResource(R.string.confirm_clear_history),
                     color = when (customization.theme) {
                         AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed
                         AppTheme.FANTASY -> FantasyColors.NeonRed
@@ -939,7 +953,7 @@ fun RollHistoryCard(
                         modifier = Modifier.padding(top = 4.dp)
                     ) {
                         Text(
-                            text = "Save to Favorites",
+                            text = stringResource(R.string.action_save),
                             color = Color.White,
                             fontSize = 10.sp
                         )
@@ -950,7 +964,7 @@ fun RollHistoryCard(
             // Show individual dice results
             if (roll.individualRolls.isNotEmpty()) {
                 Text(
-                    text = "Individual Rolls:",
+                    text = stringResource(R.string.individual_rolls_label),
                     color = when (theme) {
                         AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
                         AppTheme.FANTASY -> FantasyColors.PrimaryText
@@ -1008,7 +1022,7 @@ fun RollHistoryCard(
 
 private fun formatTimestamp(timestamp: Long): String {
     val date = java.util.Date(timestamp)
-    val formatter = java.text.SimpleDateFormat("MMM dd, yyyy HH:mm:ss", java.util.Locale.getDefault())
+    val formatter = java.text.SimpleDateFormat("MMM dd, yyyy HH:mm:ss", java.util.Locale.US)
     return formatter.format(date)
 }
 
@@ -1025,9 +1039,9 @@ fun SavePresetDialog(
     
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = {
-            Text(
-                text = "Save to Favorites",
+                    title = {
+                Text(
+                    text = stringResource(R.string.save_preset_dialog_title),
                 color = getThemeColor(theme, "NeonYellow"),
                 fontWeight = FontWeight.Bold
             )
