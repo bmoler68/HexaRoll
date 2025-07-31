@@ -660,9 +660,8 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         }
         
         // Weekend Warrior
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-        if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
-            // This would need to track weekend rolls specifically
+        if (stats.weekendRolls.size >= 50) {
+            unlockAchievement("weekend_warrior")
         }
         
         // Daily Grinder
@@ -902,6 +901,8 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             Log.e("AchievementManager", "Error resetting achievement progress", e)
         }
     }
+    
+
     
     fun getAchievementProgress(achievementId: String): AchievementProgress? {
         val achievement = _achievements.value.find { it.id == achievementId }

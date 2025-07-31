@@ -178,6 +178,8 @@ fun AchievementHeader(
                 color = MaterialTheme.colorScheme.onError
             )
         }
+        
+
     }
 }
 

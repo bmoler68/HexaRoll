@@ -437,4 +437,6 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
             achievementManager.resetAllProgress()
         }
     }
+    
+
 } 
