@@ -86,7 +86,7 @@ data class UserTitle(
 object AchievementDefinitions {
     
     // Rolling Milestones
-    val FIRST_ROLL = Achievement(
+    private val FIRST_ROLL = Achievement(
         id = "first_roll",
         name = "First Roll",
         description = "Complete your first dice roll",
@@ -95,7 +95,7 @@ object AchievementDefinitions {
         icon = "🎲"
     )
     
-    val ROLL_MASTER_100 = Achievement(
+    private val ROLL_MASTER_100 = Achievement(
         id = "roll_master_100",
         name = "Roll Master (100)",
         description = "Roll 100 times",
@@ -105,7 +105,7 @@ object AchievementDefinitions {
         maxProgress = 100
     )
     
-    val ROLL_MASTER_500 = Achievement(
+    private val ROLL_MASTER_500 = Achievement(
         id = "roll_master_500",
         name = "Roll Master (500)",
         description = "Roll 500 times",
@@ -115,7 +115,7 @@ object AchievementDefinitions {
         maxProgress = 500
     )
     
-    val ROLL_MASTER_1000 = Achievement(
+    private val ROLL_MASTER_1000 = Achievement(
         id = "roll_master_1000",
         name = "Roll Master (1000)",
         description = "Roll 1000 times",
@@ -125,7 +125,7 @@ object AchievementDefinitions {
         maxProgress = 1000
     )
     
-    val ROLL_MASTER_5000 = Achievement(
+    private val ROLL_MASTER_5000 = Achievement(
         id = "roll_master_5000",
         name = "Roll Master (5000)",
         description = "Roll 5000 times",
@@ -135,7 +135,7 @@ object AchievementDefinitions {
         maxProgress = 5000
     )
     
-    val ROLL_MASTER_10000 = Achievement(
+    private val ROLL_MASTER_10000 = Achievement(
         id = "roll_master_10000",
         name = "Roll Master (10000)",
         description = "Roll 10000 times",
@@ -145,7 +145,7 @@ object AchievementDefinitions {
         maxProgress = 10000
     )
     
-    val SPEED_DEMON = Achievement(
+    private val SPEED_DEMON = Achievement(
         id = "speed_demon",
         name = "Speed Demon",
         description = "Roll 10 times in under 30 seconds",
@@ -154,7 +154,7 @@ object AchievementDefinitions {
         icon = "⚡"
     )
     
-    val MARATHON_ROLLER = Achievement(
+    private val MARATHON_ROLLER = Achievement(
         id = "marathon_roller",
         name = "Marathon Roller",
         description = "Roll continuously for 1 minute",
@@ -163,7 +163,7 @@ object AchievementDefinitions {
         icon = "🏃"
     )
     
-    val SESSION_CHAMPION = Achievement(
+    private val SESSION_CHAMPION = Achievement(
         id = "session_champion",
         name = "Session Champion",
         description = "Roll 50+ times in a single app session",
@@ -173,7 +173,7 @@ object AchievementDefinitions {
         maxProgress = 50
     )
     
-    val PERSISTENT_ROLLER = Achievement(
+    private val PERSISTENT_ROLLER = Achievement(
         id = "persistent_roller",
         name = "Persistent Roller",
         description = "Roll 100+ times across all sessions",
@@ -184,7 +184,7 @@ object AchievementDefinitions {
     )
     
     // Dice Type Specialists
-    val D4_DEVOTEE = Achievement(
+    private val D4_DEVOTEE = Achievement(
         id = "d4_devotee",
         name = "D4 Devotee",
         description = "Roll D4 50 times",
@@ -194,7 +194,7 @@ object AchievementDefinitions {
         maxProgress = 50
     )
     
-    val D6_SPECIALIST = Achievement(
+    private val D6_SPECIALIST = Achievement(
         id = "d6_specialist",
         name = "D6 Specialist",
         description = "Roll D6 100 times",
@@ -204,7 +204,7 @@ object AchievementDefinitions {
         maxProgress = 100
     )
     
-    val D8_ENTHUSIAST = Achievement(
+    private val D8_ENTHUSIAST = Achievement(
         id = "d8_enthusiast",
         name = "D8 Enthusiast",
         description = "Roll D8 75 times",
@@ -214,7 +214,7 @@ object AchievementDefinitions {
         maxProgress = 75
     )
     
-    val D10_MASTER = Achievement(
+    private val D10_MASTER = Achievement(
         id = "d10_master",
         name = "D10 Master",
         description = "Roll D10 100 times",
@@ -224,7 +224,7 @@ object AchievementDefinitions {
         maxProgress = 100
     )
     
-    val D12_EXPERT = Achievement(
+    private val D12_EXPERT = Achievement(
         id = "d12_expert",
         name = "D12 Expert",
         description = "Roll D12 50 times",
@@ -234,7 +234,7 @@ object AchievementDefinitions {
         maxProgress = 50
     )
     
-    val D20_LEGEND = Achievement(
+    private val D20_LEGEND = Achievement(
         id = "d20_legend",
         name = "D20 Legend",
         description = "Roll D20 200 times",
@@ -244,7 +244,7 @@ object AchievementDefinitions {
         maxProgress = 200
     )
     
-    val D30_PIONEER = Achievement(
+    private val D30_PIONEER = Achievement(
         id = "d30_pioneer",
         name = "D30 Pioneer",
         description = "Roll D30 25 times",
@@ -254,7 +254,7 @@ object AchievementDefinitions {
         maxProgress = 25
     )
     
-    val D100_CENTURION = Achievement(
+    private val D100_CENTURION = Achievement(
         id = "d100_centurion",
         name = "D100 Centurion",
         description = "Roll D100 50 times",
@@ -264,7 +264,7 @@ object AchievementDefinitions {
         maxProgress = 50
     )
     
-    val POLYHEDRAL_MASTER = Achievement(
+    private val POLYHEDRAL_MASTER = Achievement(
         id = "polyhedral_master",
         name = "Polyhedral Master",
         description = "Roll all 8 dice types at least once",
@@ -275,7 +275,7 @@ object AchievementDefinitions {
     )
     
     // Result-Based Achievements
-    val SNAKE_EYES = Achievement(
+    private val SNAKE_EYES = Achievement(
         id = "snake_eyes",
         name = "Snake Eyes",
         description = "Roll 2 on 2D6",
@@ -284,7 +284,7 @@ object AchievementDefinitions {
         icon = "🐍"
     )
     
-    val BOXCARS = Achievement(
+    private val BOXCARS = Achievement(
         id = "boxcars",
         name = "Boxcars",
         description = "Roll 12 on 2D6",
@@ -293,7 +293,7 @@ object AchievementDefinitions {
         icon = "📦"
     )
     
-    val NATURAL_20 = Achievement(
+    private val NATURAL_20 = Achievement(
         id = "natural_20",
         name = "Natural 20",
         description = "Roll 20 on D20",
@@ -302,7 +302,7 @@ object AchievementDefinitions {
         icon = "⭐"
     )
     
-    val CRITICAL_FAIL = Achievement(
+    private val CRITICAL_FAIL = Achievement(
         id = "critical_fail",
         name = "Critical Fail",
         description = "Roll 1 on D20",
@@ -311,7 +311,7 @@ object AchievementDefinitions {
         icon = "💥"
     )
     
-    val PERFECT_100 = Achievement(
+    private val PERFECT_100 = Achievement(
         id = "perfect_100",
         name = "Perfect 100",
         description = "Roll 100 on D100",
@@ -320,7 +320,7 @@ object AchievementDefinitions {
         icon = "💯"
     )
     
-    val HIGH_ROLLER = Achievement(
+    private val HIGH_ROLLER = Achievement(
         id = "high_roller",
         name = "High Roller",
         description = "Roll maximum value on any dice 10 times",
@@ -330,7 +330,7 @@ object AchievementDefinitions {
         maxProgress = 10
     )
     
-    val LOW_BALLER = Achievement(
+    private val LOW_BALLER = Achievement(
         id = "low_baller",
         name = "Low Baller",
         description = "Roll minimum value (1) on any dice 10 times",
@@ -340,7 +340,7 @@ object AchievementDefinitions {
         maxProgress = 10
     )
     
-    val AVERAGE_JOE = Achievement(
+    private val AVERAGE_JOE = Achievement(
         id = "average_joe",
         name = "Average Joe",
         description = "Roll exactly the average value for a dice type 10 times",
@@ -350,7 +350,7 @@ object AchievementDefinitions {
         maxProgress = 10
     )
     
-    val LUCKY_SEVENS = Achievement(
+    private val LUCKY_SEVENS = Achievement(
         id = "lucky_sevens",
         name = "Lucky Sevens",
         description = "Roll 7 on 2D6",
@@ -359,7 +359,7 @@ object AchievementDefinitions {
         icon = "🍀"
     )
     
-    val HIGH_NOON = Achievement(
+    private val HIGH_NOON = Achievement(
         id = "high_noon",
         name = "High Noon",
         description = "Roll at noon (12:00)",
@@ -369,7 +369,7 @@ object AchievementDefinitions {
     )
     
     // Streak & Pattern Achievements
-    val HOT_STREAK = Achievement(
+    private val HOT_STREAK = Achievement(
         id = "hot_streak",
         name = "Hot Streak",
         description = "Roll the same number 3 times in a row",
@@ -378,7 +378,7 @@ object AchievementDefinitions {
         icon = "🔥"
     )
     
-    val COLD_STREAK = Achievement(
+    private val COLD_STREAK = Achievement(
         id = "cold_streak",
         name = "Cold Streak",
         description = "Roll 1 three times in a row",
@@ -387,7 +387,7 @@ object AchievementDefinitions {
         icon = "❄️"
     )
     
-    val ALTERNATING = Achievement(
+    private val ALTERNATING = Achievement(
         id = "alternating",
         name = "Alternating",
         description = "Roll high/low/high/low pattern",
@@ -396,7 +396,7 @@ object AchievementDefinitions {
         icon = "🔄"
     )
     
-    val CONSISTENT = Achievement(
+    private val CONSISTENT = Achievement(
         id = "consistent",
         name = "Consistent",
         description = "Roll within 2 points of each other for 5 rolls",
@@ -405,7 +405,7 @@ object AchievementDefinitions {
         icon = "📏"
     )
     
-    val UNPREDICTABLE = Achievement(
+    private val UNPREDICTABLE = Achievement(
         id = "unpredictable",
         name = "Unpredictable",
         description = "Roll maximum range (1 to max) in 3 consecutive rolls",
@@ -415,7 +415,7 @@ object AchievementDefinitions {
     )
     
     // Combination & Modifier Achievements
-    val MODIFIER_MASTER = Achievement(
+    private val MODIFIER_MASTER = Achievement(
         id = "modifier_master",
         name = "Modifier Master",
         description = "Use modifiers totaling +10 or more",
@@ -424,7 +424,7 @@ object AchievementDefinitions {
         icon = "➕"
     )
     
-    val NEGATIVE_NANCY = Achievement(
+    private val NEGATIVE_NANCY = Achievement(
         id = "negative_nancy",
         name = "Negative Nancy",
         description = "Use negative modifiers totaling -10 or more",
@@ -433,7 +433,7 @@ object AchievementDefinitions {
         icon = "➖"
     )
     
-    val BALANCED = Achievement(
+    private val BALANCED = Achievement(
         id = "balanced",
         name = "Balanced",
         description = "Use modifiers in 10 different rolls",
@@ -443,7 +443,7 @@ object AchievementDefinitions {
         maxProgress = 10
     )
     
-    val EXTREME = Achievement(
+    private val EXTREME = Achievement(
         id = "extreme",
         name = "Extreme",
         description = "Roll with +20 or -20 modifier",
@@ -452,7 +452,7 @@ object AchievementDefinitions {
         icon = "💪"
     )
     
-    val MIXED_BAG = Achievement(
+    private val MIXED_BAG = Achievement(
         id = "mixed_bag",
         name = "Mixed Bag",
         description = "Roll 3+ different dice types in one roll",
@@ -461,7 +461,7 @@ object AchievementDefinitions {
         icon = "🎒"
     )
     
-    val DICE_HOARDER = Achievement(
+    private val DICE_HOARDER = Achievement(
         id = "dice_hoarder",
         name = "Dice Hoarder",
         description = "Roll 10+ dice in a single roll",
@@ -471,7 +471,7 @@ object AchievementDefinitions {
     )
     
     // Theme-Based Achievements
-    val THEME_EXPLORER = Achievement(
+    private val THEME_EXPLORER = Achievement(
         id = "theme_explorer",
         name = "Theme Explorer",
         description = "Use all five themes (Cyberpunk, Fantasy, Sci-Fi, Western, Ancient)",
@@ -481,7 +481,7 @@ object AchievementDefinitions {
         maxProgress = 5
     )
     
-    val THEME_LOYALIST = Achievement(
+    private val THEME_LOYALIST = Achievement(
         id = "theme_loyalist",
         name = "Theme Loyalist",
         description = "Roll 100 times with the same theme",
@@ -491,7 +491,7 @@ object AchievementDefinitions {
         maxProgress = 100
     )
     
-    val THEME_SWITCHER = Achievement(
+    private val THEME_SWITCHER = Achievement(
         id = "theme_switcher",
         name = "Theme Switcher",
         description = "Change themes 10 times in one session",
@@ -502,7 +502,7 @@ object AchievementDefinitions {
     )
     
     // Favorites & History Achievements
-    val PRESET_PIONEER = Achievement(
+    private val PRESET_PIONEER = Achievement(
         id = "preset_pioneer",
         name = "Preset Pioneer",
         description = "Create your first favorite",
@@ -511,7 +511,7 @@ object AchievementDefinitions {
         icon = "⭐"
     )
     
-    val PRESET_COLLECTOR_5 = Achievement(
+    private val PRESET_COLLECTOR_5 = Achievement(
         id = "preset_collector_5",
         name = "Preset Collector (5)",
         description = "Create 5 favorites",
@@ -521,7 +521,7 @@ object AchievementDefinitions {
         maxProgress = 5
     )
     
-    val PRESET_COLLECTOR_10 = Achievement(
+    private val PRESET_COLLECTOR_10 = Achievement(
         id = "preset_collector_10",
         name = "Preset Collector (10)",
         description = "Create 10 favorites",
@@ -531,7 +531,7 @@ object AchievementDefinitions {
         maxProgress = 10
     )
     
-    val PRESET_COLLECTOR_25 = Achievement(
+    private val PRESET_COLLECTOR_25 = Achievement(
         id = "preset_collector_25",
         name = "Preset Collector (25)",
         description = "Create 25 favorites",
@@ -541,7 +541,7 @@ object AchievementDefinitions {
         maxProgress = 25
     )
     
-    val HISTORY_BUFF = Achievement(
+    private val HISTORY_BUFF = Achievement(
         id = "history_buff",
         name = "History Buff",
         description = "View roll history 50 times",
@@ -551,7 +551,7 @@ object AchievementDefinitions {
         maxProgress = 50
     )
     
-    val MEMORY_MASTER = Achievement(
+    private val MEMORY_MASTER = Achievement(
         id = "memory_master",
         name = "Memory Master",
         description = "Have 50+ rolls in history",
@@ -562,7 +562,7 @@ object AchievementDefinitions {
     )
     
     // Special Event Achievements
-    val MIDNIGHT_ROLLER = Achievement(
+    private val MIDNIGHT_ROLLER = Achievement(
         id = "midnight_roller",
         name = "Midnight Roller",
         description = "Roll at midnight",
@@ -571,7 +571,7 @@ object AchievementDefinitions {
         icon = "🌙"
     )
     
-    val LUCKY_HOUR = Achievement(
+    private val LUCKY_HOUR = Achievement(
         id = "lucky_hour",
         name = "Lucky Hour",
         description = "Roll at 7:11, 11:11, etc.",
@@ -580,7 +580,7 @@ object AchievementDefinitions {
         icon = "🍀"
     )
     
-    val WEEKEND_WARRIOR = Achievement(
+    private val WEEKEND_WARRIOR = Achievement(
         id = "weekend_warrior",
         name = "Weekend Warrior",
         description = "Roll 50+ times on weekends",
@@ -590,7 +590,7 @@ object AchievementDefinitions {
         maxProgress = 50
     )
     
-    val DAILY_GRINDER = Achievement(
+    private val DAILY_GRINDER = Achievement(
         id = "daily_grinder",
         name = "Daily Grinder",
         description = "Roll every day for a week",
@@ -600,7 +600,7 @@ object AchievementDefinitions {
         maxProgress = 7
     )
     
-    val MONTHLY_MASTER = Achievement(
+    private val MONTHLY_MASTER = Achievement(
         id = "monthly_master",
         name = "Monthly Master",
         description = "Roll every day for a month",

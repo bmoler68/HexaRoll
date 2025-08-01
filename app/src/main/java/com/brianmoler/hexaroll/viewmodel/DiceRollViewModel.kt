@@ -90,7 +90,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         }
     }
     
-    fun updateDiceCount(diceType: DiceType, newCount: Int) {
+    private fun updateDiceCount(diceType: DiceType, newCount: Int) {
         if (!ErrorHandler.validateDiceCount(newCount)) {
             ErrorHandler.handleValidationError(getApplication(), "dice count", newCount)
             return
@@ -376,7 +376,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         }
     }
     
-    fun getTotalDiceCount(): Int {
+    private fun getTotalDiceCount(): Int {
         return _diceSelections.value.values.sumOf { it.count }
     }
     
