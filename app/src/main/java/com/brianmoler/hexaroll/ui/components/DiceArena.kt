@@ -9,9 +9,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.compose.ui.res.stringResource
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.data.DiceType
 import com.brianmoler.hexaroll.ui.theme.CyberpunkColors
@@ -38,6 +39,9 @@ fun DiceArena(viewModel: DiceRollViewModel) {
     val diceSelections by viewModel.diceSelections.collectAsState()
     val modifier by viewModel.modifier.collectAsState()
     val customization by viewModel.customization.collectAsState()
+    
+    // Collapsible state management
+    var isCardsExpanded by remember { mutableStateOf(false) }
     
     Column(
         modifier = Modifier
@@ -137,26 +141,6 @@ fun DiceArena(viewModel: DiceRollViewModel) {
         
         Spacer(modifier = Modifier.height(8.dp))
         
-        // Total and Result Row
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            // Total Display
-            TotalDisplay(
-                viewModel = viewModel,
-                modifier = Modifier.weight(1f)
-            )
-            
-            // Result Display
-            ResultDisplay(
-                viewModel = viewModel,
-                modifier = Modifier.weight(1f)
-            )
-        }
-        
-        Spacer(modifier = Modifier.height(8.dp))
-        
         // Action Buttons Row
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -175,6 +159,181 @@ fun DiceArena(viewModel: DiceRollViewModel) {
                 viewModel = viewModel,
                 modifier = Modifier.weight(1f)
             )
+        }
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        // Collapsible Results Section
+        CollapsibleResultsSection(
+            viewModel = viewModel,
+            isExpanded = isCardsExpanded,
+            onToggle = { isCardsExpanded = !isCardsExpanded },
+            theme = customization.theme
+        )
+    }
+}
+
+@Composable
+fun CollapsibleResultsSection(
+    viewModel: DiceRollViewModel,
+    isExpanded: Boolean,
+    onToggle: () -> Unit,
+    theme: AppTheme
+) {
+    val currentResult by viewModel.currentResult.collectAsState()
+    val diceSelections by viewModel.diceSelections.collectAsState()
+    val modifierValue by viewModel.modifier.collectAsState()
+    
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+            }
+        ),
+        border = androidx.compose.foundation.BorderStroke(
+            width = 1.dp,
+            color = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                AppTheme.FANTASY -> FantasyColors.BorderBlue
+                AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                AppTheme.WESTERN -> WesternColors.BorderBlue
+                AppTheme.ANCIENT -> AncientColors.BorderBlue
+            }
+        )
+    ) {
+        Column {
+            // Toggle Header
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onToggle() }
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Compact Summary
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    // Dice Summary (truncated)
+                    val totalDice = diceSelections.values.sumOf { it.count }
+                    val diceTypes = diceSelections.values.filter { it.count > 0 }
+                    
+                    val summaryText = when {
+                        diceTypes.isEmpty() -> stringResource(R.string.no_dice_selected)
+                        diceTypes.size <= 2 -> {
+                            val notation = diceTypes.joinToString(" + ") { selection ->
+                                if (selection.diceType == DiceType.D100) {
+                                    "${selection.count}x100"
+                                } else {
+                                    "${selection.count}${selection.diceType.displayName}"
+                                }
+                            }
+                            val modifierText = if (modifierValue != 0) (if (modifierValue > 0) "+$modifierValue" else "$modifierValue") else ""
+                            notation + (if (modifierText.isNotBlank()) " $modifierText" else "")
+                        }
+                        else -> {
+                            val totalCount = diceTypes.sumOf { it.count }
+                            val modifierText = if (modifierValue != 0) (if (modifierValue > 0) "+$modifierValue" else "$modifierValue") else ""
+                            "$totalCount dice" + (if (modifierText.isNotBlank()) " $modifierText" else "")
+                        }
+                    }
+                    
+                    Text(
+                        text = summaryText,
+                        color = when (theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                            AppTheme.FANTASY -> FantasyColors.NeonBlue
+                            AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                            AppTheme.WESTERN -> WesternColors.NeonBlue
+                            AppTheme.ANCIENT -> AncientColors.NeonBlue
+                        },
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1
+                    )
+                    
+                    // Result Summary
+                    currentResult?.let { result ->
+                        Text(
+                            text = "= ${result.total}",
+                            color = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                                AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                                AppTheme.WESTERN -> WesternColors.NeonYellow
+                                AppTheme.ANCIENT -> AncientColors.NeonYellow
+                            },
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    } ?: run {
+                        Text(
+                            text = stringResource(R.string.no_rolls_yet),
+                            color = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                                AppTheme.FANTASY -> FantasyColors.SecondaryText
+                                AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                                AppTheme.WESTERN -> WesternColors.SecondaryText
+                                AppTheme.ANCIENT -> AncientColors.SecondaryText
+                            },
+                            fontSize = 11.sp
+                        )
+                    }
+                }
+                
+                // Toggle Icon
+                Icon(
+                    imageVector = if (isExpanded) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
+                    contentDescription = if (isExpanded) "Hide details" else "Show details",
+                    tint = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                        AppTheme.FANTASY -> FantasyColors.PrimaryText
+                        AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                        AppTheme.WESTERN -> WesternColors.PrimaryText
+                        AppTheme.ANCIENT -> AncientColors.PrimaryText
+                    },
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+            
+            // Expanded Content
+            if (isExpanded) {
+                Divider(
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                        AppTheme.FANTASY -> FantasyColors.BorderBlue
+                        AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                        AppTheme.WESTERN -> WesternColors.BorderBlue
+                        AppTheme.ANCIENT -> AncientColors.BorderBlue
+                    },
+                    thickness = 1.dp
+                )
+                
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    // Total Display
+                    TotalDisplay(
+                        viewModel = viewModel,
+                        modifier = Modifier.weight(1f)
+                    )
+                    
+                    // Result Display
+                    ResultDisplay(
+                        viewModel = viewModel,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
         }
     }
 }
@@ -224,7 +383,7 @@ fun DiceCard(
                 theme = theme,
                 isSelected = count > 0
             )
-            
+
             // Dice Type Label
             Text(
                 text = diceType.displayName,
@@ -238,7 +397,7 @@ fun DiceCard(
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             // Count Controls
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -273,7 +432,7 @@ fun DiceCard(
                 ) {
                     Text("-", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 }
-                
+
                 Text(
                     text = count.toString(),
                     color = when (theme) {
@@ -288,7 +447,7 @@ fun DiceCard(
                     modifier = Modifier.width(24.dp),
                     textAlign = TextAlign.Center
                 )
-                
+
                 androidx.compose.foundation.layout.Box(
                     modifier = Modifier
                         .size(36.dp)
@@ -600,7 +759,9 @@ fun ResultDisplay(
         )
     ) {
         Column(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -617,7 +778,7 @@ fun ResultDisplay(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             currentResult?.let { result ->
                 Text(
                     text = "${result.total}",
@@ -647,32 +808,71 @@ fun ResultDisplay(
                     modifier = Modifier.fillMaxWidth()
                 )
                 if (result.individualRolls.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(2.dp))
-                    val breakdown = result.diceSelections.zip(result.individualRolls)
-                        .joinToString("\n") { (sel, rolls) ->
-                            if (sel.diceType == DiceType.D100 && result.d100Rolls.isNotEmpty()) {
-                                // Show D10 breakdown for all D100 rolls
-                                val d100Details = result.d100Rolls.map { d100Roll ->
-                                    "${d100Roll.result} [${d100Roll.tensDie},${d100Roll.onesDie}]"
+                    Spacer(modifier = Modifier.height(4.dp))
+                    
+                    // Scrollable breakdown section
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    ) {
+                        androidx.compose.foundation.lazy.LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            val breakdown = result.diceSelections.zip(result.individualRolls)
+                            
+                            items(breakdown.size) { index ->
+                                val (sel, rolls) = breakdown[index]
+                                val breakdownText = if (sel.diceType == DiceType.D100 && result.d100Rolls.isNotEmpty()) {
+                                    // Show D10 breakdown for all D100 rolls
+                                    val d100Details = result.d100Rolls.map { d100Roll ->
+                                        "${d100Roll.result} [${d100Roll.tensDie},${d100Roll.onesDie}]"
+                                    }
+                                    "${sel.diceType.displayName}: ${d100Details.joinToString(", ")}"
+                                } else {
+                                    "${sel.diceType.displayName}: [${rolls.joinToString(", ")}]"
                                 }
-                                "${sel.diceType.displayName}: ${d100Details.joinToString(", ")}"
-                            } else {
-                                "${sel.diceType.displayName}: [${rolls.joinToString(", ")}]"
+                                
+                                Text(
+                                    text = breakdownText,
+                                    color = when (customization.theme) {
+                                        AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                                        AppTheme.FANTASY -> FantasyColors.SecondaryText
+                                        AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                                        AppTheme.WESTERN -> WesternColors.SecondaryText
+                                        AppTheme.ANCIENT -> AncientColors.SecondaryText
+                                    },
+                                    fontSize = 9.sp,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
                             }
                         }
-                    Text(
-                        text = breakdown,
-                        color = when (customization.theme) {
-                            AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
-                            AppTheme.FANTASY -> FantasyColors.SecondaryText
-                            AppTheme.SCI_FI -> SciFiColors.SecondaryText
-                            AppTheme.WESTERN -> WesternColors.SecondaryText
-                            AppTheme.ANCIENT -> AncientColors.SecondaryText
-                        },
-                        fontSize = 9.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                        
+                        // Scroll indicator gradient overlay at bottom
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .fillMaxWidth()
+                                .height(12.dp)
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.Transparent,
+                                            when (customization.theme) {
+                                                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(alpha = 0.8f)
+                                                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(alpha = 0.8f)
+                                                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(alpha = 0.8f)
+                                                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(alpha = 0.8f)
+                                                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(alpha = 0.8f)
+                                            }
+                                        )
+                                    )
+                                )
+                                .zIndex(1f)
+                        )
+                    }
                 }
             } ?: run {
                 Text(
@@ -700,7 +900,7 @@ fun ClearArenaButton(
     viewModel: DiceRollViewModel
 ) {
     val customization by viewModel.customization.collectAsState()
-    
+
     Button(
         onClick = onClick,
         modifier = modifier.height(48.dp),
@@ -742,7 +942,7 @@ fun RollButton(
     val diceSelections by viewModel.diceSelections.collectAsState()
     val customization by viewModel.customization.collectAsState()
     val isEnabled = diceSelections.values.any { it.count > 0 }
-    
+
     Button(
         onClick = onClick,
         enabled = isEnabled,
