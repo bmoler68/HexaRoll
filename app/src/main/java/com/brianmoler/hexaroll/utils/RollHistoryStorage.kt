@@ -1,7 +1,6 @@
 package com.brianmoler.hexaroll.utils
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.brianmoler.hexaroll.data.RollResult
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -10,7 +9,7 @@ import kotlinx.coroutines.withContext
 
 class RollHistoryStorage(private val context: Context) {
     
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
+    private val sharedPreferences = context.getSharedPreferences(
         "hexaroll_history", 
         Context.MODE_PRIVATE
     )

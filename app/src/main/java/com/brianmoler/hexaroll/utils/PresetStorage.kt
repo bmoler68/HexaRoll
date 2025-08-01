@@ -1,7 +1,6 @@
 package com.brianmoler.hexaroll.utils
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.brianmoler.hexaroll.data.PresetRoll
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -10,7 +9,7 @@ import kotlinx.coroutines.withContext
 
 class PresetStorage(private val context: Context) {
     
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
+    private val sharedPreferences = context.getSharedPreferences(
         "hexaroll_presets", 
         Context.MODE_PRIVATE
     )

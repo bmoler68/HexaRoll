@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">HexaRoll</string>
-    <string name="app_description">Multi-theme RPG dice rolling app with comprehensive achievement system</string>
     
     <!-- Tab Names -->
     <string name="tab_dice_arena">Dice Arena</string>
@@ -14,7 +13,6 @@
     <string name="modifier_label">Modifier</string>
     <string name="total_label">Total</string>
     <string name="result_label">Result</string>
-    <string name="dice_count_label">Dice Count</string>
     
     <!-- Theme Names -->
     <string name="theme_cyberpunk">Cyberpunk</string>
@@ -30,75 +28,29 @@
     <string name="theme_description_western">Wood grain and sheriff stars with rustic charm</string>
     <string name="theme_description_ancient">Roman marble and golden laurels with classical elegance</string>
     
-    <!-- Achievement Categories -->
-    <string name="achievement_category_rolling_milestones">Rolling Milestones</string>
-    <string name="achievement_category_dice_specialists">Dice Specialists</string>
-    <string name="achievement_category_result_based">Result Based</string>
-    <string name="achievement_category_streak_pattern">Streak &amp; Pattern</string>
-    <string name="achievement_category_combination_modifiers">Combination &amp; Modifiers</string>
-    <string name="achievement_category_theme_based">Theme Based</string>
-    <string name="achievement_category_favorites_history">Favorites &amp; History</string>
-    <string name="achievement_category_special_events">Special Events</string>
-    
-    <!-- Achievement Tiers -->
-    <string name="achievement_tier_bronze">Bronze</string>
-    <string name="achievement_tier_silver">Silver</string>
-    <string name="achievement_tier_gold">Gold</string>
-    <string name="achievement_tier_platinum">Platinum</string>
-    <string name="achievement_tier_diamond">Diamond</string>
+
     
     <!-- Messages -->
     <string name="achievement_unlocked">Achievement Unlocked!</string>
     <string name="achievement_awesome">Awesome!</string>
     <string name="preset_loaded">Favorite loaded successfully!</string>
-    <string name="history_cleared">Roll history cleared</string>
-    <string name="preset_saved">Preset saved</string>
+
     <string name="no_dice_selected">No dice selected</string>
     <string name="no_presets_available">No favorites yet</string>
     <string name="no_rolls_yet">No rolls yet</string>
     <string name="individual_rolls_label">Individual Rolls:</string>
+    <string name="dice_count_single">1 die</string>
+    <string name="dice_count_plural">%d dice</string>
     <string name="save_preset_dialog_title">Save to Favorites</string>
-    
-    <!-- Accessibility Content Descriptions -->
-    <string name="accessibility_add_dice">Add %1$s</string>
-    <string name="accessibility_dice_selected">%1$d %2$s selected</string>
-    <string name="accessibility_dice_selected_single">1 %1$s selected</string>
-    <string name="accessibility_no_modifier">No modifier</string>
-    <string name="accessibility_modifier_positive">Modifier: +%1$d</string>
-    <string name="accessibility_modifier_negative">Modifier: %1$d</string>
-    <string name="accessibility_no_dice_selected">No dice selected</string>
-    <string name="accessibility_roll_single_die">Roll 1 die%1$s</string>
-    <string name="accessibility_roll_multiple_dice">Roll %1$d dice%2$s</string>
-    <string name="accessibility_switch_theme">Switch to %1$s theme</string>
-    <string name="accessibility_load_preset">Load preset: %1$s</string>
-    <string name="accessibility_achievement_progress">%1$s achievement: %2$d out of %3$d</string>
-    
-    <!-- Accessibility -->
-    <string name="content_description_dice_button">Dice button</string>
-    <string name="content_description_roll_button">Roll dice button</string>
-    <string name="content_description_modifier_button">Modifier button</string>
-    <string name="content_description_theme_button">Theme selection button</string>
-    <string name="content_description_preset_button">Preset button</string>
-    <string name="content_description_achievement_button">Achievement button</string>
-    
-    <!-- Error Messages -->
-    <string name="error_loading_data">Error loading data</string>
-    <string name="error_saving_data">Error saving data</string>
-    <string name="error_network">Network error</string>
-    <string name="error_unknown">Unknown error occurred</string>
-    
-    <!-- Confirmation Dialogs -->
-    <string name="confirm_clear_history">Clear roll history?</string>
-    <string name="confirm_reset_achievements">Reset all achievement progress?</string>
-    <string name="confirm_delete_preset">Delete this preset?</string>
-    
-    <!-- Actions -->
     <string name="action_clear">Clear</string>
-    <string name="action_reset">Reset</string>
-    <string name="action_delete">Delete</string>
-    <string name="action_cancel">Cancel</string>
-    <string name="action_ok">OK</string>
-    <string name="action_save">Save</string>
-    <string name="action_load">Load</string>
     <string name="action_retry">Retry</string>
+    <string name="confirm_reset_achievements">Reset all achievement progress?</string>
+    <string name="action_reset">Reset</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="confirm_clear_history">Clear roll history?</string>
+    <string name="action_save">Save</string>
+    
+
+    
+
 </resources>

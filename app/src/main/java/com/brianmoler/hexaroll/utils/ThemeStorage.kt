@@ -1,12 +1,11 @@
 package com.brianmoler.hexaroll.utils
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.brianmoler.hexaroll.data.AppTheme
 import com.google.gson.Gson
 
 class ThemeStorage(context: Context) {
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
+    private val sharedPreferences = context.getSharedPreferences(
         "theme_preferences",
         Context.MODE_PRIVATE
     )

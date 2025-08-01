@@ -1,7 +1,6 @@
 package com.brianmoler.hexaroll.utils
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.brianmoler.hexaroll.data.Achievement
 import com.brianmoler.hexaroll.data.AchievementProgress
 import com.brianmoler.hexaroll.data.AchievementStats
@@ -15,7 +14,7 @@ import com.google.gson.*
 
 class AchievementStorage(private val context: Context) {
     
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
+    private val sharedPreferences = context.getSharedPreferences(
         "hexaroll_achievements", 
         Context.MODE_PRIVATE
     )

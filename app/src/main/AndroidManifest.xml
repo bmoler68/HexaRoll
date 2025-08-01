@@ -15,8 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HexaRoll"
         android:hardwareAccelerated="true"
-        android:largeHeap="false"
-        android:description="@string/app_description">
+        android:largeHeap="false">
         <activity
             android:name=".MainActivity"
             android:exported="true"

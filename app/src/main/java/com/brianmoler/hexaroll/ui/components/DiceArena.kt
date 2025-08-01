@@ -697,7 +697,7 @@ fun TotalDisplay(
                 )
             }
             Text(
-                text = "$totalDice dice",
+                text = if (totalDice == 1) stringResource(R.string.dice_count_single) else stringResource(R.string.dice_count_plural, totalDice),
                 color = when (customization.theme) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
                     AppTheme.FANTASY -> FantasyColors.PrimaryText
