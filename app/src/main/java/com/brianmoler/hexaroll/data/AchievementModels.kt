@@ -289,7 +289,7 @@ object AchievementDefinitions {
         name = "Boxcars",
         description = "Roll 12 on 2D6",
         category = AchievementCategory.RESULT_BASED,
-        tier = AchievementTier.SILVER,
+        tier = AchievementTier.BRONZE,
         icon = "📦"
     )
     
@@ -357,6 +357,15 @@ object AchievementDefinitions {
         category = AchievementCategory.RESULT_BASED,
         tier = AchievementTier.BRONZE,
         icon = "🍀"
+    )
+    
+    val HIGH_NOON = Achievement(
+        id = "high_noon",
+        name = "High Noon",
+        description = "Roll at noon (12:00)",
+        category = AchievementCategory.SPECIAL_EVENTS,
+        tier = AchievementTier.SILVER,
+        icon = "🌞"
     )
     
     // Streak & Pattern Achievements
@@ -558,7 +567,7 @@ object AchievementDefinitions {
         name = "Midnight Roller",
         description = "Roll at midnight",
         category = AchievementCategory.SPECIAL_EVENTS,
-        tier = AchievementTier.GOLD,
+        tier = AchievementTier.SILVER,
         icon = "🌙"
     )
     
@@ -607,11 +616,11 @@ object AchievementDefinitions {
         ROLL_MASTER_100, ROLL_MASTER_500, ROLL_MASTER_1000, ROLL_MASTER_5000, ROLL_MASTER_10000,
         SPEED_DEMON, MARATHON_ROLLER, SESSION_CHAMPION, PERSISTENT_ROLLER,
         D4_DEVOTEE, D6_SPECIALIST, D8_ENTHUSIAST, D10_MASTER, D12_EXPERT, D20_LEGEND, D30_PIONEER, D100_CENTURION, POLYHEDRAL_MASTER,
-        SNAKE_EYES, BOXCARS, NATURAL_20, CRITICAL_FAIL, PERFECT_100, HIGH_ROLLER, LOW_BALLER, AVERAGE_JOE, LUCKY_SEVENS,
+        SNAKE_EYES, BOXCARS, LUCKY_SEVENS, NATURAL_20, CRITICAL_FAIL, PERFECT_100, HIGH_ROLLER, LOW_BALLER, AVERAGE_JOE,
         HOT_STREAK, COLD_STREAK, ALTERNATING, CONSISTENT, UNPREDICTABLE,
         MODIFIER_MASTER, NEGATIVE_NANCY, BALANCED, EXTREME, MIXED_BAG, DICE_HOARDER,
         THEME_EXPLORER, THEME_LOYALIST, THEME_SWITCHER,
         PRESET_PIONEER, PRESET_COLLECTOR_5, PRESET_COLLECTOR_10, PRESET_COLLECTOR_25, HISTORY_BUFF, MEMORY_MASTER,
-        MIDNIGHT_ROLLER, LUCKY_HOUR, WEEKEND_WARRIOR, DAILY_GRINDER, MONTHLY_MASTER
+        MIDNIGHT_ROLLER, HIGH_NOON, LUCKY_HOUR, WEEKEND_WARRIOR, DAILY_GRINDER, MONTHLY_MASTER
     )
 } 

@@ -672,6 +672,11 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             unlockAchievement("lucky_hour")
         }
         
+        // High Noon
+        if (hour == 12 && minute == 0) {
+            unlockAchievement("high_noon")
+        }
+        
         // Weekend Warrior
         if (stats.weekendRolls.size >= 50) {
             unlockAchievement("weekend_warrior")
