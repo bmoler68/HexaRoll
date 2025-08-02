@@ -1,7 +1,5 @@
 package com.brianmoler.hexaroll.data
 
-import androidx.compose.ui.graphics.Color
-
 enum class DiceType(val sides: Int, val displayName: String) {
     D4(4, "D4"),
     D6(6, "D6"),

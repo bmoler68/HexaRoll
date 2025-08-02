@@ -28,7 +28,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     private val achievementManager = AchievementManager(achievementStorage)
     
     private val _diceSelections = MutableStateFlow(
-        DiceType.values().associateWith { DiceSelection(it, 0) }
+        DiceType.entries.associateWith { DiceSelection(it, 0) }
     )
     val diceSelections: StateFlow<Map<DiceType, DiceSelection>> = _diceSelections.asStateFlow()
     

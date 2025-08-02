@@ -3,18 +3,12 @@ package com.brianmoler.hexaroll.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,11 +25,8 @@ import com.brianmoler.hexaroll.R
 import com.brianmoler.hexaroll.data.*
 import com.brianmoler.hexaroll.ui.components.AchievementNotification
 import com.brianmoler.hexaroll.ui.components.DiceArena
-import com.brianmoler.hexaroll.ui.screens.AchievementScreen
 import com.brianmoler.hexaroll.ui.theme.*
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
-import java.text.SimpleDateFormat
-import java.util.*
 
 // Helper function for theme-aware colors
 private fun getThemeColor(theme: AppTheme, colorType: String): Color {
@@ -120,7 +110,7 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     viewModel: DiceRollViewModel
 ) {
-    var selectedTabIndex by remember { mutableStateOf(0) }
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
     val customization by viewModel.customization.collectAsState()
     val newlyUnlockedAchievements by viewModel.newlyUnlockedAchievements.collectAsState()
     
@@ -282,7 +272,7 @@ fun CustomizeScreen(viewModel: DiceRollViewModel) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(AppTheme.values()) { theme ->
+            items(AppTheme.entries) { theme ->
                 ThemeSelectionCard(
                     theme = theme,
                     isSelected = theme == customization.theme,

@@ -12,7 +12,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -94,7 +93,7 @@ fun DiceArena(viewModel: DiceRollViewModel) {
                 verticalArrangement = Arrangement.spacedBy(6.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(DiceType.values()) { diceType ->
+                items(DiceType.entries) { diceType ->
                     DiceCard(
                         diceType = diceType,
                         count = diceSelections[diceType]?.count ?: 0,

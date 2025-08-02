@@ -1,7 +1,6 @@
 package com.brianmoler.hexaroll.utils
 
 import android.content.Context
-import com.brianmoler.hexaroll.data.Achievement
 import com.brianmoler.hexaroll.data.AchievementProgress
 import com.brianmoler.hexaroll.data.AchievementStats
 import com.brianmoler.hexaroll.data.UserTitle
@@ -9,7 +8,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import com.google.gson.*
 
 
 class AchievementStorage(private val context: Context) {

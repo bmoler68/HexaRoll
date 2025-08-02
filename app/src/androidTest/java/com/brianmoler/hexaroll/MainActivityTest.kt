@@ -39,8 +39,44 @@ class MainActivityTest {
     @Test
     fun testDiceSelection() {
         // Test dice selection functionality
-        // This would test the dice selection UI elements
-        // Note: Actual implementation would depend on the specific UI structure
+        // Start with D6 dice (first in the grid)
+        val d6Card = composeTestRule.onNodeWithText("D6")
+        d6Card.assertExists()
+        
+        // Find the increment button for D6 (the "+" button)
+        val incrementButton = composeTestRule.onNodeWithText("+")
+        val decrementButton = composeTestRule.onNodeWithText("-")
+        
+        // Initially count should be 0
+        composeTestRule.onNodeWithText("0").assertExists()
+        
+        // Click increment button to add a D6
+        incrementButton.performClick()
+        
+        // Count should now be 1
+        composeTestRule.onNodeWithText("1").assertExists()
+        
+        // Click increment again to add another D6
+        incrementButton.performClick()
+        
+        // Count should now be 2
+        composeTestRule.onNodeWithText("2").assertExists()
+        
+        // Click decrement to remove one D6
+        decrementButton.performClick()
+        
+        // Count should be back to 1
+        composeTestRule.onNodeWithText("1").assertExists()
+        
+        // Click decrement again to remove the last D6
+        decrementButton.performClick()
+        
+        // Count should be back to 0
+        composeTestRule.onNodeWithText("0").assertExists()
+        
+        // Test that decrement doesn't go below 0
+        decrementButton.performClick()
+        composeTestRule.onNodeWithText("0").assertExists()
     }
     
     @Test
