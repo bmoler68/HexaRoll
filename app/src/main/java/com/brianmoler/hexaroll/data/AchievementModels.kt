@@ -71,7 +71,8 @@ data class AchievementStats(
     val dailyRolls: MutableSet<String> = mutableSetOf(), // Date strings
     val weeklyRolls: MutableSet<String> = mutableSetOf(), // Week strings
     val monthlyRolls: MutableSet<String> = mutableSetOf(), // Month strings
-    val weekendRolls: MutableSet<String> = mutableSetOf() // Weekend date strings
+    val weekendRolls: MutableSet<String> = mutableSetOf(), // Weekend date strings
+    val totalWeekendRolls: Int = 0 // Total rolls on weekends
 )
 
 data class UserTitle(

@@ -165,9 +165,9 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
                     "preset_collector_25" -> minOf(stats.totalFavorites, 25)
                     "history_buff" -> minOf(stats.historyViews, 50)
                     "memory_master" -> minOf(stats.totalRolls, 50)
-                    "weekend_warrior" -> minOf(stats.weekendRolls.size, 50)
+                    "weekend_warrior" -> minOf(stats.totalWeekendRolls, 50)
                     "daily_grinder" -> minOf(stats.dailyRolls.size, 7)
-                    "monthly_master" -> minOf(stats.monthlyRolls.size, 30)
+                    "monthly_master" -> minOf(stats.dailyRolls.size, 30)
                     "balanced" -> minOf(stats.modifierUsageCount, 10)
                     else -> achievement.progress
                 }
@@ -372,7 +372,8 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             dailyRolls = stats.dailyRolls.apply { add(today) },
             weeklyRolls = stats.weeklyRolls.apply { add(thisWeek) },
             monthlyRolls = stats.monthlyRolls.apply { add(thisMonth) },
-            weekendRolls = if (isWeekend) stats.weekendRolls.apply { add(today) } else stats.weekendRolls
+            weekendRolls = if (isWeekend) stats.weekendRolls.apply { add(today) } else stats.weekendRolls,
+            totalWeekendRolls = stats.totalWeekendRolls + (if (isWeekend) 1 else 0)
         )
         
         Log.d("AchievementManager", "updateStatsAfterRoll: old totalRolls=${stats.totalRolls}, new totalRolls=${newStats.totalRolls}")
@@ -676,7 +677,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         }
         
         // Weekend Warrior
-        if (stats.weekendRolls.size >= 50) {
+        if (stats.totalWeekendRolls >= 50) {
             unlockAchievement("weekend_warrior")
         }
         
@@ -686,7 +687,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         }
         
         // Monthly Master
-        if (stats.monthlyRolls.size >= 30) {
+        if (stats.dailyRolls.size >= 30) {
             unlockAchievement("monthly_master")
         }
     }
