@@ -192,11 +192,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         val diceNotation = selections
             .filter { it.count > 0 }
             .joinToString("+") { selection ->
-                if (selection.diceType == DiceType.D100) {
-                    "${selection.count}${selection.diceType.displayName}"
-                } else {
-                    "${selection.count}${selection.diceType.displayName}"
-                }
+                "${selection.count}${selection.diceType.displayName}"
             }
         
         return when {

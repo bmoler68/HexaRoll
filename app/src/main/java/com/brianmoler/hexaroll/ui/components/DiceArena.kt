@@ -228,11 +228,7 @@ fun CollapsibleResultsSection(
                         diceTypes.isEmpty() -> stringResource(R.string.no_dice_selected)
                         diceTypes.size <= 2 -> {
                             val notation = diceTypes.joinToString(" + ") { selection ->
-                                if (selection.diceType == DiceType.D100) {
-                                    "${selection.count}x100"
-                                } else {
-                                    "${selection.count}${selection.diceType.displayName}"
-                                }
+                                "${selection.count}${selection.diceType.displayName}"
                             }
                             val modifierText = if (modifierValue != 0) (if (modifierValue > 0) "+$modifierValue" else "$modifierValue") else ""
                             notation + (if (modifierText.isNotBlank()) " $modifierText" else "")
@@ -619,11 +615,7 @@ fun TotalDisplay(
     val notation = diceSelections.values
         .filter { it.count > 0 }
         .joinToString(" + ") { selection ->
-            if (selection.diceType == DiceType.D100) {
-                "${selection.count}x100"
-            } else {
-                "${selection.count}${selection.diceType.displayName}"
-            }
+            "${selection.count}${selection.diceType.displayName}"
         }
     val modifierText = if (modifierValue != 0) (if (modifierValue > 0) "+$modifierValue" else "$modifierValue") else ""
 
