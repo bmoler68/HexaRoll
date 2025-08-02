@@ -469,7 +469,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         // Check for 2D6 = 2 (Snake Eyes)
         if (rollResult.diceSelections.any { it.diceType == DiceType.D6 && it.count >= 2 }) {
             val d6Rolls = rollResult.individualRolls.find { rolls ->
-                rollResult.diceSelections[rollResult.individualRolls.indexOf(rolls)]?.diceType == DiceType.D6
+                rollResult.diceSelections[rollResult.individualRolls.indexOf(rolls)].diceType == DiceType.D6
             }
             val d6Sum = d6Rolls?.sum() ?: 0
             Log.d("AchievementManager", "Snake Eyes check: D6 rolls=$d6Rolls, sum=$d6Sum")
@@ -482,7 +482,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         // Check for 2D6 = 12 (Boxcars)
         if (rollResult.diceSelections.any { it.diceType == DiceType.D6 && it.count >= 2 }) {
             val d6Rolls = rollResult.individualRolls.find { rolls ->
-                rollResult.diceSelections[rollResult.individualRolls.indexOf(rolls)]?.diceType == DiceType.D6
+                rollResult.diceSelections[rollResult.individualRolls.indexOf(rolls)].diceType == DiceType.D6
             }
             if (d6Rolls?.sum() == 12) {
                 unlockAchievement("boxcars")
@@ -492,7 +492,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         // Check for 2D6 = 7 (Lucky Sevens)
         if (rollResult.diceSelections.any { it.diceType == DiceType.D6 && it.count >= 2 }) {
             val d6Rolls = rollResult.individualRolls.find { rolls ->
-                rollResult.diceSelections[rollResult.individualRolls.indexOf(rolls)]?.diceType == DiceType.D6
+                rollResult.diceSelections[rollResult.individualRolls.indexOf(rolls)].diceType == DiceType.D6
             }
             val d6Sum = d6Rolls?.sum() ?: 0
             Log.d("AchievementManager", "Lucky Sevens check: D6 rolls=$d6Rolls, sum=$d6Sum")
@@ -666,7 +666,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         // Lucky Hour
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
-        val timeString = String.format(java.util.Locale.US, "%02d:%02d", hour, minute)
+        val timeString = String.format(Locale.US, "%02d:%02d", hour, minute)
         if (timeString in listOf("07:11", "11:11", "12:34", "13:37")) {
             unlockAchievement("lucky_hour")
         }

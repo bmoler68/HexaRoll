@@ -384,7 +384,7 @@ fun AchievementCard(
                 if (achievement.maxProgress > 1) {
                     Spacer(modifier = Modifier.height(8.dp))
                     LinearProgressIndicator(
-                        progress = (achievement.progress.toFloat() / achievement.maxProgress),
+                        progress = { (achievement.progress.toFloat() / achievement.maxProgress) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(4.dp),
@@ -405,7 +405,7 @@ fun AchievementCard(
                             AppTheme.SCI_FI -> SciFiColors.BorderBlue
                             AppTheme.WESTERN -> WesternColors.BorderBlue
                             AppTheme.ANCIENT -> AncientColors.BorderBlue
-                        }
+                        },
                     )
                     
                     Text(

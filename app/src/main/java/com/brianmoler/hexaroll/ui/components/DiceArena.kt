@@ -299,15 +299,15 @@ fun CollapsibleResultsSection(
             
             // Expanded Content
             if (isExpanded) {
-                Divider(
+                HorizontalDivider(
+                    thickness = 1.dp,
                     color = when (theme) {
                         AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
                         AppTheme.FANTASY -> FantasyColors.BorderBlue
                         AppTheme.SCI_FI -> SciFiColors.BorderBlue
                         AppTheme.WESTERN -> WesternColors.BorderBlue
                         AppTheme.ANCIENT -> AncientColors.BorderBlue
-                    },
-                    thickness = 1.dp
+                    }
                 )
                 
                 Row(
@@ -398,7 +398,7 @@ fun DiceCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                androidx.compose.foundation.layout.Box(
+                Box(
                     modifier = Modifier
                         .size(36.dp)
                         .background(
@@ -443,7 +443,7 @@ fun DiceCard(
                     textAlign = TextAlign.Center
                 )
 
-                androidx.compose.foundation.layout.Box(
+                Box(
                     modifier = Modifier
                         .size(36.dp)
                         .background(
