@@ -14,7 +14,6 @@ object CyberpunkColors {
     val NeonBlue = Color(0xFF00FFFF) // Electric cyan
     val NeonGreen = Color(0xFF00FF00) // Bright neon green
     val NeonRed = Color(0xFFFF0000) // Bright neon red
-    val NeonCyan = Color(0xFF00FFFF) // Electric cyan
     val NeonPurple = Color(0xFF8000FF) // Bright neon purple
     val ButtonRed = Color(0xFF8B0000) // Dark red
     val ButtonGreen = Color(0xFF006400) // Dark green
@@ -31,7 +30,6 @@ object FantasyColors {
     val NeonBlue = Color(0xFF4169E1) // Royal blue (mystical)
     val NeonGreen = Color(0xFF228B22) // Forest green (nature)
     val NeonRed = Color(0xFFDC143C) // Crimson (dragon fire)
-    val NeonCyan = Color(0xFF40E0D0) // Turquoise (magical)
     val NeonPurple = Color(0xFF9370DB) // Medium purple (enchanted)
     val ButtonRed = Color(0xFF8B0000) // Dark red (danger)
     val ButtonGreen = Color(0xFF006400) // Dark green (safe)
@@ -48,7 +46,6 @@ object SciFiColors {
     val NeonBlue = Color(0xFF00BFFF) // Deep sky blue (technology)
     val NeonGreen = Color(0xFF00FF7F) // Spring green (success)
     val NeonRed = Color(0xFFFF4444) // Bright red (error)
-    val NeonCyan = Color(0xFF00FFFF) // Cyan (holographic)
     val NeonPurple = Color(0xFF9932CC) // Dark orchid (quantum)
     val ButtonRed = Color(0xFF8B0000) // Dark red (danger)
     val ButtonGreen = Color(0xFF006400) // Dark green (safe)
@@ -65,7 +62,6 @@ object WesternColors {
     val NeonBlue = Color(0xFF87CEEB) // Sky blue (bright blue for contrast)
     val NeonGreen = Color(0xFF90EE90) // Light green (bright green for contrast)
     val NeonRed = Color(0xFFFF6347) // Tomato red (bright red for contrast)
-    val NeonCyan = Color(0xFF40E0D0) // Turquoise (bright cyan for contrast)
     val NeonPurple = Color(0xFFDDA0DD) // Plum (bright purple for contrast)
     val ButtonRed = Color(0xFF8B0000) // Dark red (danger)
     val ButtonGreen = Color(0xFF006400) // Dark green (safe)
@@ -82,7 +78,6 @@ object AncientColors {
     val NeonBlue = Color(0xFF87CEEB) // Sky blue (Roman sky)
     val NeonGreen = Color(0xFF90EE90) // Light green (olive branch)
     val NeonRed = Color(0xFFFF6347) // Tomato red (Roman red)
-    val NeonCyan = Color(0xFF40E0D0) // Turquoise (Mediterranean)
     val NeonPurple = Color(0xFFDDA0DD) // Plum (imperial purple)
     val ButtonRed = Color(0xFF8B0000) // Dark red (danger)
     val ButtonGreen = Color(0xFF006400) // Dark green (safe)

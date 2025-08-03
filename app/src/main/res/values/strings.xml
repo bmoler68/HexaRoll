@@ -43,7 +43,6 @@
     <string name="dice_count_plural">%d dice</string>
     <string name="save_preset_dialog_title">Save to Favorites</string>
     <string name="action_clear">Clear</string>
-    <string name="action_retry">Retry</string>
     <string name="confirm_reset_achievements">Reset all achievement progress?</string>
     <string name="action_reset">Reset</string>
     <string name="action_cancel">Cancel</string>

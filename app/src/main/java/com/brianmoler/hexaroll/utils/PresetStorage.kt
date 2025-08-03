@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import androidx.core.content.edit
 
 class PresetStorage(private val context: Context) {
     
@@ -20,9 +21,9 @@ class PresetStorage(private val context: Context) {
     suspend fun savePresets(presets: List<PresetRoll>) {
         withContext(Dispatchers.IO) {
             val json = gson.toJson(presets, presetListType)
-            sharedPreferences.edit()
-                .putString("presets", json)
-                .apply()
+            sharedPreferences.edit {
+                putString("presets", json)
+            }
         }
     }
     
@@ -40,12 +41,5 @@ class PresetStorage(private val context: Context) {
             }
         }
     }
-    
-    suspend fun clearPresets() {
-        withContext(Dispatchers.IO) {
-            sharedPreferences.edit()
-                .remove("presets")
-                .apply()
-        }
-    }
-} 
+
+}

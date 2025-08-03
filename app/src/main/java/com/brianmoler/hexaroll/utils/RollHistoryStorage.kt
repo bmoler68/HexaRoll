@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import androidx.core.content.edit
 
 class RollHistoryStorage(private val context: Context) {
     
@@ -27,9 +28,9 @@ class RollHistoryStorage(private val context: Context) {
             // Ensure we only keep the latest 100 rolls
             val limitedHistory = rollHistory.take(MAX_HISTORY_SIZE)
             val json = gson.toJson(limitedHistory, rollHistoryListType)
-            sharedPreferences.edit()
-                .putString(KEY_ROLL_HISTORY, json)
-                .apply()
+            sharedPreferences.edit {
+                putString(KEY_ROLL_HISTORY, json)
+            }
         }
     }
     
@@ -50,9 +51,9 @@ class RollHistoryStorage(private val context: Context) {
     
     suspend fun clearRollHistory() {
         withContext(Dispatchers.IO) {
-            sharedPreferences.edit()
-                .remove(KEY_ROLL_HISTORY)
-                .apply()
+            sharedPreferences.edit {
+                remove(KEY_ROLL_HISTORY)
+                }
         }
     }
     

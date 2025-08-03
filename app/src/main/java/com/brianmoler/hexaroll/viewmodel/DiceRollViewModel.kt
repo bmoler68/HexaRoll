@@ -52,8 +52,6 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     
     // Achievement-related StateFlows
     val achievements = achievementManager.achievements
-    val achievementStats = achievementManager.achievementStats
-    val unlockedAchievements = achievementManager.unlockedAchievements
     val newlyUnlockedAchievements = achievementManager.newlyUnlockedAchievements
     val userTitles = achievementManager.userTitles
     

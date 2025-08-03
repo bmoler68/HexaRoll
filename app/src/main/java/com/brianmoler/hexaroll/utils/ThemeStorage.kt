@@ -3,6 +3,7 @@ package com.brianmoler.hexaroll.utils
 import android.content.Context
 import com.brianmoler.hexaroll.data.AppTheme
 import com.google.gson.Gson
+import androidx.core.content.edit
 
 class ThemeStorage(context: Context) {
     private val sharedPreferences = context.getSharedPreferences(
@@ -17,9 +18,9 @@ class ThemeStorage(context: Context) {
     
     fun saveTheme(theme: AppTheme) {
         val themeJson = gson.toJson(theme)
-        sharedPreferences.edit()
-            .putString(KEY_SELECTED_THEME, themeJson)
-            .apply()
+        sharedPreferences.edit {
+            putString(KEY_SELECTED_THEME, themeJson)
+        }
     }
     
     fun loadTheme(): AppTheme {
