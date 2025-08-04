@@ -14,8 +14,7 @@ import com.brianmoler.hexaroll.data.DiceType
 fun DiceShape(
     diceType: DiceType,
     modifier: Modifier = Modifier,
-    theme: AppTheme = AppTheme.CYBERPUNK,
-    isSelected: Boolean = false
+    theme: AppTheme = AppTheme.CYBERPUNK
 ) {
     // Use theme-specific dice images based on selected theme
     val imageResource = when (theme) {

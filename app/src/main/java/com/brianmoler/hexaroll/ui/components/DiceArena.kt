@@ -375,8 +375,7 @@ fun DiceCard(
             // Dice Shape
             DiceShape(
                 diceType = diceType,
-                theme = theme,
-                isSelected = count > 0
+                theme = theme
             )
 
             // Dice Type Label

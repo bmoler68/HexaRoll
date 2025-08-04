@@ -9,7 +9,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -118,7 +118,7 @@ fun MainScreen(
         TabItem(Icons.Filled.PlayArrow, stringResource(R.string.tab_dice_arena)),
         TabItem(Icons.Filled.Edit, stringResource(R.string.tab_customization)),
         TabItem(Icons.Filled.Favorite, stringResource(R.string.tab_presets)),
-        TabItem(Icons.Filled.List, stringResource(R.string.tab_history)),
+        TabItem(Icons.AutoMirrored.Filled.List, stringResource(R.string.tab_history)),
         TabItem(Icons.Filled.Star, stringResource(R.string.tab_achievements))
     )
     

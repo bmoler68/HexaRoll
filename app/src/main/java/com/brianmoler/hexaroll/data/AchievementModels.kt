@@ -75,14 +75,6 @@ data class AchievementStats(
     val totalWeekendRolls: Int = 0 // Total rolls on weekends
 )
 
-data class UserTitle(
-    val id: String,
-    val name: String,
-    val description: String,
-    val isUnlocked: Boolean = false,
-    val unlockedAt: Long? = null
-)
-
 // Achievement definitions
 object AchievementDefinitions {
     

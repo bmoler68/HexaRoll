@@ -16,14 +16,10 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
     private val _achievementStats = MutableStateFlow(AchievementStats())
     private val _unlockedAchievements = MutableStateFlow<Set<String>>(emptySet())
     private val _newlyUnlockedAchievements = MutableStateFlow<List<Achievement>>(emptyList())
-    private val _userTitles = MutableStateFlow<List<UserTitle>>(emptyList())
     private val _completionPercentage = MutableStateFlow(0.0f)
     
     val achievements: StateFlow<List<Achievement>> = _achievements.asStateFlow()
-    val achievementStats: StateFlow<AchievementStats> = _achievementStats.asStateFlow()
-    val unlockedAchievements: StateFlow<Set<String>> = _unlockedAchievements.asStateFlow()
     val newlyUnlockedAchievements: StateFlow<List<Achievement>> = _newlyUnlockedAchievements.asStateFlow()
-    val userTitles: StateFlow<List<UserTitle>> = _userTitles.asStateFlow()
     val completionPercentage: StateFlow<Float> = _completionPercentage.asStateFlow()
     
     private var isDataLoaded = false
@@ -49,7 +45,6 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             val progressList = achievementStorage.loadAchievementProgress()
             val stats = achievementStorage.loadAchievementStats()
             val unlockedIds = achievementStorage.loadUnlockedAchievements()
-            val titles = achievementStorage.loadUserTitles()
             
             Log.d("AchievementManager", "=== LOADING ACHIEVEMENT DATA ===")
             Log.d("AchievementManager", "Raw stats from storage: $stats")
@@ -59,7 +54,6 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             val statsWithResetSession = stats.copy(sessionRolls = 0, themeChanges = 0)
             _achievementStats.value = statsWithResetSession
             _unlockedAchievements.value = unlockedIds
-            _userTitles.value = titles
             
             Log.d("AchievementManager", "Loaded stats on startup: totalRolls=${stats.totalRolls}, d6 rolls=${stats.rollsByDiceType[DiceType.D6]}, sessionRolls=${stats.sessionRolls}, totalSessionRolls=${stats.totalSessionRolls}")
             Log.d("AchievementManager", "After session reset: sessionRolls=0, totalSessionRolls=${stats.totalSessionRolls}")
@@ -284,14 +278,14 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         }
         
         // Check for achievements
-        checkRollingMilestoneAchievements(rollResult, updatedStats)
-        checkDiceSpecialistAchievements(rollResult, updatedStats)
+        checkRollingMilestoneAchievements(updatedStats)
+        checkDiceSpecialistAchievements(updatedStats)
         checkResultBasedAchievements(rollResult, updatedStats)
         checkStreakPatternAchievements()
         checkCombinationModifierAchievements(rollResult, updatedStats)
         checkThemeBasedAchievements(updatedStats)
         checkFavoritesHistoryAchievements(updatedStats)
-        checkSpecialEventAchievements(rollResult, updatedStats)
+        checkSpecialEventAchievements(updatedStats)
         
         // Update achievement progress after roll
         Log.d("AchievementManager", "About to update achievement progress with stats: totalRolls=${updatedStats.totalRolls}")
@@ -387,7 +381,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         return newStats
     }
     
-    private fun checkRollingMilestoneAchievements(rollResult: RollResult, stats: AchievementStats) {
+    private fun checkRollingMilestoneAchievements(stats: AchievementStats) {
         
         // First Roll
         if (stats.totalRolls == 1) {
@@ -423,7 +417,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         }
     }
     
-    private fun checkDiceSpecialistAchievements(rollResult: RollResult, stats: AchievementStats) {
+    private fun checkDiceSpecialistAchievements(stats: AchievementStats) {
         
         // Check individual dice type achievements
         val diceTypeTargets = mapOf(
@@ -654,7 +648,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         }
     }
     
-    private fun checkSpecialEventAchievements(rollResult: RollResult, stats: AchievementStats) {
+    private fun checkSpecialEventAchievements(stats: AchievementStats) {
         val currentTime = System.currentTimeMillis()
         val calendar = Calendar.getInstance().apply { timeInMillis = currentTime }
         
@@ -836,7 +830,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         }
     }
     
-    suspend fun saveAchievementData() {
+    private suspend fun saveAchievementData() {
         try {
             val progressList = _achievements.value.map { achievement ->
                 AchievementProgress(
@@ -850,7 +844,6 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             
             achievementStorage.saveAchievementProgress(progressList)
             achievementStorage.saveUnlockedAchievements(_unlockedAchievements.value)
-            achievementStorage.saveUserTitles(_userTitles.value)
             
             Log.d("AchievementManager", "Saved achievement data: ${progressList.size} progress entries")
             
@@ -886,8 +879,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             // Reset achievement stats
             _achievementStats.value = AchievementStats()
             
-            // Clear user titles
-            _userTitles.value = emptyList()
+            // Clear user titles - removed unused feature
             
             // Save the reset state
             saveAchievementData()
@@ -918,30 +910,8 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             Log.e("AchievementManager", "Error resetting achievement progress", e)
         }
     }
-    
 
-    
-    fun getAchievementProgress(achievementId: String): AchievementProgress? {
-        val achievement = _achievements.value.find { it.id == achievementId }
-        return achievement?.let {
-            AchievementProgress(
-                achievementId = it.id,
-                currentProgress = it.progress,
-                maxProgress = it.maxProgress,
-                isUnlocked = it.isUnlocked,
-                unlockedAt = it.unlockedAt
-            )
-        }
-    }
-    
-    fun getAchievementsByCategory(category: AchievementCategory): List<Achievement> {
-        return _achievements.value.filter { it.category == category }
-    }
-    
-    fun getUnlockedAchievements(): List<Achievement> {
-        return _achievements.value.filter { it.isUnlocked }
-    }
-    
+
     private fun updateCompletionPercentage() {
         val total = _achievements.value.size
         val unlocked = _unlockedAchievements.value.size

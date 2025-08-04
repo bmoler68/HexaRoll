@@ -56,15 +56,5 @@ class RollHistoryStorage(private val context: Context) {
                 }
         }
     }
-    
-    suspend fun addRollToHistory(rollResult: RollResult) {
-        withContext(Dispatchers.IO) {
-            val currentHistory = loadRollHistory().toMutableList()
-            // Add new roll at the beginning (most recent first)
-            currentHistory.add(0, rollResult)
-            // Keep only the latest 100 rolls
-            val limitedHistory = currentHistory.take(MAX_HISTORY_SIZE)
-            saveRollHistory(limitedHistory)
-        }
-    }
-} 
+
+}

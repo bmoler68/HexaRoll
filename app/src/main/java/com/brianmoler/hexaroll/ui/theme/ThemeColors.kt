@@ -1,7 +1,6 @@
 package com.brianmoler.hexaroll.ui.theme
 
 import androidx.compose.ui.graphics.Color
-import com.brianmoler.hexaroll.data.AppTheme
 
 // Cyberpunk Theme Colors - Vibrant neon, high contrast
 object CyberpunkColors {
@@ -83,13 +82,3 @@ object AncientColors {
     val ButtonGreen = Color(0xFF006400) // Dark green (safe)
 }
 
-// Theme Color Manager
-object ThemeColors {
-    fun getColors(theme: AppTheme) = when (theme) {
-        AppTheme.CYBERPUNK -> CyberpunkColors
-        AppTheme.FANTASY -> FantasyColors
-        AppTheme.SCI_FI -> SciFiColors
-        AppTheme.WESTERN -> WesternColors
-        AppTheme.ANCIENT -> AncientColors
-    }
-} 

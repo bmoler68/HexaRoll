@@ -53,8 +53,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     // Achievement-related StateFlows
     val achievements = achievementManager.achievements
     val newlyUnlockedAchievements = achievementManager.newlyUnlockedAchievements
-    val userTitles = achievementManager.userTitles
-    
+
     init {
         loadPresetsFromStorage()
         loadThemeFromStorage()
@@ -110,15 +109,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         val currentCount = _diceSelections.value[diceType]?.count ?: 0
         updateDiceCount(diceType, currentCount - 1)
     }
-    
-    fun updateModifier(newModifier: Int) {
-        if (!ErrorHandler.validateModifier(newModifier)) {
-            ErrorHandler.handleValidationError(getApplication(), "modifier", newModifier)
-            return
-        }
-        _modifier.value = newModifier
-    }
-    
+
     fun incrementModifier() {
         _modifier.value += 1
     }
@@ -159,7 +150,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
             }
         }
         
-        val notation = buildRollNotation(selections, _modifier.value, d100Rolls)
+        val notation = buildRollNotation(selections, _modifier.value)
         val rollResult = RollResult(
             diceSelections = selections,
             modifier = _modifier.value,
@@ -186,7 +177,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         _currentResult.value = rollResult
     }
     
-    private fun buildRollNotation(selections: List<DiceSelection>, modifier: Int, d100Rolls: List<D100Roll> = emptyList()): String {
+    private fun buildRollNotation(selections: List<DiceSelection>, modifier: Int): String {
         val diceNotation = selections
             .filter { it.count > 0 }
             .joinToString("+") { selection ->
@@ -200,37 +191,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
             else -> "$diceNotation$modifier"
         }
     }
-    
-    fun addPresetRoll(name: String, description: String) {
-        if (!ErrorHandler.validatePresetName(name)) {
-            ErrorHandler.handleValidationError(getApplication(), "preset name", name)
-            return
-        }
-        
-        if (!ErrorHandler.validatePresetDescription(description)) {
-            ErrorHandler.handleValidationError(getApplication(), "preset description", description)
-            return
-        }
-        
-        val selections = _diceSelections.value.values.filter { it.count > 0 }
-        val preset = PresetRoll(
-            name = name,
-            description = description,
-            diceSelections = selections,
-            modifier = _modifier.value
-        )
-        
-        _presetRolls.update { presets ->
-            presets + preset
-        }
-        savePresetsToStorage()
-        
-        // Track favorite creation for achievements
-        viewModelScope.launch(ErrorHandler.coroutineExceptionHandler) {
-            achievementManager.onFavoriteCreated()
-        }
-    }
-    
+
     fun loadPresetRoll(preset: PresetRoll) {
         Log.d("DiceRollViewModel", "Loading preset: ${preset.name}")
         
@@ -301,37 +262,11 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         }
         savePresetsToStorage()
     }
-    
-    fun saveCurrentRollToPreset(name: String, description: String) {
-        val selections = _diceSelections.value.values.filter { it.count > 0 }
-        if (selections.isNotEmpty()) {
-            val preset = PresetRoll(
-                name = name,
-                description = description,
-                diceSelections = selections,
-                modifier = _modifier.value
-            )
-            
-            _presetRolls.update { presets ->
-                presets + preset
-            }
-            savePresetsToStorage()
-            
-            // Track favorite creation for achievements
-            viewModelScope.launch {
-                achievementManager.onFavoriteCreated()
-            }
-        }
-    }
-    
+
     fun clearPresetLoadedMessage() {
         _presetLoadedMessage.value = null
     }
-    
-    fun updateCustomization(customization: DiceCustomization) {
-        _customization.value = customization
-    }
-    
+
     private fun loadThemeFromStorage() {
         viewModelScope.launch {
             try {
@@ -369,15 +304,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
             achievementManager.onThemeChanged(theme)
         }
     }
-    
-    private fun getTotalDiceCount(): Int {
-        return _diceSelections.value.values.sumOf { it.count }
-    }
-    
-    fun getTotalWithModifier(): Int {
-        return getTotalDiceCount() + _modifier.value
-    }
-    
+
     fun clearArena() {
         // Reset all dice counts to 0
         _diceSelections.update { selections ->
@@ -432,21 +359,9 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
             achievementManager.onHistoryViewed()
         }
     }
-    
-    fun getAchievementProgress(achievementId: String) = achievementManager.getAchievementProgress(achievementId)
-    
-    fun getAchievementsByCategory(category: AchievementCategory) = achievementManager.getAchievementsByCategory(category)
-    
-    fun getUnlockedAchievements() = achievementManager.getUnlockedAchievements()
-    
+
     fun getCompletionPercentage() = achievementManager.completionPercentage
-    
-    fun saveAchievementData() {
-        viewModelScope.launch {
-            achievementManager.saveAchievementData()
-        }
-    }
-    
+
     fun resetAllProgress() {
         viewModelScope.launch {
             achievementManager.resetAllProgress()
