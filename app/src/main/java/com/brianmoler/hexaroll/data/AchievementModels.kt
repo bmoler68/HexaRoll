@@ -144,16 +144,18 @@ object AchievementDefinitions {
         description = "Roll 10 times in under 30 seconds",
         category = AchievementCategory.ROLLING_MILESTONES,
         tier = AchievementTier.SILVER,
-        icon = "⚡"
+        icon = "⚡",
+        maxProgress = 10
     )
     
     private val MARATHON_ROLLER = Achievement(
         id = "marathon_roller",
         name = "Marathon Roller",
-        description = "Roll continuously for 1 minute",
+        description = "Spend 5 hours total time in the app",
         category = AchievementCategory.ROLLING_MILESTONES,
         tier = AchievementTier.GOLD,
-        icon = "🏃"
+        icon = "🏃",
+        maxProgress = 18000 // 5 hours in seconds
     )
     
     private val SESSION_CHAMPION = Achievement(
@@ -567,7 +569,7 @@ object AchievementDefinitions {
     private val LUCKY_HOUR = Achievement(
         id = "lucky_hour",
         name = "Lucky Hour",
-        description = "Roll at 7:11, 11:11, etc.",
+        description = "Roll at 7:11 AM/PM or 11:11 AM/PM",
         category = AchievementCategory.SPECIAL_EVENTS,
         tier = AchievementTier.SILVER,
         icon = "🍀"

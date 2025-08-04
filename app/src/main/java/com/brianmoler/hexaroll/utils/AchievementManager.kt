@@ -87,19 +87,27 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         _achievements.value = _achievements.value.map { achievement ->
             val progress = progressMap[achievement.id]
             
-            // For session-based achievements, always start with 0 progress on app restart
-            val isSessionBasedAchievement = achievement.id == "session_champion" || achievement.id == "theme_switcher"
+            val isUnlocked = progress?.isUnlocked ?: false
+            val unlockedAt = progress?.unlockedAt
+            
+            // For session-based achievements, handle progress restoration
+            val isSessionBasedAchievement = achievement.id == "session_champion" || achievement.id == "theme_switcher" || 
+                                         achievement.id == "speed_demon" || achievement.id == "marathon_roller"
+            
             val restoredProgress = if (isSessionBasedAchievement) {
-                0 // Session achievements should always start at 0
+                if (isUnlocked) {
+                    // If unlocked, show full progress
+                    achievement.maxProgress
+                } else {
+                    // If not unlocked, start with 0 progress
+                    0
+                }
             } else {
                 progress?.currentProgress ?: 0
             }
             
-            val isUnlocked = progress?.isUnlocked ?: false
-            val unlockedAt = progress?.unlockedAt
-            
             // Debug logging for restoration
-            if (achievement.id == "roll_master_100" || achievement.id == "d6_specialist" || achievement.id == "session_champion" || achievement.id == "theme_switcher") {
+            if (achievement.id == "roll_master_100" || achievement.id == "d6_specialist" || achievement.id == "session_champion" || achievement.id == "theme_switcher" || achievement.id == "speed_demon" || achievement.id == "marathon_roller") {
                 Log.d("AchievementManager", "Restoring ${achievement.id}: progress=$restoredProgress, unlocked=$isUnlocked (session-based: $isSessionBasedAchievement)")
             }
             
@@ -137,6 +145,15 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
                     "roll_master_1000" -> minOf(stats.totalRolls, 1000)
                     "roll_master_5000" -> minOf(stats.totalRolls, 5000)
                     "roll_master_10000" -> minOf(stats.totalRolls, 10000)
+                    "speed_demon" -> {
+                        val currentTime = System.currentTimeMillis()
+                        val recentRollsIn30Seconds = recentRollTimes.count { currentTime - it <= 30000 }
+                        minOf(recentRollsIn30Seconds, 10)
+                    }
+                    "marathon_roller" -> {
+                        val sessionDurationSeconds = (System.currentTimeMillis() - stats.sessionStartTime) / 1000
+                        minOf(sessionDurationSeconds.toInt(), 18000) // Cap at 5 hours
+                    }
                     "session_champion" -> minOf(stats.sessionRolls, 50) // Single session achievement
                     "persistent_roller" -> minOf(stats.totalSessionRolls, 100) // Cross-session achievement
                     "d4_devotee" -> minOf(stats.rollsByDiceType[DiceType.D4] ?: 0, 50)
@@ -166,8 +183,10 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
                     else -> achievement.progress
                 }
                 
-                // Only increment progress if calculated progress is greater than persisted value
-                val finalProgress = if (calculatedProgress > achievement.progress) {
+                // For unlocked session-based achievements, maintain full progress
+                val finalProgress = if (achievement.isUnlocked && (achievement.id == "speed_demon" || achievement.id == "marathon_roller" || achievement.id == "session_champion" || achievement.id == "theme_switcher")) {
+                    achievement.maxProgress
+                } else if (calculatedProgress > achievement.progress) {
                     Log.d("AchievementManager", "${achievement.id}: Progress increased from ${achievement.progress} to $calculatedProgress")
                     calculatedProgress
                 } else {
@@ -408,10 +427,10 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             unlockAchievement("session_champion")
         }
         
-        // Marathon Roller - Check if rolling continuously for 1 minute
+        // Marathon Roller - Check if spending 5 hours total time in the app
         val sessionDuration = currentTime - stats.sessionStartTime
-        Log.d("AchievementManager", "Marathon Roller check: sessionDuration=${sessionDuration}ms (${sessionDuration/1000}s), threshold=60000ms (60s)")
-        if (sessionDuration >= 60000) { // 1 minute = 60000 milliseconds
+        Log.d("AchievementManager", "Marathon Roller check: sessionDuration=${sessionDuration}ms (${sessionDuration/1000}s), threshold=18000000ms (18000s)")
+        if (sessionDuration >= 18000000) { // 5 hours = 18000000 milliseconds
             Log.d("AchievementManager", "Marathon Roller achievement unlocked! Session duration: ${sessionDuration/1000} seconds")
             unlockAchievement("marathon_roller")
         }
@@ -661,7 +680,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
         val timeString = String.format(Locale.US, "%02d:%02d", hour, minute)
-        if (timeString in listOf("07:11", "11:11", "12:34", "13:37")) {
+        if (timeString in listOf("07:11", "19:11", "11:11", "23:11")) {
             unlockAchievement("lucky_hour")
         }
         
