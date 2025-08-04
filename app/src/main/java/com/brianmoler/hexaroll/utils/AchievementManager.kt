@@ -10,25 +10,67 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * AchievementManager - Centralized achievement system for HexaRoll
+ * 
+ * This class manages all achievement-related functionality including:
+ * - Achievement definitions and progress tracking
+ * - Achievement unlocking logic
+ * - Statistics tracking and persistence
+ * - Session-based and persistent achievements
+ * - Progress bar calculations
+ * - Achievement notifications
+ * 
+ * Architecture:
+ * - Uses StateFlow for reactive state management
+ * - Integrates with AchievementStorage for persistence
+ * - Handles both session-based and persistent achievements
+ * - Provides progress tracking for UI display
+ */
 class AchievementManager(private val achievementStorage: AchievementStorage) {
     
+    // State management for all achievements
+    // Contains all achievement definitions with current progress and unlock status
     private val _achievements = MutableStateFlow<List<Achievement>>(emptyList())
-    private val _achievementStats = MutableStateFlow(AchievementStats())
-    private val _unlockedAchievements = MutableStateFlow<Set<String>>(emptySet())
-    private val _newlyUnlockedAchievements = MutableStateFlow<List<Achievement>>(emptyList())
-    private val _completionPercentage = MutableStateFlow(0.0f)
-    
     val achievements: StateFlow<List<Achievement>> = _achievements.asStateFlow()
+    
+    // State management for achievement statistics
+    // Tracks various metrics like total rolls, dice type usage, etc.
+    private val _achievementStats = MutableStateFlow(AchievementStats())
+    
+    // State management for unlocked achievement IDs
+    // Set of achievement IDs that have been unlocked
+    private val _unlockedAchievements = MutableStateFlow<Set<String>>(emptySet())
+    
+    // State management for newly unlocked achievements
+    // Used for showing achievement unlock notifications
+    private val _newlyUnlockedAchievements = MutableStateFlow<List<Achievement>>(emptyList())
     val newlyUnlockedAchievements: StateFlow<List<Achievement>> = _newlyUnlockedAchievements.asStateFlow()
+    
+    // State management for completion percentage
+    // Overall achievement completion percentage for UI display
+    private val _completionPercentage = MutableStateFlow(0.0f)
     val completionPercentage: StateFlow<Float> = _completionPercentage.asStateFlow()
     
+    // Flag to track if achievement data has been loaded from storage
+    // Prevents saving incomplete data during initialization
     private var isDataLoaded = false
     
+    // Temporary storage for recent roll tracking
+    // Used for streak and pattern-based achievements
     private val recentRolls = mutableListOf<RollResult>()
     private val recentRollTimes = mutableListOf<Long>()
     private val lastRollResults = mutableListOf<Int>()
     private val lastRollDiceTypes = mutableListOf<DiceType>()
     
+    /**
+     * Initialize the AchievementManager
+     * 
+     * Sets up the achievement system by:
+     * - Loading all achievement definitions
+     * - Loading persistent data from storage
+     * - Initializing state management
+     */
     init {
         initializeAchievements()
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
@@ -36,10 +78,27 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         }
     }
     
+    /**
+     * Initialize achievement definitions
+     * 
+     * Loads all achievement definitions from AchievementDefinitions
+     * and sets up the initial achievement list.
+     */
     private fun initializeAchievements() {
         _achievements.value = AchievementDefinitions.ALL_ACHIEVEMENTS
     }
     
+    /**
+     * Load achievement data from persistent storage
+     * 
+     * Retrieves and restores:
+     * - Achievement progress for each achievement
+     * - Achievement statistics (rolls, dice usage, etc.)
+     * - Unlocked achievement IDs
+     * 
+     * Resets session-based stats on app restart to ensure
+     * proper session tracking for new app sessions.
+     */
     private suspend fun loadAchievementData() {
         try {
             val progressList = achievementStorage.loadAchievementProgress()
@@ -81,6 +140,14 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         }
     }
     
+    /**
+     * Update achievements with progress data from storage
+     * 
+     * @param progressList List of achievement progress data from storage
+     * 
+     * Restores achievement progress and unlock status from persistent storage.
+     * Handles session-based achievements specially to ensure proper progress display.
+     */
     private fun updateAchievementsWithProgress(progressList: List<AchievementProgress>) {
         val progressMap = progressList.associateBy { it.achievementId }
         

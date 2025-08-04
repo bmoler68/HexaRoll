@@ -19,47 +19,94 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
+/**
+ * DiceRollViewModel - Main ViewModel for the HexaRoll dice rolling application
+ * 
+ * This ViewModel manages all the application state and business logic including:
+ * - Dice selection and counting
+ * - Roll history and results
+ * - Preset management
+ * - Theme customization
+ * - Achievement tracking
+ * - Data persistence
+ * 
+ * Architecture:
+ * - Uses StateFlow for reactive state management
+ * - Integrates with various storage utilities for persistence
+ * - Handles error scenarios gracefully
+ * - Manages achievement system integration
+ */
 class DiceRollViewModel(application: Application) : AndroidViewModel(application) {
     
+    // Storage utilities for data persistence
     private val presetStorage = PresetStorage(application)
     private val rollHistoryStorage = RollHistoryStorage(application)
     private val themeStorage = ThemeStorage(application)
     private val achievementStorage = AchievementStorage(application)
     private val achievementManager = AchievementManager(achievementStorage)
     
+    // State management for dice selections
+    // Maps each dice type to its current count (0 by default)
     private val _diceSelections = MutableStateFlow(
         DiceType.entries.associateWith { DiceSelection(it, 0) }
     )
     val diceSelections: StateFlow<Map<DiceType, DiceSelection>> = _diceSelections.asStateFlow()
     
+    // State management for roll modifier
+    // Can be positive or negative to add/subtract from roll results
     private val _modifier = MutableStateFlow(0)
     val modifier: StateFlow<Int> = _modifier.asStateFlow()
     
+    // State management for roll history
+    // Stores all previous roll results for the history screen
     private val _rollHistory = MutableStateFlow<List<RollResult>>(emptyList())
     val rollHistory: StateFlow<List<RollResult>> = _rollHistory.asStateFlow()
     
+    // State management for current roll result
+    // Stores the most recent roll result for display
     private val _currentResult = MutableStateFlow<RollResult?>(null)
     val currentResult: StateFlow<RollResult?> = _currentResult.asStateFlow()
     
+    // State management for preset rolls
+    // Stores user-defined preset configurations
     private val _presetRolls = MutableStateFlow<List<PresetRoll>>(emptyList())
     val presetRolls: StateFlow<List<PresetRoll>> = _presetRolls.asStateFlow()
     
+    // State management for app customization
+    // Stores theme and other customization settings
     private val _customization = MutableStateFlow(DiceCustomization())
     val customization: StateFlow<DiceCustomization> = _customization.asStateFlow()
     
+    // State management for preset loading messages
+    // Shows feedback when presets are loaded
     private val _presetLoadedMessage = MutableStateFlow<String?>(null)
     val presetLoadedMessage: StateFlow<String?> = _presetLoadedMessage.asStateFlow()
     
     // Achievement-related StateFlows
+    // Delegated to the AchievementManager for centralized achievement handling
     val achievements = achievementManager.achievements
     val newlyUnlockedAchievements = achievementManager.newlyUnlockedAchievements
 
+    /**
+     * Initialize the ViewModel
+     * 
+     * Loads all persistent data from storage:
+     * - User presets
+     * - Theme preferences
+     * - Roll history
+     */
     init {
         loadPresetsFromStorage()
         loadThemeFromStorage()
         loadRollHistory()
     }
     
+    /**
+     * Load presets from persistent storage
+     * 
+     * Retrieves user-defined preset configurations and updates the state.
+     * Also tracks preset count for achievement purposes.
+     */
     private fun loadPresetsFromStorage() {
         viewModelScope.launch(ErrorHandler.coroutineExceptionHandler) {
             try {
@@ -77,6 +124,11 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         }
     }
     
+    /**
+     * Save presets to persistent storage
+     * 
+     * Persists the current preset configurations to device storage.
+     */
     private fun savePresetsToStorage() {
         viewModelScope.launch(ErrorHandler.coroutineExceptionHandler) {
             try {
@@ -87,6 +139,15 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         }
     }
     
+    /**
+     * Update the count for a specific dice type
+     * 
+     * @param diceType The type of dice to update
+     * @param newCount The new count (must be non-negative)
+     * 
+     * Validates the count and updates the dice selections state.
+     * Ensures counts are non-negative and within reasonable limits.
+     */
     private fun updateDiceCount(diceType: DiceType, newCount: Int) {
         if (!ErrorHandler.validateDiceCount(newCount)) {
             ErrorHandler.handleValidationError(getApplication(), "dice count", newCount)
@@ -100,24 +161,60 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         }
     }
     
+    /**
+     * Increment the count for a specific dice type
+     * 
+     * @param diceType The type of dice to increment
+     * 
+     * Increases the count by 1 and updates the state.
+     */
     fun incrementDice(diceType: DiceType) {
         val currentCount = _diceSelections.value[diceType]?.count ?: 0
         updateDiceCount(diceType, currentCount + 1)
     }
     
+    /**
+     * Decrement the count for a specific dice type
+     * 
+     * @param diceType The type of dice to decrement
+     * 
+     * Decreases the count by 1 and updates the state.
+     * Count cannot go below 0.
+     */
     fun decrementDice(diceType: DiceType) {
         val currentCount = _diceSelections.value[diceType]?.count ?: 0
         updateDiceCount(diceType, currentCount - 1)
     }
 
+    /**
+     * Increment the roll modifier
+     * 
+     * Increases the modifier by 1, which will be added to roll results.
+     */
     fun incrementModifier() {
         _modifier.value += 1
     }
     
+    /**
+     * Decrement the roll modifier
+     * 
+     * Decreases the modifier by 1, which will be subtracted from roll results.
+     */
     fun decrementModifier() {
         _modifier.value -= 1
     }
     
+    /**
+     * Perform a dice roll with the current selections
+     * 
+     * This is the main dice rolling function that:
+     * - Validates that dice are selected
+     * - Generates random rolls for each dice type
+     * - Handles special D100 percentile dice logic
+     * - Calculates total results
+     * - Updates history and achievements
+     * - Triggers achievement checks
+     */
     fun rollDice() {
         Log.d("DiceRollViewModel", "rollDice() called")
         val selections = _diceSelections.value.values.filter { it.count > 0 }

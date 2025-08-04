@@ -28,7 +28,16 @@ import com.brianmoler.hexaroll.ui.components.DiceArena
 import com.brianmoler.hexaroll.ui.theme.*
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
 
-// Helper function for theme-aware colors
+/**
+ * Helper function for theme-aware colors
+ * 
+ * Returns the appropriate color based on the current theme and color type.
+ * This centralizes theme color logic and ensures consistent theming.
+ * 
+ * @param theme The current application theme
+ * @param colorType The type of color to retrieve (e.g., "PrimaryText", "CardBackground")
+ * @return The appropriate Color for the theme and type
+ */
 private fun getThemeColor(theme: AppTheme, colorType: String): Color {
     return when (theme) {
         AppTheme.CYBERPUNK -> when (colorType) {
