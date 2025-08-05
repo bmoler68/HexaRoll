@@ -58,7 +58,21 @@ class AchievementStorage(private val context: Context) {
         return withContext(Dispatchers.IO) {
             try {
                 val json = sharedPreferences.getString("achievement_stats", "{}")
-                gson.fromJson(json, achievementStatsType) ?: AchievementStats()
+                val loadedStats = gson.fromJson(json, achievementStatsType) ?: AchievementStats()
+                
+                // Check if saved session is still valid (within 1 hour of last activity)
+                val currentTime = System.currentTimeMillis()
+                val lastActivityTime = loadedStats.lastRollTime
+                val sessionAge = currentTime - lastActivityTime
+                
+                // If session is too old (> 1 hour) or no previous activity, start a new session
+                val sessionStartTime = if (lastActivityTime == 0L || sessionAge > 3600000) { // 1 hour in milliseconds
+                    currentTime // Start new session
+                } else {
+                    loadedStats.sessionStartTime // Continue existing session
+                }
+                
+                loadedStats.copy(sessionStartTime = sessionStartTime)
             } catch (e: Exception) {
                 AchievementStats()
             }

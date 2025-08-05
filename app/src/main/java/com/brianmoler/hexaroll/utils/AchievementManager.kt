@@ -150,6 +150,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
      */
     private fun updateAchievementsWithProgress(progressList: List<AchievementProgress>) {
         val progressMap = progressList.associateBy { it.achievementId }
+        val stats = _achievementStats.value
         
         _achievements.value = _achievements.value.map { achievement ->
             val progress = progressMap[achievement.id]
@@ -166,8 +167,28 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
                     // If unlocked, show full progress
                     achievement.maxProgress
                 } else {
-                    // If not unlocked, start with 0 progress
-                    0
+                    // Calculate current progress based on loaded stats
+                    when (achievement.id) {
+                        "marathon_roller" -> {
+                            val currentTime = System.currentTimeMillis()
+                            val sessionDurationSeconds = (currentTime - stats.sessionStartTime) / 1000
+                            val lastActivityAge = currentTime - stats.lastRollTime
+                            
+                            if (sessionDurationSeconds > 0 && lastActivityAge <= 3600000) { // 1 hour max session gap
+                                minOf(sessionDurationSeconds.toInt(), 18000) // Cap at 5 hours
+                            } else {
+                                0
+                            }
+                        }
+                        "session_champion" -> minOf(stats.sessionRolls, 50)
+                        "theme_switcher" -> minOf(stats.themeChanges, 10)
+                        "speed_demon" -> {
+                            val currentTime = System.currentTimeMillis()
+                            val recentRollsIn30Seconds = recentRollTimes.count { currentTime - it <= 30000 }
+                            minOf(recentRollsIn30Seconds, 10)
+                        }
+                        else -> 0
+                    }
                 }
             } else {
                 progress?.currentProgress ?: 0
@@ -218,8 +239,17 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
                         minOf(recentRollsIn30Seconds, 10)
                     }
                     "marathon_roller" -> {
-                        val sessionDurationSeconds = (System.currentTimeMillis() - stats.sessionStartTime) / 1000
-                        minOf(sessionDurationSeconds.toInt(), 18000) // Cap at 5 hours
+                        val currentTime = System.currentTimeMillis()
+                        val sessionDurationSeconds = (currentTime - stats.sessionStartTime) / 1000
+                        
+                        // Only count progress if session is valid (within 1 hour of last activity)
+                        val lastActivityAge = currentTime - stats.lastRollTime
+                        if (sessionDurationSeconds > 0 && lastActivityAge <= 3600000) { // 1 hour max session gap
+                            minOf(sessionDurationSeconds.toInt(), 18000) // Cap at 5 hours
+                        } else {
+                            // Reset progress if session is invalid
+                            achievement.progress
+                        }
                     }
                     "session_champion" -> minOf(stats.sessionRolls, 50) // Single session achievement
                     "persistent_roller" -> minOf(stats.totalSessionRolls, 100) // Cross-session achievement
@@ -496,10 +526,17 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
         
         // Marathon Roller - Check if spending 5 hours total time in the app
         val sessionDuration = currentTime - stats.sessionStartTime
-        Log.d("AchievementManager", "Marathon Roller check: sessionDuration=${sessionDuration}ms (${sessionDuration/1000}s), threshold=18000000ms (18000s)")
-        if (sessionDuration >= 18000000) { // 5 hours = 18000000 milliseconds
-            Log.d("AchievementManager", "Marathon Roller achievement unlocked! Session duration: ${sessionDuration/1000} seconds")
-            unlockAchievement("marathon_roller")
+        val lastActivityAge = currentTime - stats.lastRollTime
+        
+        // Only check for unlock if session is valid (within 1 hour of last activity)
+        if (lastActivityAge <= 3600000) { // 1 hour max session gap
+            Log.d("AchievementManager", "Marathon Roller check: sessionDuration=${sessionDuration}ms (${sessionDuration/1000}s), threshold=18000000ms (18000s)")
+            if (sessionDuration >= 18000000) { // 5 hours = 18000000 milliseconds
+                Log.d("AchievementManager", "Marathon Roller achievement unlocked! Session duration: ${sessionDuration/1000} seconds")
+                unlockAchievement("marathon_roller")
+            }
+        } else {
+            Log.d("AchievementManager", "Marathon Roller check skipped: session too old (${lastActivityAge/1000}s since last activity)")
         }
     }
     
