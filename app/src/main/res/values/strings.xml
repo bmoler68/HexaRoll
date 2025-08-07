@@ -7,6 +7,13 @@
     <string name="tab_presets">Presets</string>
     <string name="tab_history">History</string>
     <string name="tab_achievements">Achievements</string>
+    <string name="tab_settings">Settings</string>
+    
+    <!-- Settings -->
+    <string name="settings_about">About HexaRoll</string>
+    <string name="settings_privacy_policy">Privacy Policy</string>
+    <string name="settings_about_description">Learn more about HexaRoll features and capabilities</string>
+    <string name="settings_privacy_description">View our privacy policy and data handling practices</string>
     
     <!-- Dice Controls -->
     <string name="roll_button">Roll Dice</string>

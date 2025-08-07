@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -128,7 +129,8 @@ fun MainScreen(
         TabItem(Icons.Filled.Edit, stringResource(R.string.tab_customization)),
         TabItem(Icons.Filled.Favorite, stringResource(R.string.tab_presets)),
         TabItem(Icons.AutoMirrored.Filled.List, stringResource(R.string.tab_history)),
-        TabItem(Icons.Filled.Star, stringResource(R.string.tab_achievements))
+        TabItem(Icons.Filled.Star, stringResource(R.string.tab_achievements)),
+        TabItem(Icons.Filled.Settings, stringResource(R.string.tab_settings))
     )
     
     Column(
@@ -204,6 +206,7 @@ fun MainScreen(
             2 -> PresetsScreen(viewModel)
             3 -> HistoryScreen(viewModel)
             4 -> AchievementScreen(viewModel)
+            5 -> SettingsScreen(viewModel)
         }
         
         // Achievement popup
