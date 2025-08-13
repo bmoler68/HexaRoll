@@ -14,3 +14,28 @@
 .cxx
 local.properties
 app/release/
+
+# Android build outputs
+app/build/
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# IDE and development files
+.idea/
+.cursor/
+.kotlin/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Gradle wrapper (optional - some teams prefer to include this)
+# gradle/wrapper/gradle-wrapper.jar
