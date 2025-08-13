@@ -1,8 +1,8 @@
 # HexaRoll - Multi-Theme RPG Dice Rolling App
 
-**Copyright © 2024 Brian Moler. All rights reserved.**
+**Copyright © 2025 Brian Moler. All rights reserved.**
 
-A modern Android dice rolling application with multiple theme options (Cyberpunk, Fantasy, SCI-FI, Western, Ancient), built using Jetpack Compose with a comprehensive achievement system and persistent roll history.
+A modern Android dice rolling application with multiple theme options (Cyberpunk, Fantasy, SCI-FI, Western, Ancient), built using Jetpack Compose with a comprehensive achievement system, persistent roll history, and external app information links.
 
 > **Note**: This is a private, proprietary project owned by Brian Moler. This codebase is not open source and may not be copied, modified, or distributed without explicit permission.
 
@@ -37,7 +37,6 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 
 ### 📋 Preset Rolls (Third Tab)
 - **Pre-configured Rolls**: Save and load common dice combinations
-- **Sample Presets**: 
 - **Custom Presets**: Create your own named presets with descriptions
 - **Preset Management**: Edit, delete, and organize your saved presets
 
@@ -50,34 +49,64 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 ### 🏆 Achievements (Fifth Tab)
 - **Comprehensive Achievement System**: 50+ achievements across multiple categories
 - **Achievement Categories**:
+  - **Dice Specialists**: Master specific dice types (D6, D8, D10, D12, D20, D30, D100)
   - **Rolling Milestones**: Track total rolls and session progress
-  - **Dice Type Specialists**: Master specific dice types
-  - **Result-Based**: Achieve specific roll outcomes
-  - **Streak & Pattern**: Consecutive rolls and patterns
-  - **Combination & Modifiers**: Complex dice combinations
-  - **Theme-Based**: Explore all themes and stay loyal
-  - **Favorites & History**: Preset and history management
-  - **Special Events**: Weekend warriors and marathon rollers
-- **Tier System**: Bronze, Silver, Gold, Platinum, Diamond achievements
+  - **Special Events**: Lucky hour rolls, weekend warrior, monthly master
+  - **Session Achievements**: Marathon roller (5 hours), speed demon, session champion
+- **Tier System**: Bronze, Silver, Gold, and Platinum achievements
 - **Progress Tracking**: Visual progress bars for multi-step achievements
 - **Achievement Popups**: Animated notifications for unlocked achievements
 - **Statistics Integration**: Comprehensive tracking of all user actions
-- **Reset Functionality**: Option to reset all achievement progress
+- **Session Management**: Intelligent session tracking with 1-hour timeout
+
+### ⚙️ Settings (Sixth Tab) - **NEW!**
+- **About HexaRoll**: External link to detailed app documentation
+- **Privacy Policy**: External link to privacy policy and data handling practices
+- **App Information**: Version details and copyright information
+- **External Browser Integration**: Opens links in user's preferred browser
 
 ## Technical Features
 
 - **Modern UI**: Built with Jetpack Compose
 - **Multi-Theme System**: Five distinct visual themes with complete UI adaptation
 - **Theme Persistence**: Automatic saving and loading of user theme preferences
-- **State Management**: MVVM architecture with ViewModel
-- **Responsive Design**: Adapts to different screen sizes
+- **State Management**: MVVM architecture with ViewModel and StateFlow
+- **Responsive Design**: Adapts to different screen sizes and orientations
 - **Theme-Aware Components**: All UI elements dynamically change with theme selection
 - **Persistent Data**: Roll history, achievements, and preferences saved across sessions
-- **Achievement System**: Comprehensive tracking and notification system
+- **Achievement System**: Comprehensive tracking and notification system with session management
 - **Custom Dice Assets**: Theme-specific dice images for enhanced visual appeal
 - **Production Ready**: Code obfuscation, error handling, input validation, and performance monitoring
 - **Accessibility**: Full accessibility support with content descriptions and screen reader compatibility
 - **Security**: Input validation, error handling, and secure data storage practices
+- **Internet Integration**: Permission for external browser links
+
+## Recent Improvements
+
+### 🚀 Achievement System Enhancements
+- **Monthly Master**: Now tracks 30 unique days instead of calendar months
+- **Weekend Warrior**: Counts total rolls on weekends (50 rolls required)
+- **Lucky Hour**: Updated to specific times (7:11 AM/PM, 11:11 AM/PM)
+- **Marathon Roller**: Fixed to track 5 hours of total in-app time with proper session management
+- **Progress Bars**: Session-based achievements now show accurate progress on app restart
+
+### 🧹 Code Quality Improvements
+- **Encapsulation**: Internal functions and properties made private where appropriate
+- **Dead Code Removal**: Eliminated unused functions, properties, and string resources
+- **Modern Kotlin**: Updated to use `Enum.entries` instead of deprecated `Enum.values()`
+- **Comprehensive Testing**: Complete test suite with unit tests, UI tests, and instrumented tests
+- **Code Documentation**: Added extensive KDoc comments throughout the codebase
+
+### 🎯 UI/UX Enhancements
+- **D100 Display Fix**: Corrected from "1x100" to "1D100" in total card
+- **Settings Tab**: New tab with external links to app documentation and privacy policy
+- **Tab Icons**: Restored and fixed Roll History tab icon
+- **Density Support**: Added missing drawable density variation folders
+
+### 🔧 Build System Updates
+- **Gradle Configuration**: Updated to use stable APIs and resolve deprecation warnings
+- **Dependency Management**: Added comprehensive testing dependencies
+- **Version Catalog**: Proper dependency version management
 
 ## Theme System
 
@@ -111,21 +140,21 @@ The app features five distinct visual themes, each with its own color palette an
 ## Achievement System
 
 ### Achievement Categories
+- **Dice Specialists**: Master specific dice types with dedicated achievements
 - **Rolling Milestones**: Track progress from first roll to master roller
-- **Dice Type Specialists**: Achieve mastery with specific dice types
-- **Result-Based**: Achieve specific outcomes like "Snake Eyes" (2D6 = 2)
-- **Streak & Pattern**: Consecutive rolls and pattern recognition
-- **Combination & Modifiers**: Complex dice combinations and modifier usage
-- **Theme-Based**: Explore all themes and demonstrate theme loyalty
-- **Favorites & History**: Preset management and history engagement
-- **Special Events**: Weekend activities and marathon rolling sessions
+- **Special Events**: Lucky hour rolls, weekend activities, and monthly challenges
+- **Session Achievements**: Marathon roller (5 hours), speed demon, session champion
 
 ### Achievement Tiers
 - **Bronze**: Basic achievements for new users
 - **Silver**: Intermediate achievements for regular users
 - **Gold**: Advanced achievements for experienced users
 - **Platinum**: Expert-level achievements for dedicated users
-- **Diamond**: Master-level achievements for elite users
+
+### Session Management
+- **Intelligent Tracking**: Sessions persist across app restarts with 1-hour timeout
+- **Progress Accuracy**: Progress bars display correctly on app load
+- **Cumulative Time**: Marathon Roller tracks total in-app time across valid sessions
 
 ## Installation
 
@@ -137,6 +166,7 @@ The app features five distinct visual themes, each with its own color palette an
 
 - Android API 24+ (Android 7.0)
 - Minimum 2GB RAM recommended
+- Internet permission for external links (optional)
 
 ## Usage
 
@@ -148,6 +178,7 @@ The app features five distinct visual themes, each with its own color palette an
 6. **Customize Theme**: Visit the Customize tab to choose your preferred visual theme
 7. **Track Achievements**: Monitor your progress in the Achievements tab
 8. **Explore Themes**: Try all five themes to unlock theme-based achievements
+9. **App Information**: Visit the Settings tab for app details and legal documents
 
 ## Development
 
@@ -171,15 +202,24 @@ The app features five distinct visual themes, each with its own color palette an
 ./gradlew connectedAndroidTest
 ```
 
+### Test Coverage
+
+The project includes comprehensive testing:
+
+- **Unit Tests**: Data models, utilities, ViewModels, and business logic
+- **UI Tests**: Compose UI testing with ComposeTestRule
+- **Instrumented Tests**: Android environment testing
+- **Test Dependencies**: Mockito, coroutines testing, architecture components testing
+
 ### Code Quality
 
 - **Error Handling**: Comprehensive error handling with ErrorHandler utility
 - **Input Validation**: All user inputs validated with ErrorHandler
-- **Accessibility**: Full accessibility support with AccessibilityHelper
-- **Performance**: Performance monitoring with PerformanceMonitor
-- **Testing**: Unit tests for utilities and data validation
+- **Accessibility**: Full accessibility support with content descriptions
+- **Performance**: Optimized code with proper state management
+- **Testing**: Comprehensive test suite covering all major functionality
 
-## Development
+## Architecture
 
 The app is built using:
 - **Kotlin** with **Jetpack Compose**
@@ -188,13 +228,25 @@ The app is built using:
 - **StateFlow** for reactive state management
 - **Theme System** with persistent user preferences
 - **Custom Drawing** for theme-aware dice shapes
-- **Achievement System** with comprehensive tracking
+- **Achievement System** with comprehensive tracking and session management
 - **Persistent Storage** using SharedPreferences and Gson
 - **Custom Dice Assets** for enhanced visual themes
+- **External Integration** for app documentation and legal documents
+
+## Recent Commits
+
+- Added Settings tab with external links to About page and Privacy Policy
+- Fixed Marathon Roller achievement session tracking and progress display
+- Updated achievement logic for Monthly Master, Weekend Warrior, and Lucky Hour
+- Comprehensive code cleanup and encapsulation improvements
+- Added missing density variation drawable folders
+- Updated Gradle configuration to use stable APIs
+- Comprehensive test suite rewrite and modernization
+- Added extensive code documentation and KDoc comments
 
 ## License
 
-**Copyright © 2024 Brian Moler. All rights reserved.**
+**Copyright © 2025 Brian Moler. All rights reserved.**
 
 This project is **NOT open source** and is privately owned by Brian Moler. 
 
