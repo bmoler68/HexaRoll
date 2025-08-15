@@ -13,7 +13,7 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,6 +37,17 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    
+    // Custom APK naming configuration
+    applicationVariants.all {
+        val variant = this
+        variant.outputs
+            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+            .forEach { output ->
+                val outputFileName = "${rootProject.name}-${variant.buildType.name}-v${variant.versionName}.apk"
+                output.outputFileName = outputFileName
+            }
     }
 }
 
