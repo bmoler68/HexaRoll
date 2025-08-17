@@ -139,11 +139,42 @@ fun MainScreen(
         modifier = modifier
             .fillMaxSize()
             .background(when (customization.theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
-                AppTheme.FANTASY -> FantasyColors.CardBackground
-                AppTheme.SCI_FI -> SciFiColors.CardBackground
-                AppTheme.WESTERN -> WesternColors.CardBackground
-                AppTheme.ANCIENT -> AncientColors.CardBackground
+                AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        // Make main background more transparent as background opacity increases
+                        (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.0f)
+                    } else {
+                        1.0f // Full opacity when background is disabled
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.0f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.0f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.0f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.0f)
+                    } else {
+                        1.0f
+                    }
+                )
             })
     ) {
         // App Title
@@ -205,8 +236,8 @@ fun MainScreen(
         ThemedBackground(
             theme = customization.theme,
             alpha = if (customization.backgroundEnabled) customization.backgroundOpacity else 0f,
-            contentScale = ContentScale.Fit,
-            modifier = Modifier.weight(1f)
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.weight(1f).fillMaxSize()
         ) {
             Box(
                 modifier = Modifier
