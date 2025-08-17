@@ -20,6 +20,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.brianmoler.hexaroll.data.Achievement
 import com.brianmoler.hexaroll.data.AppTheme
+import com.brianmoler.hexaroll.data.DiceCustomization
 import com.brianmoler.hexaroll.ui.theme.*
 import com.brianmoler.hexaroll.R
 
@@ -27,7 +28,8 @@ import com.brianmoler.hexaroll.R
 fun AchievementPopup(
     achievement: Achievement,
     onDismiss: () -> Unit,
-    theme: AppTheme
+    theme: AppTheme,
+    customization: DiceCustomization
 ) {
     var isVisible by remember { mutableStateOf(true) }
     
@@ -62,7 +64,8 @@ fun AchievementPopup(
                 onDismiss = {
                     isVisible = false
                     onDismiss()
-                }
+                },
+                customization = customization
             )
         }
     }
@@ -72,7 +75,8 @@ fun AchievementPopup(
 fun AchievementPopupContent(
     achievement: Achievement,
     theme: AppTheme,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    customization: DiceCustomization
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "achievement_glow")
     val glowAlpha by infiniteTransition.animateFloat(
@@ -91,11 +95,42 @@ fun AchievementPopupContent(
             .padding(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = when (theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        // Make achievement popup more transparent as background opacity increases
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f // Full opacity when background is disabled
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -214,7 +249,8 @@ fun AchievementPopupContent(
 fun AchievementNotification(
     achievements: List<Achievement>,
     onDismiss: () -> Unit,
-    theme: AppTheme
+    theme: AppTheme,
+    customization: DiceCustomization
 ) {
     if (achievements.isNotEmpty()) {
         val achievement = achievements.first()
@@ -222,7 +258,8 @@ fun AchievementNotification(
         AchievementPopup(
             achievement = achievement,
             onDismiss = onDismiss,
-            theme = theme
+            theme = theme,
+            customization = customization
         )
     }
 } 

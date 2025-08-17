@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.brianmoler.hexaroll.R
 import com.brianmoler.hexaroll.data.AppTheme
+import com.brianmoler.hexaroll.data.DiceCustomization
 import com.brianmoler.hexaroll.ui.theme.*
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
 import androidx.core.net.toUri
@@ -95,6 +96,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
         BackgroundToggleCard(
             enabled = customization.backgroundEnabled,
             theme = customization.theme,
+            customization = customization,
             onToggle = { viewModel.updateBackgroundEnabled(it) }
         )
         
@@ -104,6 +106,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
             BackgroundOpacityCard(
                 opacity = customization.backgroundOpacity,
                 theme = customization.theme,
+                customization = customization,
                 onOpacityChange = { viewModel.updateBackgroundOpacity(it) }
             )
         }
@@ -164,6 +167,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                 SettingsOptionCard(
                     option = option,
                     theme = customization.theme,
+                    customization = customization,
                     onClick = {
                         when (option.id) {
                             "about" -> {
@@ -250,12 +254,14 @@ data class SettingsOption(
  * 
  * @param option The settings option to display
  * @param theme The current app theme for styling
+ * @param customization The current dice customization for dynamic transparency
  * @param onClick Callback when the option is clicked
  */
 @Composable
 fun SettingsOptionCard(
     option: SettingsOption,
     theme: AppTheme,
+    customization: DiceCustomization,
     onClick: () -> Unit
 ) {
     Card(
@@ -265,11 +271,42 @@ fun SettingsOptionCard(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = when (theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        // Make cards more transparent as background opacity increases
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f // Full opacity when background is disabled
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
             }
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -358,6 +395,7 @@ fun SettingsOptionCard(
 fun BackgroundToggleCard(
     enabled: Boolean,
     theme: AppTheme,
+    customization: DiceCustomization,
     onToggle: (Boolean) -> Unit
 ) {
     Card(
@@ -365,11 +403,42 @@ fun BackgroundToggleCard(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = when (theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        // Make cards more transparent as background opacity increases
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f // Full opacity when background is disabled
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
             }
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -447,6 +516,7 @@ fun BackgroundToggleCard(
 fun BackgroundOpacityCard(
     opacity: Float,
     theme: AppTheme,
+    customization: DiceCustomization,
     onOpacityChange: (Float) -> Unit
 ) {
     Card(
@@ -454,11 +524,42 @@ fun BackgroundOpacityCard(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = when (theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        // Make cards more transparent as background opacity increases
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f // Full opacity when background is disabled
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
             }
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)

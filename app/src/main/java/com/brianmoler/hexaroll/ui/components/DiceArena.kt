@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.data.DiceType
+import com.brianmoler.hexaroll.data.DiceCustomization
 import com.brianmoler.hexaroll.ui.theme.CyberpunkColors
 import com.brianmoler.hexaroll.ui.theme.FantasyColors
 import com.brianmoler.hexaroll.ui.theme.SciFiColors
@@ -47,11 +48,42 @@ fun DiceArena(viewModel: DiceRollViewModel) {
             .fillMaxSize()
             .background(
                 color = when (customization.theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
-                    AppTheme.FANTASY -> FantasyColors.CardBackground
-                    AppTheme.SCI_FI -> SciFiColors.CardBackground
-                    AppTheme.WESTERN -> WesternColors.CardBackground
-                    AppTheme.ANCIENT -> AncientColors.CardBackground
+                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            // Make arena background more transparent as background opacity increases
+                            (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.1f)
+                        } else {
+                            1.0f // Full opacity when background is disabled
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.1f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.1f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.1f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.1f)
+                        } else {
+                            1.0f
+                        }
+                    )
                 },
                 shape = RoundedCornerShape(12.dp)
             )
@@ -99,7 +131,8 @@ fun DiceArena(viewModel: DiceRollViewModel) {
                         count = diceSelections[diceType]?.count ?: 0,
                         onIncrement = { viewModel.incrementDice(diceType) },
                         onDecrement = { viewModel.decrementDice(diceType) },
-                        theme = customization.theme
+                        theme = customization.theme,
+                        customization = customization
                     )
                 }
             }
@@ -135,7 +168,8 @@ fun DiceArena(viewModel: DiceRollViewModel) {
             modifier = modifier,
             onIncrement = { viewModel.incrementModifier() },
             onDecrement = { viewModel.decrementModifier() },
-            theme = customization.theme
+            theme = customization.theme,
+            customization = customization
         )
         
         Spacer(modifier = Modifier.height(8.dp))
@@ -167,7 +201,8 @@ fun DiceArena(viewModel: DiceRollViewModel) {
             viewModel = viewModel,
             isExpanded = isCardsExpanded,
             onToggle = { isCardsExpanded = !isCardsExpanded },
-            theme = customization.theme
+            theme = customization.theme,
+            customization = customization
         )
     }
 }
@@ -177,7 +212,8 @@ fun CollapsibleResultsSection(
     viewModel: DiceRollViewModel,
     isExpanded: Boolean,
     onToggle: () -> Unit,
-    theme: AppTheme
+    theme: AppTheme,
+    customization: DiceCustomization
 ) {
     val currentResult by viewModel.currentResult.collectAsState()
     val diceSelections by viewModel.diceSelections.collectAsState()
@@ -187,11 +223,42 @@ fun CollapsibleResultsSection(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = when (theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        // Make results section more transparent as background opacity increases
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f // Full opacity when background is disabled
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -339,7 +406,8 @@ fun DiceCard(
     count: Int,
     onIncrement: () -> Unit,
     onDecrement: () -> Unit,
-    theme: AppTheme = AppTheme.CYBERPUNK
+    theme: AppTheme = AppTheme.CYBERPUNK,
+    customization: DiceCustomization
 ) {
     Card(
         modifier = Modifier
@@ -347,11 +415,42 @@ fun DiceCard(
             .height(150.dp),
         colors = CardDefaults.cardColors(
             containerColor = when (theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        // Make cards more transparent as background opacity increases
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f // Full opacity when background is disabled
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -481,18 +580,50 @@ fun ModifierSection(
     modifier: Int,
     onIncrement: () -> Unit,
     onDecrement: () -> Unit,
-    theme: AppTheme = AppTheme.CYBERPUNK
+    theme: AppTheme = AppTheme.CYBERPUNK,
+    customization: DiceCustomization
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(
                 color = when (theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                    AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                    AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                    AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-                    AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+                    AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            // Make background more transparent as background opacity increases
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f // Full opacity when background is disabled
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
                 },
                 shape = RoundedCornerShape(8.dp)
             )
@@ -621,11 +752,42 @@ fun TotalDisplay(
         modifier = modifier,
         colors = CardDefaults.cardColors(
             containerColor = when (customization.theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        // Make total display more transparent as background opacity increases
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f // Full opacity when background is disabled
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -730,11 +892,42 @@ fun ResultDisplay(
         modifier = modifier,
         colors = CardDefaults.cardColors(
             containerColor = when (customization.theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        // Make result display more transparent as background opacity increases
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f // Full opacity when background is disabled
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -896,11 +1089,42 @@ fun ClearArenaButton(
         modifier = modifier.height(48.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = when (customization.theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed
-                AppTheme.FANTASY -> FantasyColors.ButtonRed
-                AppTheme.SCI_FI -> SciFiColors.ButtonRed
-                AppTheme.WESTERN -> WesternColors.ButtonRed
-                AppTheme.ANCIENT -> AncientColors.ButtonRed
+                AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        // Make button more transparent as background opacity increases
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f // Full opacity when background is disabled
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ButtonRed.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ButtonRed.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ButtonRed.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ButtonRed.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -940,27 +1164,118 @@ fun RollButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isEnabled) {
                 when (customization.theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen
-                    AppTheme.FANTASY -> FantasyColors.ButtonGreen
-                    AppTheme.SCI_FI -> SciFiColors.ButtonGreen
-                    AppTheme.WESTERN -> WesternColors.ButtonGreen
-                    AppTheme.ANCIENT -> AncientColors.ButtonGreen
+                    AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            // Make button more transparent as background opacity increases
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f // Full opacity when background is disabled
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.ButtonGreen.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.ButtonGreen.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.ButtonGreen.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.ButtonGreen.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
                 }
             } else {
                 when (customization.theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
-                    AppTheme.FANTASY -> FantasyColors.CardBackground
-                    AppTheme.SCI_FI -> SciFiColors.CardBackground
-                    AppTheme.WESTERN -> WesternColors.CardBackground
-                    AppTheme.ANCIENT -> AncientColors.CardBackground
+                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
                 }
             },
             disabledContainerColor = when (customization.theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
-                AppTheme.FANTASY -> FantasyColors.CardBackground
-                AppTheme.SCI_FI -> SciFiColors.CardBackground
-                AppTheme.WESTERN -> WesternColors.CardBackground
-                AppTheme.ANCIENT -> AncientColors.CardBackground
+                AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
             }
         ),
         border = androidx.compose.foundation.BorderStroke(

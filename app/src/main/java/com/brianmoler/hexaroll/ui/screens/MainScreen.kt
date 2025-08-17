@@ -267,7 +267,8 @@ fun MainScreen(
         AchievementNotification(
             achievements = newlyUnlockedAchievements,
             onDismiss = { /* Achievement popup will auto-dismiss */ },
-            theme = customization.theme
+            theme = customization.theme,
+            customization = customization
         )
     }
 }
@@ -343,7 +344,8 @@ fun CustomizeScreen(viewModel: DiceRollViewModel) {
                     theme = theme,
                     isSelected = theme == customization.theme,
                     onSelect = { viewModel.updateTheme(theme) },
-                    themeType = customization.theme
+                    themeType = customization.theme,
+                    customization = customization
                 )
             }
         }
@@ -355,26 +357,88 @@ fun ThemeSelectionCard(
     theme: AppTheme,
     isSelected: Boolean,
     onSelect: () -> Unit,
-    themeType: AppTheme
+    themeType: AppTheme,
+    customization: DiceCustomization
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = if (isSelected) {
                 when (themeType) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                    AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                    AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                    AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-                    AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+                    AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            // Make cards more transparent as background opacity increases
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f // Full opacity when background is disabled
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
                 }
             } else {
                 when (themeType) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
-                    AppTheme.FANTASY -> FantasyColors.CardBackground
-                    AppTheme.SCI_FI -> SciFiColors.CardBackground
-                    AppTheme.WESTERN -> WesternColors.CardBackground
-                    AppTheme.ANCIENT -> AncientColors.CardBackground
+                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
                 }
             }
         ),
@@ -544,7 +608,8 @@ fun PresetsScreen(viewModel: DiceRollViewModel) {
                         onLoad = { viewModel.loadPresetRoll(preset) },
                         onEdit = { name, description -> viewModel.updatePreset(preset.id, name, description) },
                         onRemove = { viewModel.removePreset(preset.id) },
-                        theme = customization.theme
+                        theme = customization.theme,
+                        customization = customization
                     )
                 }
             }
@@ -558,7 +623,8 @@ fun PresetCard(
     onLoad: () -> Unit,
     onEdit: (String, String) -> Unit,
     onRemove: () -> Unit,
-    theme: AppTheme = AppTheme.CYBERPUNK
+    theme: AppTheme = AppTheme.CYBERPUNK,
+    customization: DiceCustomization
 ) {
     var showEditDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -567,11 +633,42 @@ fun PresetCard(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = when (theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        // Make cards more transparent as background opacity increases
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f // Full opacity when background is disabled
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
             }
         ),
         border = androidx.compose.foundation.BorderStroke(
@@ -831,7 +928,7 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(rollHistory) { roll ->
-                    RollHistoryCard(roll = roll, viewModel = viewModel, theme = customization.theme)
+                    RollHistoryCard(roll = roll, viewModel = viewModel, theme = customization.theme, customization = customization)
                 }
             }
         }
@@ -916,7 +1013,8 @@ fun HistoryScreen(viewModel: DiceRollViewModel) {
 fun RollHistoryCard(
     roll: RollResult,
     viewModel: DiceRollViewModel,
-    theme: AppTheme = AppTheme.CYBERPUNK
+    theme: AppTheme = AppTheme.CYBERPUNK,
+    customization: DiceCustomization
 ) {
     var showSaveDialog by remember { mutableStateOf(false) }
     var presetName by remember { mutableStateOf("") }
@@ -926,11 +1024,42 @@ fun RollHistoryCard(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = when (theme) {
-                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        // Make history card more transparent as background opacity increases
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f // Full opacity when background is disabled
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
             }
         ),
         border = androidx.compose.foundation.BorderStroke(

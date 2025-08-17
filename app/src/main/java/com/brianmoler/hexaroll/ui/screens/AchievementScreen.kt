@@ -93,7 +93,8 @@ fun AchievementScreen(viewModel: DiceRollViewModel) {
         CategoryFilterButtons(
             selectedCategory = selectedCategory,
             onCategorySelected = { selectedCategory = it },
-            theme = customization.theme
+            theme = customization.theme,
+            customization = customization
         )
         
         LazyColumn(
@@ -104,7 +105,8 @@ fun AchievementScreen(viewModel: DiceRollViewModel) {
             items(filteredAchievements) { achievement ->
                 AchievementCard(
                     achievement = achievement,
-                    theme = customization.theme
+                    theme = customization.theme,
+                    customization = customization
                 )
             }
         }
@@ -177,7 +179,8 @@ fun AchievementHeader(
 fun CategoryFilterButtons(
     selectedCategory: AchievementCategory?,
     onCategorySelected: (AchievementCategory?) -> Unit,
-    theme: AppTheme
+    theme: AppTheme,
+    customization: DiceCustomization
 ) {
     Row(
         modifier = Modifier
@@ -190,7 +193,8 @@ fun CategoryFilterButtons(
             text = "All",
             isSelected = selectedCategory == null,
             onClick = { onCategorySelected(null) },
-            theme = theme
+            theme = theme,
+            customization = customization
         )
         
         // Individual category buttons
@@ -199,7 +203,8 @@ fun CategoryFilterButtons(
                 text = category.displayName,
                 isSelected = selectedCategory == category,
                 onClick = { onCategorySelected(category) },
-                theme = theme
+                theme = theme,
+                customization = customization
             )
         }
     }
@@ -210,26 +215,88 @@ fun FilterButton(
     text: String,
     isSelected: Boolean,
     onClick: () -> Unit,
-    theme: AppTheme
+    theme: AppTheme,
+    customization: DiceCustomization
 ) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isSelected) {
                 when (theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
-                    AppTheme.FANTASY -> FantasyColors.NeonYellow
-                    AppTheme.SCI_FI -> SciFiColors.NeonYellow
-                    AppTheme.WESTERN -> WesternColors.NeonYellow
-                    AppTheme.ANCIENT -> AncientColors.NeonYellow
+                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            // Keep selected buttons more opaque for visibility
+                            (1.0f - customization.backgroundOpacity * 0.3f).coerceAtLeast(0.7f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.NeonYellow.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.3f).coerceAtLeast(0.7f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.NeonYellow.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.3f).coerceAtLeast(0.7f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.NeonYellow.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.3f).coerceAtLeast(0.7f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.NeonYellow.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.3f).coerceAtLeast(0.7f)
+                        } else {
+                            1.0f
+                        }
+                    )
                 }
             } else {
                 when (theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
-                    AppTheme.FANTASY -> FantasyColors.CardBackground
-                    AppTheme.SCI_FI -> SciFiColors.CardBackground
-                    AppTheme.WESTERN -> WesternColors.CardBackground
-                    AppTheme.ANCIENT -> AncientColors.CardBackground
+                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
                 }
             }
         ),
@@ -266,26 +333,88 @@ fun FilterButton(
 @Composable
 fun AchievementCard(
     achievement: Achievement,
-    theme: AppTheme
+    theme: AppTheme,
+    customization: DiceCustomization
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = if (achievement.isUnlocked) {
                 when (theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
-                    AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
-                    AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
-                    AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
-                    AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+                    AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            // Make cards more transparent as background opacity increases
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f // Full opacity when background is disabled
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
                 }
             } else {
                 when (theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
-                    AppTheme.FANTASY -> FantasyColors.CardBackground
-                    AppTheme.SCI_FI -> SciFiColors.CardBackground
-                    AppTheme.WESTERN -> WesternColors.CardBackground
-                    AppTheme.ANCIENT -> AncientColors.CardBackground
+                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
                 }
             }
         ),
