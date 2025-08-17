@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import com.brianmoler.hexaroll.R
 import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.data.DiceCustomization
+import com.brianmoler.hexaroll.ui.components.BackgroundFitMode
 import com.brianmoler.hexaroll.ui.theme.*
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
 import androidx.core.net.toUri
@@ -112,6 +113,14 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                 theme = customization.theme,
                 customization = customization,
                 onOpacityChange = { viewModel.updateBackgroundOpacity(it) }
+            )
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            BackgroundScalingCard(
+                scalingMode = customization.backgroundScaling,
+                theme = customization.theme,
+                customization = customization,
+                onScalingChange = { viewModel.updateBackgroundScaling(it) }
             )
         }
         
@@ -671,6 +680,160 @@ fun BackgroundOpacityCard(
                     },
                     fontSize = 12.sp
                 )
+            }
+        }
+    }
+}
+
+/**
+ * Card component for adjusting background scaling mode
+ */
+@Composable
+fun BackgroundScalingCard(
+    scalingMode: BackgroundFitMode,
+    theme: AppTheme,
+    customization: DiceCustomization,
+    onScalingChange: (BackgroundFitMode) -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        // Make cards more transparent as background opacity increases
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f // Full opacity when background is disabled
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+            }
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Background Scaling",
+                color = when (theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                    AppTheme.FANTASY -> FantasyColors.PrimaryText
+                    AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                    AppTheme.WESTERN -> WesternColors.PrimaryText
+                    AppTheme.ANCIENT -> AncientColors.PrimaryText
+                },
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            )
+            
+            Text(
+                text = "How background images should fit your screen",
+                color = when (theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                    AppTheme.FANTASY -> FantasyColors.SecondaryText
+                    AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                    AppTheme.WESTERN -> WesternColors.SecondaryText
+                    AppTheme.ANCIENT -> AncientColors.SecondaryText
+                },
+                fontSize = 14.sp,
+                modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
+            )
+            
+            // Scaling mode options
+            val scalingOptions = listOf(
+                Triple(BackgroundFitMode.SMART_SCALE, "Smart Scale", "Automatically optimizes for your screen"),
+                Triple(BackgroundFitMode.FILL_SCREEN, "Fill Screen", "Covers entire screen, may crop image"),
+                Triple(BackgroundFitMode.FIT_SCREEN, "Fit Image", "Shows complete image, may show borders"),
+                Triple(BackgroundFitMode.STRETCH, "Stretch", "Stretches image to exact screen size")
+            )
+            
+            scalingOptions.forEach { (mode, title, description) ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onScalingChange(mode) }
+                        .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = scalingMode == mode,
+                        onClick = { onScalingChange(mode) },
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                                AppTheme.FANTASY -> FantasyColors.NeonBlue
+                                AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                                AppTheme.WESTERN -> WesternColors.NeonBlue
+                                AppTheme.ANCIENT -> AncientColors.NeonBlue
+                            },
+                            unselectedColor = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                                AppTheme.FANTASY -> FantasyColors.SecondaryText
+                                AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                                AppTheme.WESTERN -> WesternColors.SecondaryText
+                                AppTheme.ANCIENT -> AncientColors.SecondaryText
+                            }
+                        )
+                    )
+                    
+                    Column(modifier = Modifier.padding(start = 12.dp)) {
+                        Text(
+                            text = title,
+                            color = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                                AppTheme.FANTASY -> FantasyColors.PrimaryText
+                                AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                                AppTheme.WESTERN -> WesternColors.PrimaryText
+                                AppTheme.ANCIENT -> AncientColors.PrimaryText
+                            },
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = description,
+                            color = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                                AppTheme.FANTASY -> FantasyColors.SecondaryText
+                                AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                                AppTheme.WESTERN -> WesternColors.SecondaryText
+                                AppTheme.ANCIENT -> AncientColors.SecondaryText
+                            },
+                            fontSize = 12.sp
+                        )
+                    }
+                }
             }
         }
     }

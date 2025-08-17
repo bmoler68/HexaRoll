@@ -1,5 +1,7 @@
 package com.brianmoler.hexaroll.data
 
+import com.brianmoler.hexaroll.ui.components.BackgroundFitMode
+
 /**
  * DiceType - Enumeration of available dice types
  * 
@@ -117,9 +119,11 @@ enum class AppTheme {
  * @property theme The currently selected visual theme
  * @property backgroundEnabled Whether theme backgrounds are displayed
  * @property backgroundOpacity Opacity level for theme backgrounds (0.0 - 1.0)
+ * @property backgroundScaling How background images should be scaled to fit the screen
  */
 data class DiceCustomization(
     val theme: AppTheme = AppTheme.CYBERPUNK,
     val backgroundEnabled: Boolean = true,
-    val backgroundOpacity: Float = 0.3f
+    val backgroundOpacity: Float = 0.3f,
+    val backgroundScaling: BackgroundFitMode = BackgroundFitMode.SMART_SCALE
 ) 

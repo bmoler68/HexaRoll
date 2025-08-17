@@ -28,6 +28,7 @@ import com.brianmoler.hexaroll.data.*
 import com.brianmoler.hexaroll.ui.components.AchievementNotification
 import com.brianmoler.hexaroll.ui.components.DiceArena
 import com.brianmoler.hexaroll.ui.components.ThemedBackground
+import com.brianmoler.hexaroll.ui.components.BackgroundFitMode
 import com.brianmoler.hexaroll.ui.theme.*
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
 
@@ -236,7 +237,7 @@ fun MainScreen(
         ThemedBackground(
             theme = customization.theme,
             alpha = if (customization.backgroundEnabled) customization.backgroundOpacity else 0f,
-            contentScale = ContentScale.Crop,
+            fitMode = customization.backgroundScaling,
             modifier = Modifier.weight(1f).fillMaxSize()
         ) {
             Box(
