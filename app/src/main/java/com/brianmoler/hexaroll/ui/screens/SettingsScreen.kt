@@ -7,6 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -43,10 +45,12 @@ import androidx.core.net.toUri
 fun SettingsScreen(viewModel: DiceRollViewModel) {
     val customization by viewModel.customization.collectAsState()
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
     
-        Column(
+    Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(16.dp)
     ) {
         // Settings Header
@@ -158,39 +162,34 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
             )
         )
         
-        // Main content
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.weight(1f)
-        ) {
-            items(settingsOptions) { option ->
-                SettingsOptionCard(
-                    option = option,
-                    theme = customization.theme,
-                    customization = customization,
-                    onClick = {
-                        when (option.id) {
-                            "about" -> {
-                                val intent = Intent(Intent.ACTION_VIEW, "https://www.brianmoler.com/appdocs/HexaRoll/HexaRollDetails.html".toUri())
-                                context.startActivity(intent)
-                            }
-                            "privacy" -> {
-                                val intent = Intent(Intent.ACTION_VIEW, "https://www.brianmoler.com/appdocs/HexaRoll/HexaRollPrivacyPolicy.html".toUri())
-                                context.startActivity(intent)
-                            }
+        // Settings Options
+        settingsOptions.forEach { option ->
+            SettingsOptionCard(
+                option = option,
+                theme = customization.theme,
+                customization = customization,
+                onClick = {
+                    when (option.id) {
+                        "about" -> {
+                            val intent = Intent(Intent.ACTION_VIEW, "https://www.brianmoler.com/appdocs/HexaRoll/HexaRollDetails.html".toUri())
+                            context.startActivity(intent)
+                        }
+                        "privacy" -> {
+                            val intent = Intent(Intent.ACTION_VIEW, "https://www.brianmoler.com/appdocs/HexaRoll/HexaRollPrivacyPolicy.html".toUri())
+                            context.startActivity(intent)
                         }
                     }
-                )
-            }
+                }
+            )
+            Spacer(modifier = Modifier.height(12.dp))
         }
         
         // Footer information
+        Spacer(modifier = Modifier.height(24.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
-            
             Text(
                 text = stringResource(R.string.app_name),
                 color = when (customization.theme) {
@@ -234,6 +233,9 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                 modifier = Modifier.padding(bottom = 16.dp)
             )
         }
+        
+        // Extra bottom padding for comfortable scrolling
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
