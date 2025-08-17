@@ -367,13 +367,13 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     private fun loadThemeFromStorage() {
         viewModelScope.launch {
             try {
-                val theme = themeStorage.loadTheme()
-                _customization.value = DiceCustomization(theme = theme)
+                val customization = themeStorage.loadCustomization()
+                _customization.value = customization
                 
                 // Track loaded theme for achievements
-                achievementManager.onThemeLoaded(theme)
+                achievementManager.onThemeLoaded(customization.theme)
             } catch (e: Exception) {
-                Log.e("DiceRollViewModel", "Error loading theme", e)
+                Log.e("DiceRollViewModel", "Error loading customization", e)
                 _customization.value = DiceCustomization(theme = AppTheme.CYBERPUNK)
                 
                 // Track default theme for achievements
@@ -382,24 +382,51 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         }
     }
     
-    private fun saveThemeToStorage(theme: AppTheme) {
+    private fun saveThemeToStorage() {
         viewModelScope.launch {
             try {
-                themeStorage.saveTheme(theme)
+                themeStorage.saveCustomization(_customization.value)
             } catch (e: Exception) {
-                Log.e("DiceRollViewModel", "Error saving theme", e)
+                Log.e("DiceRollViewModel", "Error saving customization", e)
             }
         }
     }
     
     fun updateTheme(theme: AppTheme) {
-        _customization.value = DiceCustomization(theme = theme)
-        saveThemeToStorage(theme)
+        _customization.update { current ->
+            current.copy(theme = theme)
+        }
+        saveThemeToStorage()
         
         // Track theme change for achievements
         viewModelScope.launch {
             achievementManager.onThemeChanged(theme)
         }
+    }
+    
+    /**
+     * Update background enabled setting
+     * 
+     * @param enabled Whether theme backgrounds should be displayed
+     */
+    fun updateBackgroundEnabled(enabled: Boolean) {
+        _customization.update { current ->
+            current.copy(backgroundEnabled = enabled)
+        }
+        saveThemeToStorage()
+    }
+    
+    /**
+     * Update background opacity setting
+     * 
+     * @param opacity Background opacity level (0.0 - 1.0)
+     */
+    fun updateBackgroundOpacity(opacity: Float) {
+        val clampedOpacity = opacity.coerceIn(0.0f, 1.0f)
+        _customization.update { current ->
+            current.copy(backgroundOpacity = clampedOpacity)
+        }
+        saveThemeToStorage()
     }
 
     fun clearArena() {

@@ -115,7 +115,11 @@ enum class AppTheme {
  * and behavior.
  * 
  * @property theme The currently selected visual theme
+ * @property backgroundEnabled Whether theme backgrounds are displayed
+ * @property backgroundOpacity Opacity level for theme backgrounds (0.0 - 1.0)
  */
 data class DiceCustomization(
-    val theme: AppTheme = AppTheme.CYBERPUNK
+    val theme: AppTheme = AppTheme.CYBERPUNK,
+    val backgroundEnabled: Boolean = true,
+    val backgroundOpacity: Float = 0.3f
 ) 

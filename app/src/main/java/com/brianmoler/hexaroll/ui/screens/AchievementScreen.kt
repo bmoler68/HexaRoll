@@ -41,17 +41,7 @@ fun AchievementScreen(viewModel: DiceRollViewModel) {
     }
     
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                when (customization.theme) {
-                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground
-                    AppTheme.FANTASY -> FantasyColors.CardBackground
-                    AppTheme.SCI_FI -> SciFiColors.CardBackground
-                    AppTheme.WESTERN -> WesternColors.CardBackground
-                    AppTheme.ANCIENT -> AncientColors.CardBackground
-                }
-            )
+        modifier = Modifier.fillMaxSize()
     ) {
         AchievementHeader(
             completionPercentage = completionPercentage,

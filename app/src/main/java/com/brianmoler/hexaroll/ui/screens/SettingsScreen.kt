@@ -76,6 +76,55 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
             modifier = Modifier.padding(bottom = 24.dp)
         )
         
+        // Background Controls Section
+        Text(
+            text = "Background Settings",
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                AppTheme.WESTERN -> WesternColors.NeonYellow
+                AppTheme.ANCIENT -> AncientColors.NeonYellow
+            },
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(top = 8.dp, bottom = 12.dp)
+        )
+        
+        // Background Enable/Disable Toggle
+        BackgroundToggleCard(
+            enabled = customization.backgroundEnabled,
+            theme = customization.theme,
+            onToggle = { viewModel.updateBackgroundEnabled(it) }
+        )
+        
+        // Background Opacity Slider (only shown if backgrounds are enabled)
+        if (customization.backgroundEnabled) {
+            Spacer(modifier = Modifier.height(12.dp))
+            BackgroundOpacityCard(
+                opacity = customization.backgroundOpacity,
+                theme = customization.theme,
+                onOpacityChange = { viewModel.updateBackgroundOpacity(it) }
+            )
+        }
+        
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        // App Information Section
+        Text(
+            text = "App Information",
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                AppTheme.WESTERN -> WesternColors.NeonYellow
+                AppTheme.ANCIENT -> AncientColors.NeonYellow
+            },
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
+        
         // Settings Options
         val settingsOptions = listOf(
             SettingsOption(
@@ -298,6 +347,228 @@ fun SettingsOptionCard(
                 },
                 modifier = Modifier.size(20.dp)
             )
+        }
+    }
+}
+
+/**
+ * Card component for toggling background images on/off
+ */
+@Composable
+fun BackgroundToggleCard(
+    enabled: Boolean,
+    theme: AppTheme,
+    onToggle: (Boolean) -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+            }
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Theme Backgrounds",
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                        AppTheme.FANTASY -> FantasyColors.PrimaryText
+                        AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                        AppTheme.WESTERN -> WesternColors.PrimaryText
+                        AppTheme.ANCIENT -> AncientColors.PrimaryText
+                    },
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = if (enabled) "Background images are enabled" else "Background images are disabled",
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                        AppTheme.FANTASY -> FantasyColors.SecondaryText
+                        AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                        AppTheme.WESTERN -> WesternColors.SecondaryText
+                        AppTheme.ANCIENT -> AncientColors.SecondaryText
+                    },
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+            
+            Switch(
+                checked = enabled,
+                onCheckedChange = onToggle,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                        AppTheme.FANTASY -> FantasyColors.NeonBlue
+                        AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                        AppTheme.WESTERN -> WesternColors.NeonBlue
+                        AppTheme.ANCIENT -> AncientColors.NeonBlue
+                    },
+                    uncheckedThumbColor = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                        AppTheme.FANTASY -> FantasyColors.SecondaryText
+                        AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                        AppTheme.WESTERN -> WesternColors.SecondaryText
+                        AppTheme.ANCIENT -> AncientColors.SecondaryText
+                    },
+                    uncheckedTrackColor = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                        AppTheme.FANTASY -> FantasyColors.BorderBlue
+                        AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                        AppTheme.WESTERN -> WesternColors.BorderBlue
+                        AppTheme.ANCIENT -> AncientColors.BorderBlue
+                    }
+                )
+            )
+        }
+    }
+}
+
+/**
+ * Card component for adjusting background opacity
+ */
+@Composable
+fun BackgroundOpacityCard(
+    opacity: Float,
+    theme: AppTheme,
+    onOpacityChange: (Float) -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground
+            }
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Background Opacity",
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                        AppTheme.FANTASY -> FantasyColors.PrimaryText
+                        AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                        AppTheme.WESTERN -> WesternColors.PrimaryText
+                        AppTheme.ANCIENT -> AncientColors.PrimaryText
+                    },
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = "${(opacity * 100).toInt()}%",
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                        AppTheme.FANTASY -> FantasyColors.NeonYellow
+                        AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                        AppTheme.WESTERN -> WesternColors.NeonYellow
+                        AppTheme.ANCIENT -> AncientColors.NeonYellow
+                    },
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            
+            Text(
+                text = "Adjust how visible the background image is",
+                color = when (theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                    AppTheme.FANTASY -> FantasyColors.SecondaryText
+                    AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                    AppTheme.WESTERN -> WesternColors.SecondaryText
+                    AppTheme.ANCIENT -> AncientColors.SecondaryText
+                },
+                fontSize = 14.sp,
+                modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
+            )
+            
+            Slider(
+                value = opacity,
+                onValueChange = onOpacityChange,
+                valueRange = 0.1f..1.0f,
+                steps = 8, // 10%, 20%, 30%, ..., 100%
+                colors = SliderDefaults.colors(
+                    thumbColor = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                        AppTheme.FANTASY -> FantasyColors.NeonBlue
+                        AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                        AppTheme.WESTERN -> WesternColors.NeonBlue
+                        AppTheme.ANCIENT -> AncientColors.NeonBlue
+                    },
+                    activeTrackColor = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                        AppTheme.FANTASY -> FantasyColors.NeonBlue
+                        AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                        AppTheme.WESTERN -> WesternColors.NeonBlue
+                        AppTheme.ANCIENT -> AncientColors.NeonBlue
+                    },
+                    inactiveTrackColor = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                        AppTheme.FANTASY -> FantasyColors.BorderBlue
+                        AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                        AppTheme.WESTERN -> WesternColors.BorderBlue
+                        AppTheme.ANCIENT -> AncientColors.BorderBlue
+                    }
+                )
+            )
+            
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Subtle",
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                        AppTheme.FANTASY -> FantasyColors.SecondaryText
+                        AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                        AppTheme.WESTERN -> WesternColors.SecondaryText
+                        AppTheme.ANCIENT -> AncientColors.SecondaryText
+                    },
+                    fontSize = 12.sp
+                )
+                Text(
+                    text = "Vivid",
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                        AppTheme.FANTASY -> FantasyColors.SecondaryText
+                        AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                        AppTheme.WESTERN -> WesternColors.SecondaryText
+                        AppTheme.ANCIENT -> AncientColors.SecondaryText
+                    },
+                    fontSize = 12.sp
+                )
+            }
         }
     }
 } 

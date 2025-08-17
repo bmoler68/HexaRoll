@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,7 @@ import com.brianmoler.hexaroll.R
 import com.brianmoler.hexaroll.data.*
 import com.brianmoler.hexaroll.ui.components.AchievementNotification
 import com.brianmoler.hexaroll.ui.components.DiceArena
+import com.brianmoler.hexaroll.ui.components.ThemedBackground
 import com.brianmoler.hexaroll.ui.theme.*
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
 
@@ -199,14 +201,66 @@ fun MainScreen(
             }
         }
         
-        // Content based on selected tab
-        when (selectedTabIndex) {
-            0 -> RollScreen(viewModel)
-            1 -> CustomizeScreen(viewModel)
-            2 -> PresetsScreen(viewModel)
-            3 -> HistoryScreen(viewModel)
-            4 -> AchievementScreen(viewModel)
-            5 -> SettingsScreen(viewModel)
+        // Content based on selected tab with themed background
+        ThemedBackground(
+            theme = customization.theme,
+            alpha = if (customization.backgroundEnabled) customization.backgroundOpacity else 0f,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier.weight(1f)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground.copy(
+                            alpha = if (customization.backgroundEnabled) {
+                                // Adjust overlay opacity based on background opacity
+                                // At 100% background opacity, use minimal overlay (0.1f)
+                                // At lower background opacity, use more overlay for readability
+                                (1.0f - customization.backgroundOpacity * 0.75f).coerceAtLeast(0.1f)
+                            } else {
+                                1.0f // Full opacity when background is disabled
+                            }
+                        )
+                        AppTheme.FANTASY -> FantasyColors.CardBackground.copy(
+                            alpha = if (customization.backgroundEnabled) {
+                                (1.0f - customization.backgroundOpacity * 0.75f).coerceAtLeast(0.1f)
+                            } else {
+                                1.0f
+                            }
+                        )
+                        AppTheme.SCI_FI -> SciFiColors.CardBackground.copy(
+                            alpha = if (customization.backgroundEnabled) {
+                                (1.0f - customization.backgroundOpacity * 0.75f).coerceAtLeast(0.1f)
+                            } else {
+                                1.0f
+                            }
+                        )
+                        AppTheme.WESTERN -> WesternColors.CardBackground.copy(
+                            alpha = if (customization.backgroundEnabled) {
+                                (1.0f - customization.backgroundOpacity * 0.75f).coerceAtLeast(0.1f)
+                            } else {
+                                1.0f
+                            }
+                        )
+                        AppTheme.ANCIENT -> AncientColors.CardBackground.copy(
+                            alpha = if (customization.backgroundEnabled) {
+                                (1.0f - customization.backgroundOpacity * 0.75f).coerceAtLeast(0.1f)
+                            } else {
+                                1.0f
+                            }
+                        )
+                    })
+            ) {
+                when (selectedTabIndex) {
+                    0 -> RollScreen(viewModel)
+                    1 -> CustomizeScreen(viewModel)
+                    2 -> PresetsScreen(viewModel)
+                    3 -> HistoryScreen(viewModel)
+                    4 -> AchievementScreen(viewModel)
+                    5 -> SettingsScreen(viewModel)
+                }
+            }
         }
         
         // Achievement popup
