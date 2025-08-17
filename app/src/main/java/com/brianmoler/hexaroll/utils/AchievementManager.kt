@@ -1011,23 +1011,6 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             // Update completion percentage
             updateCompletionPercentage()
             
-            // Add a success notification
-            _newlyUnlockedAchievements.update { list ->
-                list + Achievement(
-                    id = "reset_success",
-                    name = "Progress Reset",
-                    description = "All achievement progress has been reset successfully",
-                    category = AchievementCategory.SPECIAL_EVENTS,
-                    tier = AchievementTier.BRONZE,
-                    icon = "🔄",
-                    isUnlocked = true,
-                    progress = 1,
-                    maxProgress = 1,
-                    unlockedAt = System.currentTimeMillis(),
-                    rarity = 0.0
-                )
-            }
-            
             Log.d("AchievementManager", "All achievement progress has been reset")
         } catch (e: Exception) {
             Log.e("AchievementManager", "Error resetting achievement progress", e)

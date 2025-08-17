@@ -20,9 +20,23 @@ class PresetStorage(private val context: Context) {
     
     suspend fun savePresets(presets: List<PresetRoll>) {
         withContext(Dispatchers.IO) {
-            val json = gson.toJson(presets, presetListType)
-            sharedPreferences.edit {
-                putString("presets", json)
+            try {
+                // Validate presets before saving
+                val validatedPresets = presets.filter { preset ->
+                    preset.name.isNotBlank() && 
+                    preset.name.length <= 50 &&
+                    preset.description.length <= 200 &&
+                    preset.diceSelections.isNotEmpty() &&
+                    preset.diceSelections.all { it.count >= 0 && it.count <= 100 }
+                }
+                
+                val json = gson.toJson(validatedPresets, presetListType)
+                sharedPreferences.edit {
+                    putString("presets", json)
+                }
+            } catch (e: Exception) {
+                // Log error but don't crash the app
+                android.util.Log.e("PresetStorage", "Failed to save presets", e)
             }
         }
     }

@@ -54,17 +54,24 @@ fun AchievementScreen(viewModel: DiceRollViewModel) {
         if (showResetConfirmation) {
             AlertDialog(
                 onDismissRequest = { showResetConfirmation = false },
+                containerColor = ThemeColorUtils.getCardBackgroundColor(
+                    customization.theme,
+                    customization.backgroundEnabled,
+                    customization.backgroundOpacity
+                ),
                 title = {
                     Text(
                         text = stringResource(R.string.confirm_reset_achievements),
                         style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.NEON_RED)
                     )
                 },
                 text = {
                     Text(
                         text = "This will permanently delete all achievement progress, unlocked achievements, and statistics. This action cannot be undone.",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.SECONDARY_TEXT)
                     )
                 },
                 confirmButton = {
@@ -74,7 +81,8 @@ fun AchievementScreen(viewModel: DiceRollViewModel) {
                             showResetConfirmation = false
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error
+                            containerColor = Color(0xFFC62828), // Dark Red
+                            contentColor = Color.White
                         )
                     ) {
                         Text(stringResource(R.string.action_reset))
@@ -82,7 +90,11 @@ fun AchievementScreen(viewModel: DiceRollViewModel) {
                 },
                 dismissButton = {
                     Button(
-                        onClick = { showResetConfirmation = false }
+                        onClick = { showResetConfirmation = false },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF1565C0), // Dark Blue
+                            contentColor = Color.White
+                        )
                     ) {
                         Text(stringResource(R.string.action_cancel))
                     }
