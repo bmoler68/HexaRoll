@@ -17,14 +17,7 @@ class ThemeStorage(context: Context) {
         private const val KEY_SELECTED_THEME = "selected_theme"
         private const val KEY_CUSTOMIZATION = "dice_customization"
     }
-    
-    fun saveTheme(theme: AppTheme) {
-        val themeJson = gson.toJson(theme)
-        sharedPreferences.edit {
-            putString(KEY_SELECTED_THEME, themeJson)
-        }
-    }
-    
+
     fun loadTheme(): AppTheme {
         val themeJson = sharedPreferences.getString(KEY_SELECTED_THEME, null)
         return if (themeJson != null) {

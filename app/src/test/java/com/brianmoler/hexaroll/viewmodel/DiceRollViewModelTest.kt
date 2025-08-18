@@ -2,10 +2,7 @@ package com.brianmoler.hexaroll.viewmodel
 
 import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import com.brianmoler.hexaroll.data.DiceType
-import com.brianmoler.hexaroll.data.DiceSelection
-import com.brianmoler.hexaroll.data.DiceCustomization
 import com.brianmoler.hexaroll.data.AppTheme
 import org.junit.Before
 import org.junit.Rule

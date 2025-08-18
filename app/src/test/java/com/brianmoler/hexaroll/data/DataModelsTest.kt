@@ -2,7 +2,6 @@ package com.brianmoler.hexaroll.data
 
 import org.junit.Test
 import org.junit.Assert.*
-import java.util.UUID
 
 /**
  * Unit tests for HexaRoll data models

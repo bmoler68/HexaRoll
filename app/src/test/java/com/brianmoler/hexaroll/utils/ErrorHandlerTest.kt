@@ -1,10 +1,8 @@
 package com.brianmoler.hexaroll.utils
 
-import android.content.Context
 import org.junit.Test
 import org.junit.Assert.*
 import org.junit.Before
-import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
 /**
@@ -14,10 +12,7 @@ import org.mockito.MockitoAnnotations
  * that ensures data integrity throughout the application.
  */
 class ErrorHandlerTest {
-    
-    @Mock
-    private lateinit var mockContext: Context
-    
+
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)

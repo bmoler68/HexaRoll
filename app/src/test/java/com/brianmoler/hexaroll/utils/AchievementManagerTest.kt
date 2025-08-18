@@ -1,6 +1,5 @@
 package com.brianmoler.hexaroll.utils
 
-import android.content.Context
 import com.brianmoler.hexaroll.data.*
 import org.junit.Before
 import org.junit.Test
@@ -29,10 +28,7 @@ import org.junit.After
 @RunWith(MockitoJUnitRunner::class)
 @ExperimentalCoroutinesApi
 class AchievementManagerTest {
-    
-    @Mock
-    private lateinit var mockContext: Context
-    
+
     @Mock
     private lateinit var mockAchievementStorage: AchievementStorage
     

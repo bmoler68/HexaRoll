@@ -19,7 +19,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.brianmoler.hexaroll.R
-import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.data.DiceCustomization
 import com.brianmoler.hexaroll.data.PresetRoll
 import com.brianmoler.hexaroll.ui.theme.ThemeColorUtils
