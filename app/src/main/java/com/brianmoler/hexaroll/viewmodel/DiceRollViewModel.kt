@@ -489,19 +489,18 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
             }
         }
     }
-    
-    // Achievement-related functions
-    fun onHistoryViewed() {
-        viewModelScope.launch {
-            achievementManager.onHistoryViewed()
-        }
-    }
 
     fun getCompletionPercentage() = achievementManager.completionPercentage
 
     fun resetAllProgress() {
         viewModelScope.launch {
             achievementManager.resetAllProgress()
+        }
+    }
+    
+    fun onHistoryViewed() {
+        viewModelScope.launch {
+            achievementManager.onHistoryViewed()
         }
     }
     

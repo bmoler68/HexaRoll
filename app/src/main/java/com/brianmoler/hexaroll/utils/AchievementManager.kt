@@ -876,27 +876,7 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             Log.d("AchievementManager", "Skipping stats save in onThemeChanged - data not yet loaded")
         }
     }
-    
-    suspend fun onHistoryViewed() {
-        val stats = _achievementStats.value
-        val updatedStats = stats.copy(historyViews = stats.historyViews + 1)
-        _achievementStats.value = updatedStats
-        
-        // Check favorites/history achievements
-        checkFavoritesHistoryAchievements(updatedStats)
-        
-        // Update achievement progress
-        updateAchievementProgressAfterRoll(updatedStats)
-        
-        // Only save stats if data has been loaded
-        if (isDataLoaded) {
-            achievementStorage.saveAchievementStats(updatedStats)
-            saveAchievementData()
-        } else {
-            Log.d("AchievementManager", "Skipping stats save in onHistoryViewed - data not yet loaded")
-        }
-    }
-    
+
     suspend fun onFavoriteCreated() {
         val stats = _achievementStats.value
         val updatedStats = stats.copy(totalFavorites = stats.totalFavorites + 1)
@@ -950,6 +930,28 @@ class AchievementManager(private val achievementStorage: AchievementStorage) {
             achievementStorage.saveAchievementStats(stats)
         } else {
             Log.d("AchievementManager", "Skipping stats save in onThemeLoaded - data not yet loaded")
+        }
+    }
+    
+    suspend fun onHistoryViewed() {
+        val stats = _achievementStats.value
+        val updatedStats = stats.copy(historyViews = stats.historyViews + 1)
+        _achievementStats.value = updatedStats
+        
+        Log.d("AchievementManager", "History viewed. Total history views: ${updatedStats.historyViews}")
+        
+        // Check favorites/history achievements
+        checkFavoritesHistoryAchievements(updatedStats)
+        
+        // Update achievement progress
+        updateAchievementProgressAfterRoll(updatedStats)
+        
+        // Only save stats if data has been loaded
+        if (isDataLoaded) {
+            achievementStorage.saveAchievementStats(updatedStats)
+            saveAchievementData()
+        } else {
+            Log.d("AchievementManager", "Skipping stats save in onHistoryViewed - data not yet loaded")
         }
     }
     
