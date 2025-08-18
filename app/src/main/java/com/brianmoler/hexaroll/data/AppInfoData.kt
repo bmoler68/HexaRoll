@@ -43,10 +43,16 @@ object AppInfoData {
     fun getVersionString(): String = "Version ${Version.VERSION_NAME}"
     
     /**
+     * Helper function to get formatted copyright string
+     */
+    fun getCopyrightString(): String = "© ${Info.RELEASE_YEAR} ${Info.DEVELOPER_NAME}. All rights reserved."
+    
+    /**
      * Helper function to get full app information
      */
     fun getAppInfoSummary(): String = """
         ${getVersionString()}
-        ${Info.COPYRIGHT_TEXT}
+        ${getCopyrightString()}
     """.trimIndent()
+
 }

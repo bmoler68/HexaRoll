@@ -1,12 +1,9 @@
 package com.brianmoler.hexaroll.ui.screens
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -216,7 +213,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
             )
             
             Text(
-                text = context.getString(R.string.app_version, AppInfoData.Version.VERSION_NAME),
+                text = AppInfoData.getVersionString(),
                 color = when (customization.theme) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                     AppTheme.FANTASY -> FantasyColors.SecondaryText
@@ -230,7 +227,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
             )
             
             Text(
-                text = context.getString(R.string.app_copyright, AppInfoData.Info.RELEASE_YEAR),
+                text = AppInfoData.getCopyrightString(),
                 color = when (customization.theme) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                     AppTheme.FANTASY -> FantasyColors.SecondaryText
