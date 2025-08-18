@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -45,6 +46,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
     val customization by viewModel.customization.collectAsState()
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+    var showResetConfirmation by remember { mutableStateOf(false) }
     
     Column(
         modifier = Modifier
@@ -166,6 +168,19 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                         modifier = Modifier.size(24.dp)
                     )
                 }
+            ),
+            SettingsOption(
+                id = "reset_achievements",
+                title = "Reset Achievement Progress",
+                description = "Reset all achievement progress and statistics",
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.Refresh,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             )
         )
         
@@ -184,6 +199,9 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                         "privacy" -> {
                             val intent = Intent(Intent.ACTION_VIEW, AppInfoData.Urls.PRIVACY_POLICY.toUri())
                             context.startActivity(intent)
+                        }
+                        "reset_achievements" -> {
+                            showResetConfirmation = true
                         }
                     }
                 }
@@ -243,6 +261,100 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
         
         // Extra bottom padding for comfortable scrolling
         Spacer(modifier = Modifier.height(32.dp))
+    }
+    
+    // Reset Achievement Progress Confirmation Dialog
+    if (showResetConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showResetConfirmation = false },
+            containerColor = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+            },
+            title = {
+                Text(
+                    text = stringResource(R.string.confirm_reset_achievements),
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed
+                        AppTheme.FANTASY -> FantasyColors.NeonRed
+                        AppTheme.SCI_FI -> SciFiColors.NeonRed
+                        AppTheme.WESTERN -> WesternColors.NeonRed
+                        AppTheme.ANCIENT -> AncientColors.NeonRed
+                    },
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "This will permanently delete all achievement progress, unlocked achievements, and statistics. This action cannot be undone.",
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                        AppTheme.FANTASY -> FantasyColors.SecondaryText
+                        AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                        AppTheme.WESTERN -> WesternColors.SecondaryText
+                        AppTheme.ANCIENT -> AncientColors.SecondaryText
+                    }
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        viewModel.resetAllProgress()
+                        showResetConfirmation = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFC62828), // Dark Red
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text(stringResource(R.string.action_reset))
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showResetConfirmation = false },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF1565C0), // Dark Blue
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            }
+        )
     }
 }
 

@@ -22,7 +22,6 @@ import com.brianmoler.hexaroll.data.*
 import com.brianmoler.hexaroll.ui.theme.*
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
 
 @Composable
 fun AchievementScreen(viewModel: DiceRollViewModel) {
@@ -30,7 +29,6 @@ fun AchievementScreen(viewModel: DiceRollViewModel) {
     val customization by viewModel.customization.collectAsState()
     val completionPercentage by viewModel.getCompletionPercentage().collectAsState()
     
-    var showResetConfirmation by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf<AchievementCategory?>(null) }
     
     // Filter achievements based on selected category
@@ -46,61 +44,8 @@ fun AchievementScreen(viewModel: DiceRollViewModel) {
         AchievementHeader(
             completionPercentage = completionPercentage,
             totalAchievements = achievements.size,
-            unlockedCount = achievements.count { it.isUnlocked },
-            onResetProgress = { showResetConfirmation = true }
+            unlockedCount = achievements.count { it.isUnlocked }
         )
-        
-        // Confirmation Dialog
-        if (showResetConfirmation) {
-            AlertDialog(
-                onDismissRequest = { showResetConfirmation = false },
-                containerColor = ThemeColorUtils.getCardBackgroundColor(
-                    customization.theme,
-                    customization.backgroundEnabled,
-                    customization.backgroundOpacity
-                ),
-                title = {
-                    Text(
-                        text = stringResource(R.string.confirm_reset_achievements),
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.NEON_RED)
-                    )
-                },
-                text = {
-                    Text(
-                        text = "This will permanently delete all achievement progress, unlocked achievements, and statistics. This action cannot be undone.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.SECONDARY_TEXT)
-                    )
-                },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            viewModel.resetAllProgress()
-                            showResetConfirmation = false
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFC62828), // Dark Red
-                            contentColor = Color.White
-                        )
-                    ) {
-                        Text(stringResource(R.string.action_reset))
-                    }
-                },
-                dismissButton = {
-                    Button(
-                        onClick = { showResetConfirmation = false },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF1565C0), // Dark Blue
-                            contentColor = Color.White
-                        )
-                    ) {
-                        Text(stringResource(R.string.action_cancel))
-                    }
-                }
-            )
-        }
         
         CategoryFilterButtons(
             selectedCategory = selectedCategory,
@@ -129,8 +74,7 @@ fun AchievementScreen(viewModel: DiceRollViewModel) {
 fun AchievementHeader(
     completionPercentage: Float,
     totalAchievements: Int,
-    unlockedCount: Int,
-    onResetProgress: () -> Unit
+    unlockedCount: Int
 ) {
     Column(
         modifier = Modifier
@@ -161,29 +105,6 @@ fun AchievementHeader(
             color = MaterialTheme.colorScheme.primary
         )
         
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        // Reset button
-        Button(
-            onClick = onResetProgress,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.error
-            ),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Refresh,
-                contentDescription = "Reset Progress",
-                tint = MaterialTheme.colorScheme.onError
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Reset All Progress",
-                color = MaterialTheme.colorScheme.onError
-            )
-        }
-        
-
     }
 }
 
