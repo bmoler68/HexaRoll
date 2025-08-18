@@ -52,7 +52,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .padding(16.dp)
+            .padding(12.dp)
     ) {
         // Settings Header
         Text(
@@ -64,9 +64,9 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                 AppTheme.WESTERN -> WesternColors.NeonYellow
                 AppTheme.ANCIENT -> AncientColors.NeonYellow
             },
-            fontSize = 24.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 4.dp)
         )
         
         Text(
@@ -78,8 +78,8 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                 AppTheme.WESTERN -> WesternColors.SecondaryText
                 AppTheme.ANCIENT -> AncientColors.SecondaryText
             },
-            fontSize = 14.sp,
-            modifier = Modifier.padding(bottom = 24.dp)
+            fontSize = 12.sp,
+            modifier = Modifier.padding(bottom = 16.dp)
         )
         
         // Background Controls Section
@@ -92,9 +92,9 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                 AppTheme.WESTERN -> WesternColors.NeonYellow
                 AppTheme.ANCIENT -> AncientColors.NeonYellow
             },
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(top = 8.dp, bottom = 12.dp)
+            modifier = Modifier.padding(top = 6.dp, bottom = 8.dp)
         )
         
         // Background Enable/Disable Toggle
@@ -107,7 +107,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
         
         // Background Opacity Slider (only shown if backgrounds are enabled)
         if (customization.backgroundEnabled) {
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             BackgroundOpacityCard(
                 opacity = customization.backgroundOpacity,
                 theme = customization.theme,
@@ -115,7 +115,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                 onOpacityChange = { viewModel.updateBackgroundOpacity(it) }
             )
             
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             BackgroundScalingCard(
                 scalingMode = customization.backgroundScaling,
                 theme = customization.theme,
@@ -124,7 +124,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
             )
         }
         
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         
         // App Information Section
         Text(
@@ -136,9 +136,9 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                 AppTheme.WESTERN -> WesternColors.NeonYellow
                 AppTheme.ANCIENT -> AncientColors.NeonYellow
             },
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 12.dp)
+            modifier = Modifier.padding(bottom = 8.dp)
         )
         
         // Settings Options
@@ -206,11 +206,11 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                     }
                 }
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
         
         // Footer information
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -260,7 +260,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
         }
         
         // Extra bottom padding for comfortable scrolling
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
     }
     
     // Reset Achievement Progress Confirmation Dialog

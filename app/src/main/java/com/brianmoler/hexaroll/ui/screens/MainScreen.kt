@@ -95,10 +95,11 @@ fun MainScreen(
                                 ThemeColorUtils.getThemeColor(customization.theme, ColorType.NEON_YELLOW)
                             } else {
                                 ThemeColorUtils.getThemeColor(customization.theme, ColorType.NEON_BLUE)
-                            }
+                            },
+                            modifier = Modifier.size(15.dp)
                         )
                     },
-                    modifier = Modifier.padding(4.dp)
+                    modifier = Modifier.padding(1.dp)
                 )
             }
         }
@@ -165,7 +166,7 @@ private fun AppTitle(theme: com.brianmoler.hexaroll.data.AppTheme) {
     Text(
         text = "HEXAROLL",
         color = ThemeColorUtils.getThemeColor(theme, ColorType.NEON_YELLOW),
-        fontSize = 32.sp,
+        fontSize = 20.sp,
         fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
         modifier = Modifier
@@ -173,7 +174,7 @@ private fun AppTitle(theme: com.brianmoler.hexaroll.data.AppTheme) {
             .background(
                 ThemeColorUtils.getThemeColor(theme, ColorType.ELEVATED_CARD_BACKGROUND)
             )
-            .padding(16.dp)
-            .padding(vertical = 8.dp)
+            .padding(1.dp)
+            .padding(vertical = 1.dp)
     )
 }

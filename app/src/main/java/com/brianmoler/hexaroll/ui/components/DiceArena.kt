@@ -98,7 +98,7 @@ fun DiceArena(viewModel: DiceRollViewModel) {
                 },
                 shape = RoundedCornerShape(12.dp)
             )
-            .padding(12.dp)
+            .padding(2.dp)
     ) {
         // Title
         Text(

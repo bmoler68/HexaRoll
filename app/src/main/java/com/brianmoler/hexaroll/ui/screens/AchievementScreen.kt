@@ -79,7 +79,7 @@ fun AchievementHeader(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -89,7 +89,7 @@ fun AchievementHeader(
             color = MaterialTheme.colorScheme.onSurface
         )
         
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(2.dp))
         
         Text(
             text = "$unlockedCount / $totalAchievements Unlocked",
@@ -97,7 +97,7 @@ fun AchievementHeader(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(2.dp))
         
         Text(
             text = "${(completionPercentage * 100).toInt()}% Complete",
@@ -367,14 +367,14 @@ fun AchievementCard(
         )
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Achievement icon
             Text(
                 text = achievement.icon,
-                fontSize = 32.sp,
-                modifier = Modifier.padding(end = 12.dp)
+                fontSize = 24.sp,
+                modifier = Modifier.padding(end = 8.dp)
             )
             
             // Achievement details
@@ -397,7 +397,7 @@ fun AchievementCard(
                                 AppTheme.ANCIENT -> AncientColors.SecondaryText
                             }
                         },
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
                     
@@ -418,7 +418,7 @@ fun AchievementCard(
                     )
                 }
                 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(2.dp))
                 
                 Text(
                     text = achievement.description,
@@ -434,7 +434,7 @@ fun AchievementCard(
                 
                 // Progress bar for achievements with progress
                 if (achievement.maxProgress > 1) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(2.dp))
                     LinearProgressIndicator(
                         progress = { (achievement.progress.toFloat() / achievement.maxProgress) },
                         modifier = Modifier

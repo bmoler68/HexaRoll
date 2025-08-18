@@ -38,7 +38,7 @@ fun RollScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(12.dp)
     ) {
         // Preset loaded message notification
         presetLoadedMessage?.let { message ->
@@ -47,7 +47,7 @@ fun RollScreen(
                 onDismiss = { viewModel.clearPresetLoadedMessage() },
                 customization = customization
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
         }
         
         // Main dice rolling interface
@@ -85,7 +85,7 @@ private fun PresetLoadedNotification(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

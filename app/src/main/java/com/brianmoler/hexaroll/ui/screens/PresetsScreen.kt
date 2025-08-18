@@ -52,15 +52,15 @@ fun PresetsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(12.dp)
     ) {
         // Screen title
         Text(
             text = stringResource(R.string.tab_presets),
             color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.NEON_YELLOW),
-            fontSize = 24.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 8.dp)
         )
         
         // Preset loaded notification
@@ -70,7 +70,7 @@ fun PresetsScreen(
                 onDismiss = { viewModel.clearPresetLoadedMessage() },
                 customization = customization
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
         }
         
         // Content based on preset availability
@@ -104,13 +104,13 @@ private fun EmptyPresetsContent(customization: DiceCustomization) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 32.dp),
+            .padding(vertical = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = stringResource(R.string.no_presets_available),
             color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.SECONDARY_TEXT),
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
@@ -120,7 +120,7 @@ private fun EmptyPresetsContent(customization: DiceCustomization) {
         Text(
             text = "Create favorites by rolling dice and using the 'Save to Favorites' button in the History tab",
             color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.SECONDARY_TEXT),
-            fontSize = 14.sp,
+            fontSize = 12.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -153,7 +153,7 @@ private fun PresetLoadedNotification(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -203,7 +203,7 @@ private fun PresetCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(12.dp)
         ) {
             // Preset header
             Row(
@@ -215,7 +215,7 @@ private fun PresetCard(
                     Text(
                         text = preset.name,
                         color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.NEON_YELLOW),
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
                     if (preset.description.isNotBlank()) {
@@ -253,7 +253,7 @@ private fun PresetCard(
                 }
             }
             
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             
             // Preset configuration display
             Text(
@@ -344,7 +344,7 @@ private fun PresetEditDialog(
                         cursorColor = ThemeColorUtils.getThemeColor(customization.theme, ColorType.NEON_BLUE)
                     )
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },

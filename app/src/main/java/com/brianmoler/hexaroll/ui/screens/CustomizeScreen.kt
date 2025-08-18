@@ -44,23 +44,23 @@ fun CustomizeScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(12.dp)
     ) {
         // Screen title
         Text(
             text = "HEXAROLL THEME",
             color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.NEON_YELLOW),
-            fontSize = 24.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 8.dp)
         )
         
         // Description
         Text(
             text = "Choose your preferred visual theme for the app",
             color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.SECONDARY_TEXT),
-            fontSize = 14.sp,
-            modifier = Modifier.padding(bottom = 24.dp)
+            fontSize = 12.sp,
+            modifier = Modifier.padding(bottom = 16.dp)
         )
         
         // Theme selection list
@@ -143,7 +143,7 @@ private fun ThemeSelectionCard(
                     Text(
                         text = getThemeName(theme),
                         color = ThemeColorUtils.getThemeColor(displayTheme, ColorType.NEON_YELLOW),
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
                     
@@ -151,7 +151,7 @@ private fun ThemeSelectionCard(
                     Text(
                         text = getThemeDescription(theme),
                         color = ThemeColorUtils.getThemeColor(displayTheme, ColorType.SECONDARY_TEXT),
-                        fontSize = 14.sp
+                        fontSize = 12.sp
                     )
                 }
                 
@@ -160,7 +160,7 @@ private fun ThemeSelectionCard(
                     Text(
                         text = "✓",
                         color = ThemeColorUtils.getThemeColor(displayTheme, ColorType.NEON_GREEN),
-                        fontSize = 24.sp,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }

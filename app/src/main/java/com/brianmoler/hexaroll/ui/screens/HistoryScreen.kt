@@ -56,7 +56,7 @@ fun HistoryScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(12.dp)
     ) {
         // Screen header
         Row(
@@ -67,7 +67,7 @@ fun HistoryScreen(
             Text(
                 text = stringResource(R.string.tab_history),
                 color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.NEON_YELLOW),
-                fontSize = 24.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             
@@ -85,7 +85,7 @@ fun HistoryScreen(
             }
         }
         
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         
         // Content based on history availability
         if (rollHistory.isEmpty()) {
@@ -128,23 +128,23 @@ private fun EmptyHistoryContent(customization: DiceCustomization) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 32.dp),
+            .padding(vertical = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "No Roll History",
             color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.SECONDARY_TEXT),
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
         
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         
         Text(
             text = "Start rolling dice to see your history here",
             color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.SECONDARY_TEXT),
-            fontSize = 14.sp,
+            fontSize = 12.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -179,7 +179,7 @@ private fun HistoryCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(12.dp)
         ) {
             // Left column: Result and dice notation
             Column(
@@ -203,18 +203,18 @@ private fun HistoryCard(
                 Text(
                     text = "($diceNotation)",
                     color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.NEON_BLUE),
-                    fontSize = 14.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Medium
                 )
                 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 
                 // Individual dice results
                 if (rollResult.individualRolls.isNotEmpty()) {
                     Text(
                         text = "Individual Results:",
                         color = ThemeColorUtils.getThemeColor(customization.theme, ColorType.SECONDARY_TEXT),
-                        fontSize = 14.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Medium
                     )
                     
@@ -353,7 +353,7 @@ private fun PresetCreationDialog(
                     )
                 )
                 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 
                 OutlinedTextField(
                     value = description,
