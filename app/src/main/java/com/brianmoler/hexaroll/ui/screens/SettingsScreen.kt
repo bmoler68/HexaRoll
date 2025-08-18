@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.brianmoler.hexaroll.R
+import com.brianmoler.hexaroll.data.AppInfoData
 import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.data.DiceCustomization
 import com.brianmoler.hexaroll.ui.components.BackgroundFitMode
@@ -180,11 +181,11 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                 onClick = {
                     when (option.id) {
                         "about" -> {
-                            val intent = Intent(Intent.ACTION_VIEW, "https://www.brianmoler.com/appdocs/HexaRoll/HexaRollDetails.html".toUri())
+                            val intent = Intent(Intent.ACTION_VIEW, AppInfoData.Urls.ABOUT_PAGE.toUri())
                             context.startActivity(intent)
                         }
                         "privacy" -> {
-                            val intent = Intent(Intent.ACTION_VIEW, "https://www.brianmoler.com/appdocs/HexaRoll/HexaRollPrivacyPolicy.html".toUri())
+                            val intent = Intent(Intent.ACTION_VIEW, AppInfoData.Urls.PRIVACY_POLICY.toUri())
                             context.startActivity(intent)
                         }
                     }
@@ -215,7 +216,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
             )
             
             Text(
-                text = "Version 1.0.0",
+                text = context.getString(R.string.app_version, AppInfoData.Version.VERSION_NAME),
                 color = when (customization.theme) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                     AppTheme.FANTASY -> FantasyColors.SecondaryText
@@ -229,7 +230,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
             )
             
             Text(
-                text = "© 2025 Brian Moler. All rights reserved.",
+                text = context.getString(R.string.app_copyright, AppInfoData.Info.RELEASE_YEAR),
                 color = when (customization.theme) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                     AppTheme.FANTASY -> FantasyColors.SecondaryText
