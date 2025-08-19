@@ -268,6 +268,112 @@ The app is built using:
 - **Custom Dice Assets** for enhanced visual themes
 - **External Integration** for app documentation and legal documents
 
+### Project Structure
+
+```
+app/
+├── src/
+│   ├── main/
+│   │   ├── AndroidManifest.xml              # App configuration and permissions
+│   │   ├── java/com/brianmoler/hexaroll/
+│   │   │   ├── MainActivity.kt              # Main entry point
+│   │   │   ├── data/                        # Data models and app information
+│   │   │   │   ├── AchievementModels.kt     # Achievement data structures
+│   │   │   │   ├── AppInfoData.kt           # Centralized app constants and URLs
+│   │   │   │   └── DiceModels.kt            # Dice-related data classes
+│   │   │   ├── ui/                          # User interface components
+│   │   │   │   ├── components/              # Reusable UI components
+│   │   │   │   │   ├── AchievementPopup.kt  # Achievement notification popup
+│   │   │   │   │   ├── Dice3DRenderer.kt    # 3D dice shape rendering
+│   │   │   │   │   ├── DiceArena.kt         # Main dice rolling interface
+│   │   │   │   │   ├── DiceShapes.kt        # Polyhedral dice shape definitions
+│   │   │   │   │   └── ThemedBackground.kt  # Theme-aware background component
+│   │   │   │   ├── screens/                 # Main application screens
+│   │   │   │   │   ├── AchievementScreen.kt # Achievements tab (5th tab)
+│   │   │   │   │   ├── CustomizeScreen.kt   # Theme selection (2nd tab)
+│   │   │   │   │   ├── HistoryScreen.kt     # Roll history (4th tab)
+│   │   │   │   │   ├── MainScreen.kt        # Main navigation and app container
+│   │   │   │   │   ├── PresetsScreen.kt     # Preset management (3rd tab)
+│   │   │   │   │   ├── RollScreen.kt        # Dice arena wrapper (1st tab)
+│   │   │   │   │   └── SettingsScreen.kt    # App settings (6th tab)
+│   │   │   │   └── theme/                   # Theme system and styling
+│   │   │   │       ├── Theme.kt             # Main theme definitions
+│   │   │   │       ├── ThemeBackgrounds.kt  # Background patterns
+│   │   │   │       ├── ThemeColors.kt       # Color palettes for 5 themes
+│   │   │   │       ├── ThemeColorUtils.kt   # Color utility functions
+│   │   │   │       └── Type.kt              # Typography definitions
+│   │   │   ├── utils/                       # Utility classes and managers
+│   │   │   │   ├── AchievementManager.kt    # Achievement logic and tracking
+│   │   │   │   ├── AchievementStorage.kt    # Achievement persistence
+│   │   │   │   ├── ErrorHandler.kt          # Error handling and validation
+│   │   │   │   ├── PresetStorage.kt         # Preset save/load functionality
+│   │   │   │   ├── RollHistoryStorage.kt    # Roll history persistence
+│   │   │   │   └── ThemeStorage.kt          # Theme preference storage
+│   │   │   └── viewmodel/                   # MVVM ViewModels
+│   │   │       └── DiceRollViewModel.kt     # Main app state management
+│   │   └── res/                             # Android resources
+│   │       ├── drawable/                    # Vector drawables and icons
+│   │       ├── drawable-xhdpi/              # Theme-specific dice images
+│   │       │   ├── bg_theme_*.png           # Background images for 5 themes
+│   │       │   └── d*_*.png                 # Dice images (type_theme.png)
+│   │       ├── mipmap-*/                    # App launcher icons
+│   │       ├── values/                      # Resource values
+│   │       │   ├── colors.xml               # Color definitions
+│   │       │   ├── strings.xml              # String resources
+│   │       │   └── themes.xml               # Material theme configurations
+│   │       └── xml/                         # XML configurations
+│   │           ├── backup_rules.xml         # Data backup configuration
+│   │           └── data_extraction_rules.xml # Data extraction rules
+│   ├── androidTest/                         # Instrumented tests
+│   │   └── java/com/brianmoler/hexaroll/
+│   │       ├── ExampleInstrumentedTest.kt   # Basic instrumented test
+│   │       └── MainActivityTest.kt          # Main activity UI tests
+│   └── test/                                # Unit tests
+│       └── java/com/brianmoler/hexaroll/
+│           ├── data/DataModelsTest.kt       # Data model unit tests
+│           ├── ExampleUnitTest.kt           # Example unit test
+│           ├── utils/                       # Utility class tests
+│           │   ├── AchievementManagerTest.kt # Achievement logic tests
+│           │   └── ErrorHandlerTest.kt      # Error handling tests
+│           └── viewmodel/                   # ViewModel tests
+│               └── DiceRollViewModelTest.kt # Main ViewModel tests
+├── build.gradle.kts                         # App-level build configuration
+└── proguard-rules.pro                       # Code obfuscation rules
+
+gradle/
+├── libs.versions.toml                       # Version catalog for dependencies
+└── wrapper/                                 # Gradle wrapper files
+
+build.gradle.kts                             # Project-level build configuration
+settings.gradle.kts                          # Project settings
+gradle.properties                            # Gradle configuration properties
+```
+
+### Key Architecture Components
+
+#### **📱 UI Layer** (`ui/`)
+- **Screens**: Six main tabs with complete functionality
+- **Components**: Reusable, theme-aware UI components
+- **Theme System**: Five distinct visual themes with complete UI adaptation
+- **Responsive Design**: Portrait and landscape layouts with orientation detection
+
+#### **🎯 Data Layer** (`data/`)
+- **Models**: Data classes for dice, achievements, and app information
+- **Centralized Constants**: `AppInfoData.kt` for maintainable app configuration
+- **Type Safety**: Strongly-typed data structures throughout
+
+#### **🔧 Business Logic** (`utils/`, `viewmodel/`)
+- **MVVM Pattern**: Clear separation of concerns with ViewModel
+- **State Management**: Reactive state using StateFlow
+- **Persistence**: SharedPreferences with Gson for complex data
+- **Achievement System**: Comprehensive tracking with session management
+
+#### **🎨 Resources** (`res/`)
+- **Theme Assets**: Custom dice images for each of the 5 themes
+- **Scalable Graphics**: Vector drawables for icons and UI elements
+- **Responsive Images**: Multiple density support for all screen sizes
+- **Material Design**: Complete Material 3 theme integration
+
 ## Recent Commits
 
 ### Latest Landscape & UI Optimization (2025)
