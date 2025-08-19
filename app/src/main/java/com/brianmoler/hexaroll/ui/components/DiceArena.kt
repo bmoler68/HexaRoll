@@ -1904,8 +1904,9 @@ fun TotalDisplay(
         )
     ) {
         Column(
-            modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
             Text(
                 text = stringResource(R.string.total_label),
@@ -2046,8 +2047,9 @@ fun ResultDisplay(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
             Text(
                 text = stringResource(R.string.result_label),
@@ -2093,8 +2095,6 @@ fun ResultDisplay(
                     modifier = Modifier.fillMaxWidth()
                 )
                 if (result.individualRolls.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    
                     // Scrollable breakdown section
                     Box(
                         modifier = Modifier
@@ -2103,7 +2103,7 @@ fun ResultDisplay(
                     ) {
                         androidx.compose.foundation.lazy.LazyColumn(
                             modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                            verticalArrangement = Arrangement.spacedBy(0.dp)
                         ) {
                             val breakdown = result.diceSelections.zip(result.individualRolls)
                             
