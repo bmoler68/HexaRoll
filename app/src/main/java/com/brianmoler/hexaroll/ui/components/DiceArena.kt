@@ -563,13 +563,17 @@ fun LandscapeDiceArena(viewModel: DiceRollViewModel) {
                     // Total Display - Left half
                     TotalDisplay(
                         viewModel = viewModel,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
                     )
                     
                     // Result Display - Right half
                     ResultDisplay(
                         viewModel = viewModel,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
                     )
                 }
             }
@@ -1927,7 +1931,7 @@ fun TotalDisplay(
                         AppTheme.WESTERN -> WesternColors.NeonBlue
                         AppTheme.ANCIENT -> AncientColors.NeonBlue
                     },
-                    fontSize = 14.sp,
+                    fontSize = 10.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -1941,7 +1945,7 @@ fun TotalDisplay(
                         AppTheme.WESTERN -> WesternColors.SecondaryText
                         AppTheme.ANCIENT -> AncientColors.SecondaryText
                     },
-                    fontSize = 14.sp,
+                    fontSize = 10.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -1955,7 +1959,7 @@ fun TotalDisplay(
                     AppTheme.WESTERN -> WesternColors.PrimaryText
                     AppTheme.ANCIENT -> AncientColors.PrimaryText
                 },
-                fontSize = 12.sp,
+                fontSize = 9.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -1969,7 +1973,7 @@ fun TotalDisplay(
                         AppTheme.WESTERN -> WesternColors.NeonBlue
                         AppTheme.ANCIENT -> AncientColors.NeonBlue
                     },
-                    fontSize = 11.sp,
+                    fontSize = 9.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
