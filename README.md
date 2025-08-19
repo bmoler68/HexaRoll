@@ -22,6 +22,12 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 - **Interactive Controls**: +/- buttons to adjust dice quantities
 - **Roll Modifier**: Adjustable modifier with +/- controls
 - **Total Display**: Shows total dice count and final total with modifier
+- **Result Display**: Detailed breakdown of individual dice rolls with scrollable history
+- **Landscape Optimization**: Horizontal split layout for perfect landscape viewing
+  - **Side-by-Side Layout**: Total and Result displays appear side-by-side in landscape
+  - **Compact Controls**: Space-optimized buttons and modifier controls
+  - **Perfect Fit**: All elements contained without scrolling or overflow
+- **Ultra-Compact Spacing**: Minimized padding for maximum information density
 - **Roll Button**: Manual roll button with theme-appropriate styling
 - **Scroll Indicators**: Visual cues for scrollable dice selection areas
 
@@ -59,29 +65,68 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 - **Statistics Integration**: Comprehensive tracking of all user actions
 - **Session Management**: Intelligent session tracking with 1-hour timeout
 
-### ⚙️ Settings (Sixth Tab) - **NEW!**
+### ⚙️ Settings (Sixth Tab) - **Enhanced!**
 - **About HexaRoll**: External link to detailed app documentation
 - **Privacy Policy**: External link to privacy policy and data handling practices
-- **App Information**: Version details and copyright information
+- **App Information**: Centralized version details and copyright information from `AppInfoData.kt`
+- **Reset Achievement Progress**: Moved from Achievements tab for better UX with confirmation dialog
 - **External Browser Integration**: Opens links in user's preferred browser
 
 ## Technical Features
 
-- **Modern UI**: Built with Jetpack Compose
+- **Modern UI**: Built with Jetpack Compose with ultra-compact spacing optimization
 - **Multi-Theme System**: Five distinct visual themes with complete UI adaptation
 - **Theme Persistence**: Automatic saving and loading of user theme preferences
 - **State Management**: MVVM architecture with ViewModel and StateFlow
-- **Responsive Design**: Adapts to different screen sizes and orientations
+- **Responsive Design**: Full landscape and portrait support with orientation-aware layouts
+  - **Landscape Optimization**: Horizontal split layout (65% dice grid + 35% controls)
+  - **Side-by-Side Displays**: Total and Result displays optimized for landscape viewing
+  - **Automatic Layout Switching**: Seamless transition between portrait and landscape modes
 - **Theme-Aware Components**: All UI elements dynamically change with theme selection
 - **Persistent Data**: Roll history, achievements, and preferences saved across sessions
 - **Achievement System**: Comprehensive tracking and notification system with session management
 - **Custom Dice Assets**: Theme-specific dice images for enhanced visual appeal
+- **Ultra-Compact Design**: Minimized padding and spacing for maximum content density
+- **Font Standardization**: Consistent typography hierarchy across all display components
 - **Production Ready**: Code obfuscation, error handling, input validation, and performance monitoring
 - **Accessibility**: Full accessibility support with content descriptions and screen reader compatibility
 - **Security**: Input validation, error handling, and secure data storage practices
 - **Internet Integration**: Permission for external browser links
+- **Centralized App Data**: Dedicated data classes for maintainable app information management
 
 ## Recent Improvements
+
+### 📱 Landscape Orientation & Layout Optimization (Latest)
+- **Landscape Support**: Re-enabled landscape orientation for optimal tablet and phone rotation use
+- **Optimized Landscape Layout**: Complete redesign of dice arena for landscape mode
+  - **Horizontal Split Design**: 65% dice grid + 35% controls for perfect space utilization
+  - **Side-by-Side Displays**: Total and Result displays appear side-by-side in landscape
+  - **Landscape-Specific Components**: Custom compact buttons and controls for landscape
+  - **Perfect Fit**: All UI elements properly contained without scrolling or overflow
+- **Font Standardization**: Unified font sizes between Total and Result displays for consistency
+- **Ultra-Compact Spacing**: Minimized padding and line spacing for maximum content density
+  - Reduced outer padding from 8dp to 4dp (50% reduction)
+  - Eliminated artificial spacing between text lines
+  - Optimized breakdown section spacing for maximum information display
+- **Equal Box Sizing**: Total and Result displays are perfectly equal in landscape mode
+- **Responsive Design**: Automatic orientation detection and layout switching
+
+### 🧹 Advanced Code Quality & Cleanup
+- **Dead Code Removal**: Eliminated unused landscape-specific display functions (346+ lines removed)
+- **App Information Centralization**: Created dedicated `AppInfoData.kt` for centralized app constants
+  - Version information, URLs, and copyright details in single location
+  - Improved maintainability and consistency across the app
+- **Settings Screen Enhancement**: Moved achievement reset functionality to Settings menu for better UX
+- **Code Deduplication**: Removed redundant references and cleaned up string resources
+
+### 🎯 UI/UX & Visual Enhancements  
+- **Compact UI Design**: Significantly reduced heading sizes and spacing across all screens
+  - Main "HEXAROLL" header optimized for minimal space usage
+  - Tab icons reduced in size and spacing for more compact navigation
+  - Consistent padding reduction across all major screens
+- **Achievement Bug Fix**: Fixed "History Buff" achievement tracking for viewing roll history 50 times
+- **Visual Consistency**: Standardized font hierarchy across Total and Result displays
+- **Perfect Mobile Optimization**: Ultra-compact layout ideal for mobile screens and landscape use
 
 ### 🚀 Achievement System Enhancements
 - **Monthly Master**: Now tracks 30 unique days instead of calendar months
@@ -89,24 +134,14 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 - **Lucky Hour**: Updated to specific times (7:11 AM/PM, 11:11 AM/PM)
 - **Marathon Roller**: Fixed to track 5 hours of total in-app time with proper session management
 - **Progress Bars**: Session-based achievements now show accurate progress on app restart
+- **History Buff Fix**: Properly tracks roll history viewing for achievement progression
 
-### 🧹 Code Quality Improvements
-- **Encapsulation**: Internal functions and properties made private where appropriate
-- **Dead Code Removal**: Eliminated unused functions, properties, and string resources
+### 🔧 Technical Infrastructure
+- **Gradle Configuration**: Updated to use stable APIs and resolve deprecation warnings
+- **Dependency Management**: Added comprehensive testing dependencies with TOML version catalog
 - **Modern Kotlin**: Updated to use `Enum.entries` instead of deprecated `Enum.values()`
 - **Comprehensive Testing**: Complete test suite with unit tests, UI tests, and instrumented tests
 - **Code Documentation**: Added extensive KDoc comments throughout the codebase
-
-### 🎯 UI/UX Enhancements
-- **D100 Display Fix**: Corrected from "1x100" to "1D100" in total card
-- **Settings Tab**: New tab with external links to app documentation and privacy policy
-- **Tab Icons**: Restored and fixed Roll History tab icon
-- **Density Support**: Added missing drawable density variation folders
-
-### 🔧 Build System Updates
-- **Gradle Configuration**: Updated to use stable APIs and resolve deprecation warnings
-- **Dependency Management**: Added comprehensive testing dependencies
-- **Version Catalog**: Proper dependency version management
 
 ## Theme System
 
@@ -235,6 +270,18 @@ The app is built using:
 
 ## Recent Commits
 
+### Latest Landscape & UI Optimization (2025)
+- **Landscape Layout Implementation**: Complete redesign for landscape orientation with horizontal split
+- **Ultra-Compact Spacing**: Reduced padding from 8dp to 4dp and eliminated artificial line spacing
+- **Font Standardization**: Unified font sizes between Total and Result displays for consistency
+- **Equal Box Sizing**: Perfect symmetry between Total and Result displays in landscape mode
+- **Code Cleanup**: Removed 346+ lines of unused landscape-specific display functions
+- **App Data Centralization**: Created `AppInfoData.kt` for centralized app constants and URLs
+- **Settings Enhancement**: Moved achievement reset functionality from Achievements to Settings screen
+- **History Buff Fix**: Corrected achievement tracking for viewing roll history 50 times
+- **Compact UI Design**: Reduced heading sizes and spacing across all screens for mobile optimization
+
+### Previous Major Updates
 - Added Settings tab with external links to About page and Privacy Policy
 - Fixed Marathon Roller achievement session tracking and progress display
 - Updated achievement logic for Monthly Master, Weekend Warrior, and Lucky Hour

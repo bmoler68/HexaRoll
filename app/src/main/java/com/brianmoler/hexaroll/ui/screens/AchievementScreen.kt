@@ -16,12 +16,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.res.stringResource
-import com.brianmoler.hexaroll.R
 import com.brianmoler.hexaroll.data.*
 import com.brianmoler.hexaroll.ui.theme.*
 import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
-import androidx.compose.material.icons.Icons
 
 @Composable
 fun AchievementScreen(viewModel: DiceRollViewModel) {

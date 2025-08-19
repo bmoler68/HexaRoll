@@ -8,6 +8,7 @@ import com.brianmoler.hexaroll.data.AchievementProgress
 import com.brianmoler.hexaroll.data.AchievementStats
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import androidx.core.content.edit
 
 class AchievementStorage(private val context: Context) {
     
@@ -24,7 +25,7 @@ class AchievementStorage(private val context: Context) {
         withContext(Dispatchers.IO) {
             try {
                 val json = gson.toJson(progressList, achievementProgressListType)
-                sharedPreferences.edit().putString("achievement_progress", json).apply()
+                sharedPreferences.edit { putString("achievement_progress", json) }
             } catch (e: Exception) {
                 // Handle serialization error
             }
@@ -47,7 +48,7 @@ class AchievementStorage(private val context: Context) {
         withContext(Dispatchers.IO) {
             try {
                 val json = gson.toJson(stats, achievementStatsType)
-                sharedPreferences.edit().putString("achievement_stats", json).apply()
+                sharedPreferences.edit { putString("achievement_stats", json)}
             } catch (e: Exception) {
                 // Handle serialization error
             }
@@ -84,7 +85,7 @@ class AchievementStorage(private val context: Context) {
         withContext(Dispatchers.IO) {
             try {
                 val json = gson.toJson(unlockedIds, unlockedAchievementsSetType)
-                sharedPreferences.edit().putString("unlocked_achievements", json).apply()
+                sharedPreferences.edit { putString("unlocked_achievements", json)}
             } catch (e: Exception) {
                 // Handle serialization error
             }
