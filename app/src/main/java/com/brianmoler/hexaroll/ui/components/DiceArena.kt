@@ -1,5 +1,6 @@
 package com.brianmoler.hexaroll.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,18 @@ import com.brianmoler.hexaroll.R
 
 @Composable
 fun DiceArena(viewModel: DiceRollViewModel) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    
+    if (isLandscape) {
+        LandscapeDiceArena(viewModel)
+    } else {
+        PortraitDiceArena(viewModel)
+    }
+}
+
+@Composable
+fun PortraitDiceArena(viewModel: DiceRollViewModel) {
     val diceSelections by viewModel.diceSelections.collectAsState()
     val modifier by viewModel.modifier.collectAsState()
     val customization by viewModel.customization.collectAsState()
@@ -397,6 +411,1090 @@ fun CollapsibleResultsSection(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun LandscapeDiceArena(viewModel: DiceRollViewModel) {
+    val diceSelections by viewModel.diceSelections.collectAsState()
+    val modifier by viewModel.modifier.collectAsState()
+    val customization by viewModel.customization.collectAsState()
+    val currentResult by viewModel.currentResult.collectAsState()
+    
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                color = when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.1f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.1f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.1f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.1f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.9f).coerceAtLeast(0.1f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                },
+                shape = RoundedCornerShape(12.dp)
+            )
+            .border(
+                width = 2.dp,
+                color = when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                    AppTheme.FANTASY -> FantasyColors.BorderBlue
+                    AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                    AppTheme.WESTERN -> WesternColors.BorderBlue
+                    AppTheme.ANCIENT -> AncientColors.BorderBlue
+                },
+                shape = RoundedCornerShape(12.dp)
+            )
+            .padding(2.dp)
+    ) {
+        // Title
+        Text(
+            text = stringResource(R.string.tab_dice_arena),
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                AppTheme.WESTERN -> WesternColors.NeonYellow
+                AppTheme.ANCIENT -> AncientColors.NeonYellow
+            },
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 6.dp)
+        )
+        
+        // Main content row: Dice Grid + Controls + Results
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(), // Use remaining height
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Left Panel - Dice Grid (65% of width)
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3), // 3 columns in landscape
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier.weight(0.65f)
+            ) {
+                items(DiceType.entries) { diceType ->
+                    LandscapeDiceCard(
+                        diceType = diceType,
+                        count = diceSelections[diceType]?.count ?: 0,
+                        onIncrement = { viewModel.incrementDice(diceType) },
+                        onDecrement = { viewModel.decrementDice(diceType) },
+                        theme = customization.theme,
+                        customization = customization
+                    )
+                }
+            }
+            
+            // Right Panel - Controls + Total/Result (35% of width)
+            Column(
+                modifier = Modifier.weight(0.35f),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                // Compact Modifier Section
+                LandscapeModifierSection(
+                    modifier = modifier,
+                    onIncrement = { viewModel.incrementModifier() },
+                    onDecrement = { viewModel.decrementModifier() },
+                    theme = customization.theme,
+                    customization = customization
+                )
+                
+                // Action Buttons (side-by-side with compact text)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    // Clear Arena Button (custom for landscape)
+                    LandscapeClearButton(
+                        onClick = { viewModel.clearArena() },
+                        modifier = Modifier.weight(1f),
+                        viewModel = viewModel
+                    )
+                    
+                    // Roll Button (custom for landscape)
+                    LandscapeRollButton(
+                        onClick = { viewModel.rollDice() },
+                        viewModel = viewModel,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                
+                Spacer(modifier = Modifier.height(3.dp))
+                
+                // Total and Result displays side-by-side
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f), // Takes remaining vertical space
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    // Total Display - Left half
+                    TotalDisplay(
+                        viewModel = viewModel,
+                        modifier = Modifier.weight(1f)
+                    )
+                    
+                    // Result Display - Right half
+                    ResultDisplay(
+                        viewModel = viewModel,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun LandscapeDiceCard(
+    diceType: DiceType,
+    count: Int,
+    onIncrement: () -> Unit,
+    onDecrement: () -> Unit,
+    theme: AppTheme = AppTheme.CYBERPUNK,
+    customization: DiceCustomization
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(110.dp), // Reduced height for landscape
+        colors = CardDefaults.cardColors(
+            containerColor = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+            }
+        ),
+        border = androidx.compose.foundation.BorderStroke(
+            width = 1.dp,
+            color = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                AppTheme.FANTASY -> FantasyColors.BorderBlue
+                AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                AppTheme.WESTERN -> WesternColors.BorderBlue
+                AppTheme.ANCIENT -> AncientColors.BorderBlue
+            }
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(4.dp), // Reduced padding
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(2.dp) // Reduced spacing
+        ) {
+            // Dice Shape (smaller)
+            DiceShape(
+                diceType = diceType,
+                modifier = Modifier.size(24.dp), // Smaller dice icon
+                theme = theme
+            )
+
+            // Dice Type Label
+            Text(
+                text = diceType.displayName,
+                color = when (theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                    AppTheme.FANTASY -> FantasyColors.PrimaryText
+                    AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                    AppTheme.ANCIENT -> AncientColors.PrimaryText
+                    AppTheme.WESTERN -> WesternColors.PrimaryText
+                },
+                fontSize = 10.sp, // Smaller text
+                fontWeight = FontWeight.Bold
+            )
+
+            // Count Controls (smaller)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(28.dp) // Smaller buttons
+                        .background(
+                            color = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed
+                                AppTheme.FANTASY -> FantasyColors.ButtonRed
+                                AppTheme.SCI_FI -> SciFiColors.ButtonRed
+                                AppTheme.WESTERN -> WesternColors.ButtonRed
+                                AppTheme.ANCIENT -> AncientColors.ButtonRed
+                            },
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .border(
+                            width = 1.dp,
+                            color = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed
+                                AppTheme.FANTASY -> FantasyColors.NeonRed
+                                AppTheme.SCI_FI -> SciFiColors.NeonRed
+                                AppTheme.WESTERN -> WesternColors.NeonRed
+                                AppTheme.ANCIENT -> AncientColors.NeonRed
+                            },
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .clickable { onDecrement() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("-", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                }
+
+                Text(
+                    text = count.toString(),
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                        AppTheme.FANTASY -> FantasyColors.NeonYellow
+                        AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                        AppTheme.WESTERN -> WesternColors.NeonYellow
+                        AppTheme.ANCIENT -> AncientColors.NeonYellow
+                    },
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.width(20.dp),
+                    textAlign = TextAlign.Center
+                )
+
+                Box(
+                    modifier = Modifier
+                        .size(28.dp) // Smaller buttons
+                        .background(
+                            color = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen
+                                AppTheme.FANTASY -> FantasyColors.ButtonGreen
+                                AppTheme.SCI_FI -> SciFiColors.ButtonGreen
+                                AppTheme.WESTERN -> WesternColors.ButtonGreen
+                                AppTheme.ANCIENT -> AncientColors.ButtonGreen
+                            },
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .border(
+                            width = 1.dp,
+                            color = when (theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen
+                                AppTheme.FANTASY -> FantasyColors.NeonGreen
+                                AppTheme.SCI_FI -> SciFiColors.NeonGreen
+                                AppTheme.WESTERN -> WesternColors.NeonGreen
+                                AppTheme.ANCIENT -> AncientColors.NeonGreen
+                            },
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .clickable { onIncrement() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("+", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun LandscapeModifierSection(
+    modifier: Int,
+    onIncrement: () -> Unit,
+    onDecrement: () -> Unit,
+    theme: AppTheme = AppTheme.CYBERPUNK,
+    customization: DiceCustomization
+) {
+    // Ultra-compact single row with header and controls
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = when (theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                },
+                shape = RoundedCornerShape(6.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = when (theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                    AppTheme.FANTASY -> FantasyColors.BorderBlue
+                    AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                    AppTheme.WESTERN -> WesternColors.BorderBlue
+                    AppTheme.ANCIENT -> AncientColors.BorderBlue
+                },
+                shape = RoundedCornerShape(6.dp)
+            )
+            .padding(4.dp), // Reduced padding
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        // Header text
+        Text(
+            text = stringResource(R.string.modifier_label),
+            color = when (theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                AppTheme.FANTASY -> FantasyColors.NeonBlue
+                AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                AppTheme.WESTERN -> WesternColors.NeonBlue
+                AppTheme.ANCIENT -> AncientColors.NeonBlue
+            },
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        // Controls in same row
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                onClick = onDecrement,
+                modifier = Modifier.size(28.dp), // Smaller buttons
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed
+                        AppTheme.FANTASY -> FantasyColors.ButtonRed
+                        AppTheme.SCI_FI -> SciFiColors.ButtonRed
+                        AppTheme.WESTERN -> WesternColors.ButtonRed
+                        AppTheme.ANCIENT -> AncientColors.ButtonRed
+                    }
+                ),
+                contentPadding = PaddingValues(0.dp),
+                border = androidx.compose.foundation.BorderStroke(
+                    width = 1.dp,
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed
+                        AppTheme.FANTASY -> FantasyColors.NeonRed
+                        AppTheme.SCI_FI -> SciFiColors.NeonRed
+                        AppTheme.WESTERN -> WesternColors.NeonRed
+                        AppTheme.ANCIENT -> AncientColors.NeonRed
+                    }
+                )
+            ) {
+                Text("-", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+            }
+
+            Text(
+                text = if (modifier >= 0) "+$modifier" else "$modifier",
+                color = when (theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                    AppTheme.FANTASY -> FantasyColors.NeonYellow
+                    AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                    AppTheme.WESTERN -> WesternColors.NeonYellow
+                    AppTheme.ANCIENT -> AncientColors.NeonYellow
+                },
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.width(32.dp)
+            )
+
+            Button(
+                onClick = onIncrement,
+                modifier = Modifier.size(28.dp), // Smaller buttons
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen
+                        AppTheme.FANTASY -> FantasyColors.ButtonGreen
+                        AppTheme.SCI_FI -> SciFiColors.ButtonGreen
+                        AppTheme.WESTERN -> WesternColors.ButtonGreen
+                        AppTheme.ANCIENT -> AncientColors.ButtonGreen
+                    }
+                ),
+                contentPadding = PaddingValues(0.dp),
+                border = androidx.compose.foundation.BorderStroke(
+                    width = 1.dp,
+                    color = when (theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen
+                        AppTheme.FANTASY -> FantasyColors.NeonGreen
+                        AppTheme.SCI_FI -> SciFiColors.NeonGreen
+                        AppTheme.WESTERN -> WesternColors.NeonGreen
+                        AppTheme.ANCIENT -> AncientColors.NeonGreen
+                    }
+                )
+            ) {
+                Text("+", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+            }
+        }
+    }
+}
+
+@Composable
+fun LandscapeTotalDisplay(
+    viewModel: DiceRollViewModel,
+    modifier: Modifier = Modifier
+) {
+    val diceSelections by viewModel.diceSelections.collectAsState()
+    val modifierValue by viewModel.modifier.collectAsState()
+    val customization by viewModel.customization.collectAsState()
+
+    val totalDice = diceSelections.values.sumOf { it.count }
+    val notation = diceSelections.values
+        .filter { it.count > 0 }
+        .joinToString(" + ") { selection ->
+            "${selection.count}${selection.diceType.displayName}"
+        }
+    val modifierText = if (modifierValue != 0) (if (modifierValue > 0) "+$modifierValue" else "$modifierValue") else ""
+
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+            }
+        ),
+        border = androidx.compose.foundation.BorderStroke(
+            width = 1.dp,
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                AppTheme.WESTERN -> WesternColors.NeonYellow
+                AppTheme.ANCIENT -> AncientColors.NeonYellow
+            }
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(6.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.total_label),
+                color = when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                    AppTheme.FANTASY -> FantasyColors.NeonYellow
+                    AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                    AppTheme.WESTERN -> WesternColors.NeonYellow
+                    AppTheme.ANCIENT -> AncientColors.NeonYellow
+                },
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+            if (notation.isNotBlank()) {
+                Text(
+                    text = notation + (if (modifierText.isNotBlank()) " $modifierText" else ""),
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                        AppTheme.FANTASY -> FantasyColors.NeonBlue
+                        AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                        AppTheme.WESTERN -> WesternColors.NeonBlue
+                        AppTheme.ANCIENT -> AncientColors.NeonBlue
+                    },
+                    fontSize = 11.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                    maxLines = 2 // Allow wrapping for long notation
+                )
+                
+                // Compact dice count and modifier info in one line
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Text(
+                        text = if (totalDice == 1) stringResource(R.string.dice_count_single) else stringResource(R.string.dice_count_plural, totalDice),
+                        color = when (customization.theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                            AppTheme.FANTASY -> FantasyColors.PrimaryText
+                            AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                            AppTheme.WESTERN -> WesternColors.PrimaryText
+                            AppTheme.ANCIENT -> AncientColors.PrimaryText
+                        },
+                        fontSize = 9.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    
+                    if (modifierValue != 0) {
+                        Text(
+                            text = if (modifierValue > 0) "+$modifierValue mod" else "$modifierValue mod",
+                            color = when (customization.theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                                AppTheme.FANTASY -> FantasyColors.NeonBlue
+                                AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                                AppTheme.WESTERN -> WesternColors.NeonBlue
+                                AppTheme.ANCIENT -> AncientColors.NeonBlue
+                            },
+                            fontSize = 9.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            } else {
+                Text(
+                    text = stringResource(R.string.no_dice_selected),
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                        AppTheme.FANTASY -> FantasyColors.SecondaryText
+                        AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                        AppTheme.WESTERN -> WesternColors.SecondaryText
+                        AppTheme.ANCIENT -> AncientColors.SecondaryText
+                    },
+                    fontSize = 10.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun LandscapeResultDisplay(
+    viewModel: DiceRollViewModel,
+    modifier: Modifier = Modifier
+) {
+    val currentResult by viewModel.currentResult.collectAsState()
+    val customization by viewModel.customization.collectAsState()
+
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+            }
+        ),
+        border = androidx.compose.foundation.BorderStroke(
+            width = 1.dp,
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonPurple
+                AppTheme.FANTASY -> FantasyColors.NeonPurple
+                AppTheme.SCI_FI -> SciFiColors.NeonPurple
+                AppTheme.WESTERN -> WesternColors.NeonPurple
+                AppTheme.ANCIENT -> AncientColors.NeonPurple
+            }
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(6.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.result_label),
+                color = when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonPurple
+                    AppTheme.FANTASY -> FantasyColors.NeonPurple
+                    AppTheme.SCI_FI -> SciFiColors.NeonPurple
+                    AppTheme.WESTERN -> WesternColors.NeonPurple
+                    AppTheme.ANCIENT -> AncientColors.NeonPurple
+                },
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            currentResult?.let { result ->
+                Text(
+                    text = "${result.total}",
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                        AppTheme.FANTASY -> FantasyColors.NeonYellow
+                        AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                        AppTheme.WESTERN -> WesternColors.NeonYellow
+                        AppTheme.ANCIENT -> AncientColors.NeonYellow
+                    },
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text(
+                    text = "(${result.notation})",
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                        AppTheme.FANTASY -> FantasyColors.NeonBlue
+                        AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                        AppTheme.WESTERN -> WesternColors.NeonBlue
+                        AppTheme.ANCIENT -> AncientColors.NeonBlue
+                    },
+                    fontSize = 8.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                if (result.individualRolls.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(2.dp))
+                    
+                    // Scrollable breakdown section - more compact for landscape
+                    Box(
+                        modifier = Modifier
+                            .height(80.dp) // Fixed height for landscape
+                            .fillMaxWidth()
+                    ) {
+                        androidx.compose.foundation.lazy.LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(1.dp)
+                        ) {
+                            val breakdown = result.diceSelections.zip(result.individualRolls)
+                            
+                            items(breakdown.size) { index ->
+                                val (sel, rolls) = breakdown[index]
+                                val breakdownText = if (sel.diceType == DiceType.D100 && result.d100Rolls.isNotEmpty()) {
+                                    // Show D10 breakdown for all D100 rolls
+                                    val d100Details = result.d100Rolls.map { d100Roll ->
+                                        "${d100Roll.result} [${d100Roll.tensDie},${d100Roll.onesDie}]"
+                                    }
+                                    "${sel.diceType.displayName}: ${d100Details.joinToString(", ")}"
+                                } else {
+                                    "${sel.diceType.displayName}: [${rolls.joinToString(", ")}]"
+                                }
+                                
+                                Text(
+                                    text = breakdownText,
+                                    color = when (customization.theme) {
+                                        AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                                        AppTheme.FANTASY -> FantasyColors.SecondaryText
+                                        AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                                        AppTheme.WESTERN -> WesternColors.SecondaryText
+                                        AppTheme.ANCIENT -> AncientColors.SecondaryText
+                                    },
+                                    fontSize = 7.sp,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+                        
+                        // Scroll indicator gradient overlay at bottom
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .fillMaxWidth()
+                                .height(8.dp)
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.Transparent,
+                                            when (customization.theme) {
+                                                AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(alpha = 0.8f)
+                                                AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(alpha = 0.8f)
+                                                AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(alpha = 0.8f)
+                                                AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(alpha = 0.8f)
+                                                AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(alpha = 0.8f)
+                                            }
+                                        )
+                                    )
+                                )
+                                .zIndex(1f)
+                        )
+                    }
+                }
+            } ?: run {
+                Text(
+                    text = stringResource(R.string.no_rolls_yet),
+                    color = when (customization.theme) {
+                        AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                        AppTheme.FANTASY -> FantasyColors.SecondaryText
+                        AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                        AppTheme.WESTERN -> WesternColors.SecondaryText
+                        AppTheme.ANCIENT -> AncientColors.SecondaryText
+                    },
+                    fontSize = 9.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun LandscapeClearButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: DiceRollViewModel
+) {
+    val customization by viewModel.customization.collectAsState()
+
+    Button(
+        onClick = onClick,
+        modifier = modifier.height(40.dp), // Slightly smaller height
+        colors = ButtonDefaults.buttonColors(
+            containerColor = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.ButtonRed.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.ButtonRed.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.ButtonRed.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.ButtonRed.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.ButtonRed.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+            }
+        ),
+        border = androidx.compose.foundation.BorderStroke(
+            width = 2.dp,
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed
+                AppTheme.FANTASY -> FantasyColors.NeonRed
+                AppTheme.SCI_FI -> SciFiColors.NeonRed
+                AppTheme.WESTERN -> WesternColors.NeonRed
+                AppTheme.ANCIENT -> AncientColors.NeonRed
+            }
+        )
+    ) {
+        Text(
+            text = "Clear", // Shorter text
+            color = Color.White,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun LandscapeRollButton(
+    onClick: () -> Unit,
+    viewModel: DiceRollViewModel,
+    modifier: Modifier = Modifier
+) {
+    val diceSelections by viewModel.diceSelections.collectAsState()
+    val customization by viewModel.customization.collectAsState()
+    val isEnabled = diceSelections.values.any { it.count > 0 }
+
+    Button(
+        onClick = onClick,
+        enabled = isEnabled,
+        modifier = modifier.height(40.dp), // Slightly smaller height
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (isEnabled) {
+                when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.ButtonGreen.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.ButtonGreen.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.ButtonGreen.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.ButtonGreen.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.ButtonGreen.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                }
+            } else {
+                when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.CardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                }
+            },
+            disabledContainerColor = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.FANTASY -> FantasyColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.SCI_FI -> SciFiColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.WESTERN -> WesternColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+                AppTheme.ANCIENT -> AncientColors.CardBackground.copy(
+                    alpha = if (customization.backgroundEnabled) {
+                        (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                    } else {
+                        1.0f
+                    }
+                )
+            }
+        ),
+        border = androidx.compose.foundation.BorderStroke(
+            width = 2.dp,
+            color = if (isEnabled) {
+                when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen
+                    AppTheme.FANTASY -> FantasyColors.NeonGreen
+                    AppTheme.SCI_FI -> SciFiColors.NeonGreen
+                    AppTheme.WESTERN -> WesternColors.NeonGreen
+                    AppTheme.ANCIENT -> AncientColors.NeonGreen
+                }
+            } else {
+                when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.BorderBlue
+                    AppTheme.FANTASY -> FantasyColors.BorderBlue
+                    AppTheme.SCI_FI -> SciFiColors.BorderBlue
+                    AppTheme.WESTERN -> WesternColors.BorderBlue
+                    AppTheme.ANCIENT -> AncientColors.BorderBlue
+                }
+            }
+        )
+    ) {
+        Text(
+            text = "Roll", // Shorter text - single word
+            color = if (isEnabled) Color.White else {
+                when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                    AppTheme.FANTASY -> FantasyColors.SecondaryText
+                    AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                    AppTheme.WESTERN -> WesternColors.SecondaryText
+                    AppTheme.ANCIENT -> AncientColors.SecondaryText
+                }
+            },
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
