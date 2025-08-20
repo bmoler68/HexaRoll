@@ -405,42 +405,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         }
     }
     
-    /**
-     * Update background enabled setting
-     * 
-     * @param enabled Whether theme backgrounds should be displayed
-     */
-    fun updateBackgroundEnabled(enabled: Boolean) {
-        _customization.update { current ->
-            current.copy(backgroundEnabled = enabled)
-        }
-        saveThemeToStorage()
-    }
-    
-    /**
-     * Update background opacity setting
-     * 
-     * @param opacity Background opacity level (0.0 - 1.0)
-     */
-    fun updateBackgroundOpacity(opacity: Float) {
-        val clampedOpacity = opacity.coerceIn(0.0f, 1.0f)
-        _customization.update { current ->
-            current.copy(backgroundOpacity = clampedOpacity)
-        }
-        saveThemeToStorage()
-    }
-    
-    /**
-     * Update background scaling mode setting
-     * 
-     * @param scalingMode How background images should be scaled to fit the screen
-     */
-    fun updateBackgroundScaling(scalingMode: BackgroundFitMode) {
-        _customization.update { current ->
-            current.copy(backgroundScaling = scalingMode)
-        }
-        saveThemeToStorage()
-    }
+
 
     fun clearArena() {
         // Reset all dice counts to 0

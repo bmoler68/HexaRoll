@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.brianmoler.hexaroll.R
 import com.brianmoler.hexaroll.ui.components.AchievementNotification
+import com.brianmoler.hexaroll.ui.components.BackgroundFitMode
 import com.brianmoler.hexaroll.ui.components.ThemedBackground
 import com.brianmoler.hexaroll.ui.theme.ThemeColorUtils
 import com.brianmoler.hexaroll.ui.theme.ColorType
@@ -66,8 +67,8 @@ fun MainScreen(
             .background(
                 ThemeColorUtils.getBackgroundColor(
                     customization.theme,
-                    customization.backgroundEnabled,
-                    customization.backgroundOpacity
+                    backgroundEnabled = true,
+                    backgroundOpacity = 1.0f
                 )
             )
     ) {
@@ -107,8 +108,8 @@ fun MainScreen(
         // Content based on selected tab with themed background
         ThemedBackground(
             theme = customization.theme,
-            alpha = if (customization.backgroundEnabled) customization.backgroundOpacity else 0f,
-            fitMode = customization.backgroundScaling,
+            alpha = 1.0f,
+            fitMode = BackgroundFitMode.STRETCH,
             modifier = Modifier.weight(1f).fillMaxSize()
         ) {
             Box(
@@ -117,15 +118,9 @@ fun MainScreen(
                     .background(
                         ThemeColorUtils.getBackgroundColor(
                             customization.theme,
-                            customization.backgroundEnabled,
-                            customization.backgroundOpacity
-                        ).copy(
-                            alpha = if (customization.backgroundEnabled) {
-                                (1.0f - customization.backgroundOpacity * 0.75f).coerceAtLeast(0.1f)
-                            } else {
-                                1.0f
-                            }
-                        )
+                            backgroundEnabled = true,
+                            backgroundOpacity = 1.0f
+                        ).copy(alpha = 0.25f) // Fixed alpha for readability over background
                     )
             ) {
                 // Navigate to appropriate screen

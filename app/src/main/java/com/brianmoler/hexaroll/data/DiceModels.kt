@@ -124,6 +124,6 @@ enum class AppTheme {
 data class DiceCustomization(
     val theme: AppTheme = AppTheme.CYBERPUNK,
     val backgroundEnabled: Boolean = true,
-    val backgroundOpacity: Float = 0.3f,
-    val backgroundScaling: BackgroundFitMode = BackgroundFitMode.SMART_SCALE
+    val backgroundOpacity: Float = 1.0f,
+    val backgroundScaling: BackgroundFitMode = BackgroundFitMode.STRETCH
 ) 
