@@ -122,8 +122,8 @@ enum class AppTheme {
  * @property backgroundScaling How background images should be scaled to fit the screen
  */
 data class DiceCustomization(
-    val theme: AppTheme = AppTheme.CYBERPUNK,
-    val backgroundEnabled: Boolean = true,
-    val backgroundOpacity: Float = 1.0f,
-    val backgroundScaling: BackgroundFitMode = BackgroundFitMode.STRETCH
+    val theme: AppTheme = AppDefaultsData.Theme.DEFAULT_THEME,
+    val backgroundEnabled: Boolean = AppDefaultsData.Background.ENABLED,
+    val backgroundOpacity: Float = AppDefaultsData.Background.OPACITY,
+    val backgroundScaling: BackgroundFitMode = AppDefaultsData.Background.SCALING_MODE
 ) 

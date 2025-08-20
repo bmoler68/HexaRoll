@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.brianmoler.hexaroll.R
+import com.brianmoler.hexaroll.data.AppDefaultsData
 import com.brianmoler.hexaroll.ui.components.AchievementNotification
 import com.brianmoler.hexaroll.ui.components.BackgroundFitMode
 import com.brianmoler.hexaroll.ui.components.ThemedBackground
@@ -67,8 +68,8 @@ fun MainScreen(
             .background(
                 ThemeColorUtils.getBackgroundColor(
                     customization.theme,
-                    backgroundEnabled = true,
-                    backgroundOpacity = 1.0f
+                    backgroundEnabled = AppDefaultsData.Background.ENABLED,
+                    backgroundOpacity = AppDefaultsData.Background.OPACITY
                 )
             )
     ) {
@@ -108,8 +109,8 @@ fun MainScreen(
         // Content based on selected tab with themed background
         ThemedBackground(
             theme = customization.theme,
-            alpha = 1.0f,
-            fitMode = BackgroundFitMode.STRETCH,
+            alpha = AppDefaultsData.Background.OPACITY,
+            fitMode = AppDefaultsData.Background.SCALING_MODE,
             modifier = Modifier.weight(1f).fillMaxSize()
         ) {
             Box(
@@ -118,9 +119,9 @@ fun MainScreen(
                     .background(
                         ThemeColorUtils.getBackgroundColor(
                             customization.theme,
-                            backgroundEnabled = true,
-                            backgroundOpacity = 1.0f
-                        ).copy(alpha = 0.25f) // Fixed alpha for readability over background
+                            backgroundEnabled = AppDefaultsData.Background.ENABLED,
+                            backgroundOpacity = AppDefaultsData.Background.OPACITY
+                        ).copy(alpha = AppDefaultsData.Background.OVERLAY_ALPHA)
                     )
             ) {
                 // Navigate to appropriate screen

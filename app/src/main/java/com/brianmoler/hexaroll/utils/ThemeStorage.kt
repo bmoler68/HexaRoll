@@ -1,6 +1,7 @@
 package com.brianmoler.hexaroll.utils
 
 import android.content.Context
+import com.brianmoler.hexaroll.data.AppDefaultsData
 import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.data.DiceCustomization
 import com.google.gson.Gson
@@ -24,10 +25,10 @@ class ThemeStorage(context: Context) {
             try {
                 gson.fromJson(themeJson, AppTheme::class.java)
             } catch (e: Exception) {
-                AppTheme.CYBERPUNK // Default fallback
+                AppDefaultsData.Theme.DEFAULT_THEME // Centralized default fallback
             }
         } else {
-            AppTheme.CYBERPUNK // Default theme
+            AppDefaultsData.Theme.DEFAULT_THEME // Centralized default theme
         }
     }
     
@@ -44,8 +45,12 @@ class ThemeStorage(context: Context) {
     }
     
     /**
-     * Load complete customization settings with backward compatibility
-     * Falls back to theme-only if customization data is not available
+     * Load complete customization settings with automatic defaults
+     * 
+     * Uses Gson deserialization with automatic fallback to data class defaults
+     * for any missing or corrupted fields. This eliminates the need for manual
+     * fallback construction since DiceCustomization default parameters handle
+     * missing values automatically.
      */
     fun loadCustomization(): DiceCustomization {
         // Try to load full customization first
@@ -54,16 +59,13 @@ class ThemeStorage(context: Context) {
             try {
                 return gson.fromJson(customizationJson, DiceCustomization::class.java)
             } catch (e: Exception) {
-                // Fall through to backward compatibility
+                // JSON is corrupted, fall back to theme-only with data class defaults
             }
         }
         
-        // Backward compatibility: load theme-only and create customization with defaults
+        // No customization data or corrupted data - use theme with data class defaults
         val theme = loadTheme()
-        return DiceCustomization(
-            theme = theme,
-            backgroundEnabled = true,
-            backgroundOpacity = 0.3f
-        )
+        return DiceCustomization(theme = theme)
+        // backgroundEnabled, backgroundOpacity, backgroundScaling will use AppDefaultsData values
     }
 } 

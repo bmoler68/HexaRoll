@@ -260,7 +260,7 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         
         // Update roll history with new roll at the beginning (most recent first)
         _rollHistory.update { history ->
-            (listOf(rollResult) + history).take(100) // Keep latest 100 rolls
+            (listOf(rollResult) + history).take(AppDefaultsData.Data.MAX_ROLL_HISTORY) // Keep latest rolls
         }
         
         // Save to persistent storage
