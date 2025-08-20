@@ -1,5 +1,6 @@
 package com.brianmoler.hexaroll.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,6 +57,9 @@ enum class BackgroundFitMode {
  * look perfect on different screen sizes and aspect ratios. It automatically adapts to
  * device characteristics for optimal visual experience.
  * 
+ * Now supports orientation-aware background selection, automatically choosing landscape-specific
+ * backgrounds when the device is rotated to landscape mode.
+ * 
  * @param theme The current application theme
  * @param modifier Modifier to be applied to the container
  * @param fitMode How the background should be scaled to fit the screen (default: SMART_SCALE)
@@ -74,6 +78,9 @@ fun ThemedBackground(
 ) {
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
+    
+    // Detect orientation
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     
     // Calculate screen dimensions
     val screenWidthDp = configuration.screenWidthDp.dp
@@ -113,10 +120,10 @@ fun ThemedBackground(
     }
     
     Box(modifier = modifier.fillMaxSize()) {
-        // Background image layer with smart scaling
+        // Background image layer with orientation-aware smart scaling
         Image(
-            painter = painterResource(id = ThemeBackgrounds.getBackgroundResource(theme)),
-            contentDescription = "Theme background for ${theme.name.lowercase()} theme",
+            painter = painterResource(id = ThemeBackgrounds.getBackgroundResource(theme, isLandscape)),
+            contentDescription = "Theme background for ${theme.name.lowercase()} theme (${if (isLandscape) "landscape" else "portrait"})",
             modifier = Modifier.fillMaxSize(),
             contentScale = optimalContentScale,
             alpha = alpha
