@@ -375,10 +375,10 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
                 achievementManager.onThemeLoaded(customization.theme)
             } catch (e: Exception) {
                 Log.e("DiceRollViewModel", "Error loading customization", e)
-                _customization.value = DiceCustomization(theme = AppTheme.CYBERPUNK)
+                _customization.value = DiceCustomization(theme = AppDefaultsData.Theme.DEFAULT_THEME)
                 
                 // Track default theme for achievements
-                achievementManager.onThemeLoaded(AppTheme.CYBERPUNK)
+                achievementManager.onThemeLoaded(AppDefaultsData.Theme.DEFAULT_THEME)
             }
         }
     }
