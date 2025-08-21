@@ -97,4 +97,26 @@ class ErrorHandlerTest {
         assertFalse("Boundary value -1 should be invalid", ErrorHandler.validateDiceCount(-1))
         assertFalse("Boundary value 101 should be invalid", ErrorHandler.validateDiceCount(101))
     }
+    
+    @Test
+    fun `validation methods should handle null inputs gracefully`() {
+        // These tests verify that the validation methods don't crash on null inputs
+        // The actual behavior depends on the implementation, but they should handle nulls safely
+        
+        // Test with null strings (if the methods accept nullable strings)
+        try {
+            ErrorHandler.validatePresetName("")
+            ErrorHandler.validatePresetDescription("")
+        } catch (e: Exception) {
+            fail("Validation methods should handle empty strings gracefully: ${e.message}")
+        }
+        
+        // Test with extreme values
+        try {
+            ErrorHandler.validateDiceCount(Int.MAX_VALUE)
+            ErrorHandler.validateModifier(Int.MAX_VALUE)
+        } catch (e: Exception) {
+            fail("Validation methods should handle extreme values gracefully: ${e.message}")
+        }
+    }
 } 

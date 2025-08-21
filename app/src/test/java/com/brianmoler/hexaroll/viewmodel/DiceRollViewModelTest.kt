@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.brianmoler.hexaroll.data.DiceType
 import com.brianmoler.hexaroll.data.AppTheme
+import com.brianmoler.hexaroll.data.DiceCustomization
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -102,7 +103,9 @@ class DiceRollViewModelTest {
     fun `initial customization should have default theme`() = runBlockingTest {
         val customization = viewModel.customization.value
         assertNotNull("Customization should not be null", customization)
-        assertEquals("Default theme should be Cyberpunk", AppTheme.CYBERPUNK, customization.theme)
+        // Default theme should match AppDefaultsData
+        assertEquals("Default theme should match AppDefaultsData", 
+                    DiceCustomization().theme, customization.theme)
     }
     
     @Test
@@ -141,5 +144,26 @@ class DiceRollViewModelTest {
             AppTheme.ANCIENT
         )
         assertTrue("Theme should be valid", validThemes.contains(customization.theme))
+    }
+    
+    @Test
+    fun `customization should have valid background settings`() = runBlockingTest {
+        val customization = viewModel.customization.value
+        
+        // Background settings should be within valid ranges
+        assertTrue("Background opacity should be between 0 and 1", 
+                  customization.backgroundOpacity in 0.0f..1.0f)
+        assertNotNull("Background scaling mode should not be null", customization.backgroundScaling)
+    }
+    
+    @Test
+    fun `dice selections should maintain order`() = runBlockingTest {
+        val diceSelections = viewModel.diceSelections.value
+        
+        // Verify the order matches DiceType.entries
+        val expectedOrder = DiceType.entries
+        val actualOrder = diceSelections.keys.toList()
+        
+        assertEquals("Dice selections should maintain enum order", expectedOrder, actualOrder)
     }
 }

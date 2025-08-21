@@ -104,14 +104,16 @@ class DataModelsTest {
             diceSelections = listOf(DiceSelection(DiceType.D6, 1)),
             modifier = 0,
             individualRolls = listOf(listOf(3)),
-            total = 3
+            total = 3,
+            notation = "1D6"
         )
         
         val result2 = RollResult(
             diceSelections = listOf(DiceSelection(DiceType.D6, 1)),
             modifier = 0,
             individualRolls = listOf(listOf(4)),
-            total = 4
+            total = 4,
+            notation = "1D6"
         )
         
         assertNotEquals("Roll results should have different IDs", result1.id, result2.id)
@@ -126,12 +128,30 @@ class DataModelsTest {
             diceSelections = listOf(DiceSelection(DiceType.D6, 1)),
             modifier = 0,
             individualRolls = listOf(listOf(3)),
-            total = 3
+            total = 3,
+            notation = "1D6"
         )
         val afterCreation = System.currentTimeMillis()
         
         assertTrue("Timestamp should be within reasonable range", 
                   result.timestamp >= beforeCreation && result.timestamp <= afterCreation)
+    }
+    
+    @Test
+    fun `RollResult should handle D100 rolls correctly`() {
+        val d100Rolls = listOf(D100Roll(tensDie = 7, onesDie = 5))
+        val result = RollResult(
+            diceSelections = listOf(DiceSelection(DiceType.D100, 1)),
+            modifier = 0,
+            individualRolls = listOf(listOf(75)),
+            d100Rolls = d100Rolls,
+            total = 75,
+            notation = "1D100"
+        )
+        
+        assertEquals(1, result.d100Rolls.size)
+        assertEquals(75, result.d100Rolls.first().result)
+        assertEquals("1D100", result.notation)
     }
     
     @Test
@@ -174,6 +194,34 @@ class DataModelsTest {
         assertEquals(diceSelections, preset.diceSelections)
         assertEquals(2, preset.modifier)
         assertEquals(2, preset.diceSelections.size)
+    }
+    
+    @Test
+    fun `AppTheme enum should contain all expected themes`() {
+        val expectedThemes = listOf(
+            AppTheme.CYBERPUNK,
+            AppTheme.FANTASY,
+            AppTheme.SCI_FI,
+            AppTheme.WESTERN,
+            AppTheme.ANCIENT
+        )
+        
+        assertEquals(5, AppTheme.entries.size)
+        expectedThemes.forEach { expectedTheme ->
+            assertTrue("${expectedTheme.name} should be in entries", 
+                      AppTheme.entries.contains(expectedTheme))
+        }
+    }
+    
+    @Test
+    fun `DiceCustomization should use default values from AppDefaultsData`() {
+        val customization = DiceCustomization()
+        
+        // These should match the defaults in AppDefaultsData
+        assertEquals(AppDefaultsData.Theme.DEFAULT_THEME, customization.theme)
+        assertEquals(AppDefaultsData.Background.ENABLED, customization.backgroundEnabled)
+        assertEquals(AppDefaultsData.Background.OPACITY, customization.backgroundOpacity, 0.01f)
+        assertEquals(AppDefaultsData.Background.SCALING_MODE, customization.backgroundScaling)
     }
     
     @Test

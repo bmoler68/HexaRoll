@@ -20,10 +20,9 @@ import org.junit.After
  * Unit tests for AchievementManager
  * 
  * Tests the achievement system logic including:
- * - Achievement unlocking conditions
- * - Progress tracking
- * - Statistics management
- * - Session handling
+ * - Achievement definitions and structure
+ * - Achievement categories and tiers
+ * - Basic achievement manager functionality
  */
 @RunWith(MockitoJUnitRunner::class)
 @ExperimentalCoroutinesApi
@@ -57,9 +56,9 @@ class AchievementManagerTest {
         
         // Check for some key achievements
         val achievementIds = achievements.map { it.id }
-        assertTrue("Should have D6 enthusiast achievement", achievementIds.contains("d6_enthusiast"))
-        assertTrue("Should have marathon roller achievement", achievementIds.contains("marathon_roller"))
-        assertTrue("Should have lucky hour achievement", achievementIds.contains("lucky_hour"))
+        assertTrue("Should have first roll achievement", achievementIds.contains("first_roll"))
+        assertTrue("Should have roll master achievements", achievementIds.contains("roll_master_100"))
+        assertTrue("Should have dice specialist achievements", achievementIds.contains("d6_specialist"))
     }
     
     @Test
@@ -81,10 +80,14 @@ class AchievementManagerTest {
         val achievements = achievementManager.achievements.value
         
         val validCategories = listOf(
-            AchievementCategory.DICE_SPECIALIST,
             AchievementCategory.ROLLING_MILESTONES,
-            AchievementCategory.SPECIAL_EVENTS,
-            AchievementCategory.SESSION_ACHIEVEMENTS
+            AchievementCategory.DICE_SPECIALISTS,
+            AchievementCategory.RESULT_BASED,
+            AchievementCategory.STREAK_PATTERNS,
+            AchievementCategory.COMBINATION_MODIFIERS,
+            AchievementCategory.THEME_BASED,
+            AchievementCategory.FAVORITES_HISTORY,
+            AchievementCategory.SPECIAL_EVENTS
         )
         
         achievements.forEach { achievement ->
@@ -101,7 +104,8 @@ class AchievementManagerTest {
             AchievementTier.BRONZE,
             AchievementTier.SILVER,
             AchievementTier.GOLD,
-            AchievementTier.PLATINUM
+            AchievementTier.PLATINUM,
+            AchievementTier.DIAMOND
         )
         
         achievements.forEach { achievement ->
@@ -115,15 +119,17 @@ class AchievementManagerTest {
         val achievements = achievementManager.achievements.value
         
         achievements.forEach { achievement ->
-            if (achievement.id == "marathon_roller") {
-                assertEquals("Marathon roller should have 18000 max progress", 
-                            18000, achievement.maxProgress)
-            } else if (achievement.id == "speed_demon") {
-                assertEquals("Speed demon should have 10 max progress", 
-                            10, achievement.maxProgress)
-            } else {
-                assertTrue("Achievement should have reasonable maxProgress", 
-                          achievement.maxProgress > 0)
+            when (achievement.id) {
+                "marathon_roller" -> assertEquals("Marathon roller should have 18000 max progress", 
+                                                18000, achievement.maxProgress)
+                "speed_demon" -> assertEquals("Speed demon should have 10 max progress", 
+                                            10, achievement.maxProgress)
+                "d6_specialist" -> assertEquals("D6 specialist should have 100 max progress", 
+                                              100, achievement.maxProgress)
+                "first_roll" -> assertEquals("First roll should have 1 max progress", 
+                                           1, achievement.maxProgress)
+                else -> assertTrue("Achievement should have reasonable maxProgress", 
+                                 achievement.maxProgress > 0)
             }
         }
     }
@@ -137,12 +143,35 @@ class AchievementManagerTest {
     }
     
     @Test
-    fun `achievement definitions should be accessible`() = runBlockingTest {
-        // Test that we can access the achievement definitions object
-        val definitions = AchievementDefinitions::class.java
+    fun `achievement definitions should contain specific achievement types`() = runBlockingTest {
+        val achievements = achievementManager.achievements.value
         
-        assertNotNull("AchievementDefinitions class should exist", definitions)
-        assertTrue("AchievementDefinitions should be accessible", 
-                  definitions.isAssignableFrom(AchievementDefinitions::class.java))
+        // Check for rolling milestone achievements
+        val rollingMilestones = achievements.filter { it.category == AchievementCategory.ROLLING_MILESTONES }
+        assertTrue("Should have rolling milestone achievements", rollingMilestones.isNotEmpty())
+        
+        // Check for dice specialist achievements
+        val diceSpecialists = achievements.filter { it.category == AchievementCategory.DICE_SPECIALISTS }
+        assertTrue("Should have dice specialist achievements", diceSpecialists.isNotEmpty())
+        
+        // Check for result-based achievements
+        val resultBased = achievements.filter { it.category == AchievementCategory.RESULT_BASED }
+        assertTrue("Should have result-based achievements", resultBased.isNotEmpty())
+    }
+    
+    @Test
+    fun `achievement definitions should have correct structure`() = runBlockingTest {
+        val achievements = achievementManager.achievements.value
+        
+        // Check that all achievements have unique IDs
+        val ids = achievements.map { it.id }
+        assertEquals("All achievement IDs should be unique", ids.size, ids.distinct().size)
+        
+        // Check that all achievements have non-empty names and descriptions
+        achievements.forEach { achievement ->
+            assertTrue("Achievement name should not be empty", achievement.name.isNotEmpty())
+            assertTrue("Achievement description should not be empty", achievement.description.isNotEmpty())
+            assertTrue("Achievement icon should not be empty", achievement.icon.isNotEmpty())
+        }
     }
 }

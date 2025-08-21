@@ -9,7 +9,7 @@ import org.junit.Test
 import org.junit.Assert.*
 
 /**
- * Unit tests for HexaRoll data models and core functionality
+ * Unit tests for HexaRoll core data models and functionality
  * 
  * These tests verify the behavior of data classes and enums
  * that form the foundation of the application.
@@ -41,6 +41,20 @@ class HexaRollUnitTest {
         
         assertEquals(100, DiceType.D100.sides)
         assertEquals("D100", DiceType.D100.displayName)
+    }
+    
+    @Test
+    fun `DiceType entries should contain all dice types`() {
+        val expectedTypes = listOf(
+            DiceType.D4, DiceType.D6, DiceType.D8, DiceType.D10,
+            DiceType.D12, DiceType.D20, DiceType.D30, DiceType.D100
+        )
+        
+        assertEquals(expectedTypes.size, DiceType.entries.size)
+        expectedTypes.forEach { expectedType ->
+            assertTrue("${expectedType.name} should be in entries", 
+                      DiceType.entries.contains(expectedType))
+        }
     }
     
     @Test
@@ -93,28 +107,35 @@ class HexaRollUnitTest {
             diceSelections = diceSelections,
             modifier = 2,
             individualRolls = individualRolls,
-            total = 6
+            total = 6,
+            notation = "1D6+2"
         )
         
         assertEquals(diceSelections, rollResult.diceSelections)
         assertEquals(2, rollResult.modifier)
         assertEquals(individualRolls, rollResult.individualRolls)
         assertEquals(6, rollResult.total)
+        assertEquals("1D6+2", rollResult.notation)
         assertNotNull(rollResult.id)
         assertTrue(rollResult.timestamp > 0)
     }
     
     @Test
-    fun `DiceType entries should contain all dice types`() {
-        val expectedTypes = listOf(
-            DiceType.D4, DiceType.D6, DiceType.D8, DiceType.D10,
-            DiceType.D12, DiceType.D20, DiceType.D30, DiceType.D100
+    fun `RollResult should handle D100 rolls correctly`() {
+        val diceSelections = listOf(DiceSelection(DiceType.D100, 1))
+        val individualRolls = listOf(listOf(75))
+        val d100Rolls = listOf(D100Roll(tensDie = 7, onesDie = 5))
+        val rollResult = RollResult(
+            diceSelections = diceSelections,
+            modifier = 0,
+            individualRolls = individualRolls,
+            d100Rolls = d100Rolls,
+            total = 75,
+            notation = "1D100"
         )
         
-        assertEquals(expectedTypes.size, DiceType.entries.size)
-        expectedTypes.forEach { expectedType ->
-            assertTrue("${expectedType.name} should be in entries", 
-                      DiceType.entries.contains(expectedType))
-        }
+        assertEquals(1, rollResult.d100Rolls.size)
+        assertEquals(75, rollResult.d100Rolls.first().result)
+        assertEquals(75, rollResult.total)
     }
 }

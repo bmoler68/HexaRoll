@@ -9,6 +9,8 @@ import com.brianmoler.hexaroll.data.DiceType
 import com.brianmoler.hexaroll.data.DiceSelection
 import com.brianmoler.hexaroll.data.RollResult
 import com.brianmoler.hexaroll.data.D100Roll
+import com.brianmoler.hexaroll.data.AppTheme
+import com.brianmoler.hexaroll.data.DiceCustomization
 
 /**
  * Instrumented tests for HexaRoll application
@@ -17,6 +19,7 @@ import com.brianmoler.hexaroll.data.D100Roll
  * - Application context and package information
  * - Data model functionality in the Android environment
  * - Basic dice rolling logic
+ * - Theme and customization data
  */
 @RunWith(AndroidJUnit4::class)
 class HexaRollInstrumentedTest {
@@ -72,13 +75,15 @@ class HexaRollInstrumentedTest {
             diceSelections = diceSelections,
             modifier = 3,
             individualRolls = individualRolls,
-            total = 13
+            total = 13,
+            notation = "2D6+3"
         )
         
         assertEquals(diceSelections, rollResult.diceSelections)
         assertEquals(3, rollResult.modifier)
         assertEquals(individualRolls, rollResult.individualRolls)
         assertEquals(13, rollResult.total)
+        assertEquals("2D6+3", rollResult.notation)
         assertNotNull(rollResult.id)
         assertTrue(rollResult.timestamp > 0)
     }
@@ -98,5 +103,51 @@ class HexaRollInstrumentedTest {
             assertTrue("${expectedType.name} should be available", 
                       DiceType.entries.contains(expectedType))
         }
+    }
+    
+    @Test
+    fun testAppThemeEnumInAndroidEnvironment() {
+        // Test that AppTheme enum works correctly in Android environment
+        val expectedThemes = listOf(
+            AppTheme.CYBERPUNK,
+            AppTheme.FANTASY,
+            AppTheme.SCI_FI,
+            AppTheme.WESTERN,
+            AppTheme.ANCIENT
+        )
+        
+        assertEquals(5, expectedThemes.size)
+        assertEquals(5, AppTheme.entries.size)
+        
+        expectedThemes.forEach { expectedTheme ->
+            assertTrue("${expectedTheme.name} should be available", 
+                      AppTheme.entries.contains(expectedTheme))
+        }
+    }
+    
+    @Test
+    fun testDiceCustomizationInAndroidEnvironment() {
+        // Test DiceCustomization data class in Android environment
+        val customization = DiceCustomization()
+        
+        assertNotNull("Theme should not be null", customization.theme)
+        assertTrue("Background enabled should be boolean", customization.backgroundEnabled is Boolean)
+        assertTrue("Background opacity should be float", customization.backgroundOpacity is Float)
+        assertNotNull("Background scaling should not be null", customization.backgroundScaling)
+    }
+    
+    @Test
+    fun testDataClassImmutability() {
+        // Test that data classes are properly immutable
+        val originalSelection = DiceSelection(DiceType.D6, 2)
+        val modifiedSelection = originalSelection.copy(count = 5)
+        
+        // Original should remain unchanged
+        assertEquals(2, originalSelection.count)
+        assertEquals(DiceType.D6, originalSelection.diceType)
+        
+        // Modified should have new values
+        assertEquals(5, modifiedSelection.count)
+        assertEquals(DiceType.D6, modifiedSelection.diceType)
     }
 }

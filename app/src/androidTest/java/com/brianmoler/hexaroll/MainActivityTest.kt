@@ -28,6 +28,7 @@ class MainActivityTest {
     @Test
     fun testAppLaunchesSuccessfully() {
         // Verify the app launches and shows the main screen
+        // Look for a common element that should be present on launch
         composeTestRule.onNodeWithText("Dice Arena").assertExists()
         composeTestRule.onNodeWithText("Dice Arena").assertIsDisplayed()
     }
@@ -188,5 +189,33 @@ class MainActivityTest {
         
         // Verify Customization screen loads
         composeTestRule.onNodeWithText("Customization").assertExists()
+    }
+    
+    @Test
+    fun testDiceSelectionLimits() {
+        // Test that dice selection has reasonable limits
+        val incrementButton = composeTestRule.onNodeWithText("+")
+        
+        // Try to increment multiple times to test upper limits
+        repeat(10) {
+            incrementButton.performClick()
+        }
+        
+        // Should be able to select at least 10 dice
+        composeTestRule.onNodeWithText("10").assertExists()
+    }
+    
+    @Test
+    fun testUIResponsiveness() {
+        // Test that UI elements respond to user interaction
+        val d6Card = composeTestRule.onNodeWithText("D6")
+        d6Card.assertExists()
+        
+        // Perform a click to ensure the UI is responsive
+        d6Card.performClick()
+        
+        // The UI should remain stable after interaction
+        d6Card.assertExists()
+        d6Card.assertIsDisplayed()
     }
 } 
