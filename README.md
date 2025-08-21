@@ -33,13 +33,14 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 
 ### 🎨 Customization (Second Tab)
 - **Theme Selection**: Choose from five distinct visual themes:
+  - **Fantasy**: Warm earthy tones with magical golden accents (Default)
   - **Cyberpunk**: Vibrant neon colors with electric glow effects
-  - **Fantasy**: Warm earthy tones with magical golden accents
   - **SCI-FI**: Cool futuristic blues with holographic highlights
   - **Western**: Wood grain and sheriff stars with rustic charm
   - **Ancient**: Roman marble and golden laurels with classical elegance
 - **Persistent Preferences**: Your theme choice is automatically saved
 - **Complete Visual Transformation**: All UI elements adapt to your chosen theme
+- **Automatic Background Settings**: Theme backgrounds always enabled with 100% opacity and stretch scaling
 
 ### 📋 Preset Rolls (Third Tab)
 - **Pre-configured Rolls**: Save and load common dice combinations
@@ -50,7 +51,7 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 - **Persistent Roll Log**: Track all dice rolls with timestamps (up to 100 rolls)
 - **Detailed Results**: View individual dice results and totals
 - **Preset Creation**: Convert any roll result into a preset
-- **Clear History**: Option to clear roll history with confirmation
+- **Achievement Integration**: Viewing history contributes to achievement progress
 
 ### 🏆 Achievements (Fifth Tab)
 - **Comprehensive Achievement System**: 50+ achievements across multiple categories
@@ -93,10 +94,22 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 - **Security**: Input validation, error handling, and secure data storage practices
 - **Internet Integration**: Permission for external browser links
 - **Centralized App Data**: Dedicated data classes for maintainable app information management
+- **Simplified Storage**: Clean, single-key storage system without legacy overhead
 
 ## Recent Improvements
 
-### 📱 Landscape Orientation & Layout Optimization (Latest)
+### 🧹 Latest Code Simplification & Cleanup (Latest)
+- **ThemeStorage Simplification**: Removed legacy theme storage key and unused functions
+  - Eliminated `KEY_SELECTED_THEME` constant and `loadTheme()` function
+  - Simplified storage to use only `KEY_CUSTOMIZATION` for complete data
+  - Removed unused imports and dead code
+  - Cleaner, more maintainable storage implementation
+- **Comprehensive Testing**: Added complete test coverage for ThemeStorage utility
+  - Tests for data persistence, error handling, and edge cases
+  - Mock-based testing with proper verification
+  - Coverage for all storage scenarios and fallback behaviors
+
+### 📱 Landscape Orientation & Layout Optimization
 - **Landscape Support**: Re-enabled landscape orientation for optimal tablet and phone rotation use
 - **Optimized Landscape Layout**: Complete redesign of dice arena for landscape mode
   - **Horizontal Split Design**: 65% dice grid + 35% controls for perfect space utilization
@@ -147,15 +160,15 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 
 The app features five distinct visual themes, each with its own color palette and aesthetic:
 
-### 🎭 Cyberpunk Theme (Default)
-- **Background**: Deep blue-black with dark blue-gray cards
-- **Primary Colors**: Bright neon yellows, electric cyan, bright neon greens and reds
-- **Character**: High contrast, vibrant, electric, futuristic
-
-### 🏰 Fantasy Theme
+### 🏰 Fantasy Theme (Default)
 - **Background**: Deep brown wood with rich mahogany cards
 - **Primary Colors**: Goldenrod (magical gold), royal blue (mystical), forest green (nature), crimson (dragon fire)
 - **Character**: Warm, earthy, magical, medieval-inspired
+
+### 🎭 Cyberpunk Theme
+- **Background**: Deep blue-black with dark blue-gray cards
+- **Primary Colors**: Bright neon yellows, electric cyan, bright neon greens and reds
+- **Character**: High contrast, vibrant, electric, futuristic
 
 ### 🚀 SCI-FI Theme
 - **Background**: Deep space black with dark metal cards
@@ -242,9 +255,14 @@ The app features five distinct visual themes, each with its own color palette an
 The project includes comprehensive testing:
 
 - **Unit Tests**: Data models, utilities, ViewModels, and business logic
+  - **DataModelsTest.kt**: Tests for dice and achievement data structures
+  - **ThemeStorageTest.kt**: Complete coverage for theme storage utility
+  - **AchievementManagerTest.kt**: Achievement logic and tracking tests
+  - **ErrorHandlerTest.kt**: Error handling and validation tests
+  - **DiceRollViewModelTest.kt**: Main ViewModel business logic tests
 - **UI Tests**: Compose UI testing with ComposeTestRule
 - **Instrumented Tests**: Android environment testing
-- **Test Dependencies**: Mockito, coroutines testing, architecture components testing
+- **Test Dependencies**: Mockito, MockK, coroutines testing, architecture components testing
 
 ### Code Quality
 
@@ -253,6 +271,7 @@ The project includes comprehensive testing:
 - **Accessibility**: Full accessibility support with content descriptions
 - **Performance**: Optimized code with proper state management
 - **Testing**: Comprehensive test suite covering all major functionality
+- **Code Cleanup**: Regular removal of dead code and unused functions
 
 ## Architecture
 
@@ -267,6 +286,7 @@ The app is built using:
 - **Persistent Storage** using SharedPreferences and Gson
 - **Custom Dice Assets** for enhanced visual themes
 - **External Integration** for app documentation and legal documents
+- **Simplified Storage**: Clean, single-key storage system without legacy overhead
 
 ### Project Structure
 
@@ -280,6 +300,7 @@ app/
 │   │   │   ├── data/                        # Data models and app information
 │   │   │   │   ├── AchievementModels.kt     # Achievement data structures
 │   │   │   │   ├── AppInfoData.kt           # Centralized app constants and URLs
+│   │   │   │   ├── AppDefaultsData.kt       # App-wide default constants
 │   │   │   │   └── DiceModels.kt            # Dice-related data classes
 │   │   │   ├── ui/                          # User interface components
 │   │   │   │   ├── components/              # Reusable UI components
@@ -308,13 +329,14 @@ app/
 │   │   │   │   ├── ErrorHandler.kt          # Error handling and validation
 │   │   │   │   ├── PresetStorage.kt         # Preset save/load functionality
 │   │   │   │   ├── RollHistoryStorage.kt    # Roll history persistence
-│   │   │   │   └── ThemeStorage.kt          # Theme preference storage
+│   │   │   │   └── ThemeStorage.kt          # Simplified theme preference storage
 │   │   │   └── viewmodel/                   # MVVM ViewModels
 │   │   │       └── DiceRollViewModel.kt     # Main app state management
 │   │   └── res/                             # Android resources
 │   │       ├── drawable/                    # Vector drawables and icons
 │   │       ├── drawable-xhdpi/              # Theme-specific dice images
 │   │       │   ├── bg_theme_*.png           # Background images for 5 themes
+│   │       │   ├── bg_theme_*_landscape.png # Landscape background images
 │   │       │   └── d*_*.png                 # Dice images (type_theme.png)
 │   │       ├── mipmap-*/                    # App launcher icons
 │   │       ├── values/                      # Resource values
@@ -334,7 +356,8 @@ app/
 │           ├── ExampleUnitTest.kt           # Example unit test
 │           ├── utils/                       # Utility class tests
 │           │   ├── AchievementManagerTest.kt # Achievement logic tests
-│           │   └── ErrorHandlerTest.kt      # Error handling tests
+│           │   ├── ErrorHandlerTest.kt      # Error handling tests
+│           │   └── ThemeStorageTest.kt      # Theme storage utility tests
 │           └── viewmodel/                   # ViewModel tests
 │               └── DiceRollViewModelTest.kt # Main ViewModel tests
 ├── build.gradle.kts                         # App-level build configuration
@@ -359,7 +382,7 @@ gradle.properties                            # Gradle configuration properties
 
 #### **🎯 Data Layer** (`data/`)
 - **Models**: Data classes for dice, achievements, and app information
-- **Centralized Constants**: `AppInfoData.kt` for maintainable app configuration
+- **Centralized Constants**: `AppInfoData.kt` and `AppDefaultsData.kt` for maintainable app configuration
 - **Type Safety**: Strongly-typed data structures throughout
 
 #### **🔧 Business Logic** (`utils/`, `viewmodel/`)
@@ -367,35 +390,40 @@ gradle.properties                            # Gradle configuration properties
 - **State Management**: Reactive state using StateFlow
 - **Persistence**: SharedPreferences with Gson for complex data
 - **Achievement System**: Comprehensive tracking with session management
+- **Simplified Storage**: Clean, single-key storage system without legacy overhead
 
 #### **🎨 Resources** (`res/`)
 - **Theme Assets**: Custom dice images for each of the 5 themes
+- **Landscape Support**: Orientation-specific background images
 - **Scalable Graphics**: Vector drawables for icons and UI elements
 - **Responsive Images**: Multiple density support for all screen sizes
 - **Material Design**: Complete Material 3 theme integration
 
 ## Recent Commits
 
-### Latest Landscape & UI Optimization (2025)
+### Latest Code Simplification & Cleanup (2025)
+- **ThemeStorage Simplification**: Removed legacy theme storage key and unused functions
+  - Eliminated `KEY_SELECTED_THEME` constant and `loadTheme()` function
+  - Simplified storage to use only `KEY_CUSTOMIZATION` for complete data
+  - Removed unused imports and dead code
+  - Cleaner, more maintainable storage implementation
+- **Comprehensive Testing**: Added complete test coverage for ThemeStorage utility
+  - Tests for data persistence, error handling, and edge cases
+  - Mock-based testing with proper verification
+  - Coverage for all storage scenarios and fallback behaviors
+
+### Previous Major Updates
 - **Landscape Layout Implementation**: Complete redesign for landscape orientation with horizontal split
 - **Ultra-Compact Spacing**: Reduced padding from 8dp to 4dp and eliminated artificial line spacing
 - **Font Standardization**: Unified font sizes between Total and Result displays for consistency
 - **Equal Box Sizing**: Perfect symmetry between Total and Result displays in landscape mode
 - **Code Cleanup**: Removed 346+ lines of unused landscape-specific display functions
-- **App Data Centralization**: Created `AppInfoData.kt` for centralized app constants and URLs
+- **App Data Centralization**: Created `AppInfoData.kt` and `AppDefaultsData.kt` for centralized app constants
 - **Settings Enhancement**: Moved achievement reset functionality from Achievements to Settings screen
 - **History Buff Fix**: Corrected achievement tracking for viewing roll history 50 times
 - **Compact UI Design**: Reduced heading sizes and spacing across all screens for mobile optimization
-
-### Previous Major Updates
-- Added Settings tab with external links to About page and Privacy Policy
-- Fixed Marathon Roller achievement session tracking and progress display
-- Updated achievement logic for Monthly Master, Weekend Warrior, and Lucky Hour
-- Comprehensive code cleanup and encapsulation improvements
-- Added missing density variation drawable folders
-- Updated Gradle configuration to use stable APIs
-- Comprehensive test suite rewrite and modernization
-- Added extensive code documentation and KDoc comments
+- **Theme Background Rotation**: Added support for landscape-specific background images
+- **Default Background Settings**: Set theme backgrounds to always enabled with 100% opacity and stretch scaling
 
 ## License
 

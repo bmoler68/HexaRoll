@@ -1,7 +1,6 @@
 package com.brianmoler.hexaroll.utils
 
 import android.content.Context
-import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.data.DiceCustomization
 import com.google.gson.Gson
 import androidx.core.content.edit
