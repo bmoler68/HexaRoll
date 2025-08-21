@@ -10,6 +10,8 @@ import com.brianmoler.hexaroll.utils.AchievementStorage
 import com.brianmoler.hexaroll.utils.ErrorHandler
 import com.brianmoler.hexaroll.utils.PresetStorage
 import com.brianmoler.hexaroll.utils.RollHistoryStorage
+import com.brianmoler.hexaroll.utils.SoundManager
+import com.brianmoler.hexaroll.utils.SoundStorage
 import com.brianmoler.hexaroll.utils.ThemeStorage
 import com.brianmoler.hexaroll.R
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,6 +46,10 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     private val themeStorage = ThemeStorage(application)
     private val achievementStorage = AchievementStorage(application)
     private val achievementManager = AchievementManager(achievementStorage)
+    
+    // Sound management
+    private val soundManager = SoundManager(application)
+    private val soundStorage = SoundStorage(application)
     
     // State management for dice selections
     // Maps each dice type to its current count (0 by default)
@@ -82,10 +88,23 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
     private val _presetLoadedMessage = MutableStateFlow<String?>(null)
     val presetLoadedMessage: StateFlow<String?> = _presetLoadedMessage.asStateFlow()
     
+    // State management for sound settings
+    private val _soundEnabled = MutableStateFlow(soundStorage.loadSoundEnabled())
+    val soundEnabled: StateFlow<Boolean> = _soundEnabled.asStateFlow()
+    
     // Achievement-related StateFlows
     // Delegated to the AchievementManager for centralized achievement handling
     val achievements = achievementManager.achievements
     val newlyUnlockedAchievements = achievementManager.newlyUnlockedAchievements
+    
+    // Sound control functions
+    fun setSoundEnabled(enabled: Boolean) {
+        _soundEnabled.value = enabled
+        soundManager.setSoundEnabled(enabled)
+        soundStorage.saveSoundEnabled(enabled)
+    }
+    
+    fun isSoundEnabled(): Boolean = _soundEnabled.value
 
     /**
      * Initialize the ViewModel
@@ -217,6 +236,10 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
      */
     fun rollDice() {
         Log.d("DiceRollViewModel", "rollDice() called")
+        
+        // Play dice rolling sound
+        soundManager.playDiceRollSound()
+        
         val selections = _diceSelections.value.values.filter { it.count > 0 }
         if (selections.isEmpty()) {
             Log.d("DiceRollViewModel", "No dice selected, returning")
@@ -468,5 +491,13 @@ class DiceRollViewModel(application: Application) : AndroidViewModel(application
         }
     }
     
-
+    /**
+     * Clean up resources when ViewModel is cleared
+     * 
+     * Ensures proper cleanup of SoundManager to prevent memory leaks
+     */
+    override fun onCleared() {
+        super.onCleared()
+        soundManager.cleanup()
+    }
 } 

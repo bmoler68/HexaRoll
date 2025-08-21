@@ -29,6 +29,7 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
   - **Perfect Fit**: All elements contained without scrolling or overflow
 - **Ultra-Compact Spacing**: Minimized padding for maximum information density
 - **Roll Button**: Manual roll button with theme-appropriate styling
+- **Sound Effects**: Immersive dice rolling sound effects with user control
 - **Scroll Indicators**: Visual cues for scrollable dice selection areas
 
 ### 🎨 Customization (Second Tab)
@@ -70,6 +71,7 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 - **About HexaRoll**: External link to detailed app documentation
 - **Privacy Policy**: External link to privacy policy and data handling practices
 - **App Information**: Centralized version details and copyright information from `AppInfoData.kt`
+- **Sound Settings**: Control dice rolling sound effects with toggle switch
 - **Reset Achievement Progress**: Moved from Achievements tab for better UX with confirmation dialog
 - **External Browser Integration**: Opens links in user's preferred browser
 
@@ -95,8 +97,26 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 - **Internet Integration**: Permission for external browser links
 - **Centralized App Data**: Dedicated data classes for maintainable app information management
 - **Simplified Storage**: Clean, single-key storage system without legacy overhead
+- **Audio System**: Immersive sound effects with user control and automatic resource management
 
 ## Recent Improvements
+
+### 🔊 Latest Sound Effects Implementation (Latest)
+- **Dice Rolling Sounds**: Added immersive audio feedback when rolling dice
+  - High-quality WAV audio file for authentic dice rolling experience
+  - Automatic playback when "Roll Dice" button is pressed
+  - User control via Settings screen with toggle switch
+  - Sound preference persistence across app sessions
+- **Audio System Architecture**: Implemented comprehensive sound management
+  - **SoundManager.kt**: Handles MediaPlayer lifecycle and resource cleanup
+  - **SoundStorage.kt**: Persists user sound preferences using SharedPreferences
+  - **Automatic Cleanup**: Prevents memory leaks with proper resource management
+  - **Error Handling**: Graceful fallback for missing or corrupted audio files
+- **Settings Integration**: Added dedicated Sound Settings section
+  - New "Sound Settings" section above App Settings
+  - Toggle switch for enabling/disabling dice rolling sounds
+  - Theme-aware styling consistent with app design
+  - Real-time sound control with immediate effect
 
 ### 🧹 Latest Code Simplification & Cleanup (Latest)
 - **ThemeStorage Simplification**: Removed legacy theme storage key and unused functions
@@ -185,6 +205,26 @@ The app features five distinct visual themes, each with its own color palette an
 - **Primary Colors**: Pure white marble text, bright gold laurels, Mediterranean blues, imperial purples
 - **Character**: Classical, elegant, Roman-inspired, marble and gold aesthetic
 
+## Sound System
+
+### 🎵 Audio Features
+- **Dice Rolling Sounds**: Immersive sound effects that play when rolling dice
+- **User Control**: Toggle switch in Settings to enable/disable sound effects
+- **Automatic Playback**: Sounds trigger automatically when "Roll Dice" button is pressed
+- **Resource Management**: Automatic cleanup and memory management for optimal performance
+- **Error Handling**: Graceful fallback if audio files are missing or corrupted
+
+### 🔊 Sound Attribution
+**Dice Rolling on Table** by Flem0527  
+**Source**: [https://freesound.org/s/629982/](https://freesound.org/s/629982/)  
+**License**: Creative Commons 0 (CC0) - Public Domain
+
+### 🎛️ Sound Settings
+- **Location**: Settings tab → Sound Settings section
+- **Control**: Toggle switch for "Dice Rolling Sound"
+- **Default**: Sound effects are enabled by default
+- **Persistence**: Sound preference is saved and restored across app sessions
+
 ## Achievement System
 
 ### Achievement Categories
@@ -226,7 +266,8 @@ The app features five distinct visual themes, each with its own color palette an
 6. **Customize Theme**: Visit the Customize tab to choose your preferred visual theme
 7. **Track Achievements**: Monitor your progress in the Achievements tab
 8. **Explore Themes**: Try all five themes to unlock theme-based achievements
-9. **App Information**: Visit the Settings tab for app details and legal documents
+9. **Control Sound**: Visit Settings to enable/disable dice rolling sound effects
+10. **App Information**: Visit the Settings tab for app details and legal documents
 
 ## Development
 
@@ -329,6 +370,8 @@ app/
 │   │   │   │   ├── ErrorHandler.kt          # Error handling and validation
 │   │   │   │   ├── PresetStorage.kt         # Preset save/load functionality
 │   │   │   │   ├── RollHistoryStorage.kt    # Roll history persistence
+│   │   │   │   ├── SoundManager.kt          # Audio playback and resource management
+│   │   │   │   ├── SoundStorage.kt          # Sound preference persistence
 │   │   │   │   └── ThemeStorage.kt          # Simplified theme preference storage
 │   │   │   └── viewmodel/                   # MVVM ViewModels
 │   │   │       └── DiceRollViewModel.kt     # Main app state management
@@ -338,6 +381,8 @@ app/
 │   │       │   ├── bg_theme_*.png           # Background images for 5 themes
 │   │       │   ├── bg_theme_*_landscape.png # Landscape background images
 │   │       │   └── d*_*.png                 # Dice images (type_theme.png)
+│   │       ├── raw/                         # Audio resources
+│   │       │   └── dice_roll.wav            # Dice rolling sound effect
 │   │       ├── mipmap-*/                    # App launcher icons
 │   │       ├── values/                      # Resource values
 │   │       │   ├── colors.xml               # Color definitions
@@ -391,12 +436,14 @@ gradle.properties                            # Gradle configuration properties
 - **Persistence**: SharedPreferences with Gson for complex data
 - **Achievement System**: Comprehensive tracking with session management
 - **Simplified Storage**: Clean, single-key storage system without legacy overhead
+- **Audio System**: Immersive sound effects with user control and automatic resource management
 
 #### **🎨 Resources** (`res/`)
 - **Theme Assets**: Custom dice images for each of the 5 themes
 - **Landscape Support**: Orientation-specific background images
 - **Scalable Graphics**: Vector drawables for icons and UI elements
 - **Responsive Images**: Multiple density support for all screen sizes
+- **Audio Resources**: Immersive sound effects for enhanced user experience
 - **Material Design**: Complete Material 3 theme integration
 
 ## Recent Commits

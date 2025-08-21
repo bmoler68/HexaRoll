@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -32,12 +33,13 @@ import com.brianmoler.hexaroll.viewmodel.DiceRollViewModel
 import androidx.core.net.toUri
 
 /**
- * Settings screen that provides access to app information and legal documents
+ * Settings screen that provides access to app information, legal documents, and app controls
  * 
  * Features:
+ * - App Settings section with achievement reset functionality
+ * - Sound Settings section with dice rolling sound toggle
  * - About page link that opens in browser
  * - Privacy Policy link that opens in browser
- * - Reset achievement progress option
  * - Theme-aware styling consistent with app design
  * - Clean, organized layout with clear descriptions
  */
@@ -82,7 +84,319 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
             modifier = Modifier.padding(bottom = 16.dp)
         )
         
-
+        // App Settings Section
+        Text(
+            text = "App Settings",
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                AppTheme.WESTERN -> WesternColors.NeonYellow
+                AppTheme.ANCIENT -> AncientColors.NeonYellow
+            },
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        
+        // Reset Achievement Progress Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                }
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Icon with background
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(
+                            color = when (customization.theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                                AppTheme.FANTASY -> FantasyColors.NeonBlue
+                                AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                                AppTheme.WESTERN -> WesternColors.NeonBlue
+                                AppTheme.ANCIENT -> AncientColors.NeonBlue
+                            },
+                            shape = RoundedCornerShape(8.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Refresh,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                
+                Spacer(modifier = Modifier.width(16.dp))
+                
+                // Content
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Reset Achievement Progress",
+                        color = when (customization.theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                            AppTheme.FANTASY -> FantasyColors.PrimaryText
+                            AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                            AppTheme.WESTERN -> WesternColors.PrimaryText
+                            AppTheme.ANCIENT -> AncientColors.PrimaryText
+                        },
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                    
+                    Spacer(modifier = Modifier.height(4.dp))
+                    
+                    Text(
+                        text = "Reset all achievement progress and statistics",
+                        color = when (customization.theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                            AppTheme.FANTASY -> FantasyColors.SecondaryText
+                            AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                            AppTheme.WESTERN -> WesternColors.SecondaryText
+                            AppTheme.ANCIENT -> AncientColors.SecondaryText
+                        },
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp
+                    )
+                }
+                
+                // Clickable area
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clickable { showResetConfirmation = true }
+                        .background(
+                            color = when (customization.theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed.copy(alpha = 0.2f)
+                                AppTheme.FANTASY -> FantasyColors.NeonRed.copy(alpha = 0.2f)
+                                AppTheme.SCI_FI -> SciFiColors.NeonRed.copy(alpha = 0.2f)
+                                AppTheme.WESTERN -> WesternColors.NeonRed.copy(alpha = 0.2f)
+                                AppTheme.ANCIENT -> AncientColors.NeonRed.copy(alpha = 0.2f)
+                            },
+                            shape = RoundedCornerShape(8.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = "Reset achievements",
+                        tint = when (customization.theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.NeonRed
+                            AppTheme.FANTASY -> FantasyColors.NeonRed
+                            AppTheme.SCI_FI -> SciFiColors.NeonRed
+                            AppTheme.WESTERN -> WesternColors.NeonRed
+                            AppTheme.ANCIENT -> AncientColors.NeonRed
+                        },
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Sound Settings Section
+        Text(
+            text = "Sound Settings",
+            color = when (customization.theme) {
+                AppTheme.CYBERPUNK -> CyberpunkColors.NeonYellow
+                AppTheme.FANTASY -> FantasyColors.NeonYellow
+                AppTheme.SCI_FI -> SciFiColors.NeonYellow
+                AppTheme.WESTERN -> WesternColors.NeonYellow
+                AppTheme.ANCIENT -> AncientColors.NeonYellow
+            },
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        
+        // Sound Toggle Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = when (customization.theme) {
+                    AppTheme.CYBERPUNK -> CyberpunkColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.FANTASY -> FantasyColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.SCI_FI -> SciFiColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.WESTERN -> WesternColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                    AppTheme.ANCIENT -> AncientColors.ElevatedCardBackground.copy(
+                        alpha = if (customization.backgroundEnabled) {
+                            (1.0f - customization.backgroundOpacity * 0.7f).coerceAtLeast(0.2f)
+                        } else {
+                            1.0f
+                        }
+                    )
+                }
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Icon with background
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(
+                            color = when (customization.theme) {
+                                AppTheme.CYBERPUNK -> CyberpunkColors.NeonBlue
+                                AppTheme.FANTASY -> FantasyColors.NeonBlue
+                                AppTheme.SCI_FI -> SciFiColors.NeonBlue
+                                AppTheme.WESTERN -> WesternColors.NeonBlue
+                                AppTheme.ANCIENT -> AncientColors.NeonBlue
+                            },
+                            shape = RoundedCornerShape(8.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Settings,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                
+                Spacer(modifier = Modifier.width(16.dp))
+                
+                // Content
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Dice Rolling Sound",
+                        color = when (customization.theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.PrimaryText
+                            AppTheme.FANTASY -> FantasyColors.PrimaryText
+                            AppTheme.SCI_FI -> SciFiColors.PrimaryText
+                            AppTheme.WESTERN -> WesternColors.PrimaryText
+                            AppTheme.ANCIENT -> AncientColors.PrimaryText
+                        },
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                    
+                    Spacer(modifier = Modifier.height(4.dp))
+                    
+                    Text(
+                        text = "Play sound effects when rolling dice",
+                        color = when (customization.theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
+                            AppTheme.FANTASY -> FantasyColors.SecondaryText
+                            AppTheme.SCI_FI -> SciFiColors.SecondaryText
+                            AppTheme.WESTERN -> WesternColors.SecondaryText
+                            AppTheme.ANCIENT -> AncientColors.SecondaryText
+                        },
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp
+                    )
+                }
+                
+                // Toggle Switch
+                val soundEnabled by viewModel.soundEnabled.collectAsState()
+                Switch(
+                    checked = soundEnabled,
+                    onCheckedChange = { enabled ->
+                        viewModel.setSoundEnabled(enabled)
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = when (customization.theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen
+                            AppTheme.FANTASY -> FantasyColors.NeonGreen
+                            AppTheme.SCI_FI -> SciFiColors.NeonGreen
+                            AppTheme.WESTERN -> WesternColors.NeonGreen
+                            AppTheme.ANCIENT -> AncientColors.NeonGreen
+                        },
+                        checkedTrackColor = when (customization.theme) {
+                            AppTheme.CYBERPUNK -> CyberpunkColors.NeonGreen.copy(alpha = 0.2f)
+                            AppTheme.FANTASY -> FantasyColors.NeonGreen.copy(alpha = 0.2f)
+                            AppTheme.SCI_FI -> SciFiColors.NeonGreen.copy(alpha = 0.2f)
+                            AppTheme.WESTERN -> WesternColors.NeonGreen.copy(alpha = 0.2f)
+                            AppTheme.ANCIENT -> AncientColors.NeonGreen.copy(alpha = 0.2f)
+                        }
+                    )
+                )
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
         
         // App Information Section
         Text(
@@ -126,19 +440,6 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                         modifier = Modifier.size(24.dp)
                     )
                 }
-            ),
-            SettingsOption(
-                id = "reset_achievements",
-                title = "Reset Achievement Progress",
-                description = "Reset all achievement progress and statistics",
-                icon = {
-                    Icon(
-                        imageVector = Icons.Filled.Refresh,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
             )
         )
         
@@ -157,9 +458,6 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                         "privacy" -> {
                             val intent = Intent(Intent.ACTION_VIEW, AppInfoData.Urls.PRIVACY_POLICY.toUri())
                             context.startActivity(intent)
-                        }
-                        "reset_achievements" -> {
-                            showResetConfirmation = true
                         }
                     }
                 }
