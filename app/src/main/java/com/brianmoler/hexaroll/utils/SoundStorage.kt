@@ -2,6 +2,7 @@ package com.brianmoler.hexaroll.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 
 /**
  * SoundStorage - Handles persistence of sound preferences
@@ -31,9 +32,9 @@ class SoundStorage(context: Context) {
      * @param enabled Whether sound effects should be played
      */
     fun saveSoundEnabled(enabled: Boolean) {
-        sharedPreferences.edit()
-            .putBoolean(KEY_SOUND_ENABLED, enabled)
-            .apply()
+        sharedPreferences.edit {
+            putBoolean(KEY_SOUND_ENABLED, enabled)
+        }
     }
     
     /**
