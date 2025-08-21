@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.sp
 import com.brianmoler.hexaroll.R
 import com.brianmoler.hexaroll.data.AppDefaultsData
 import com.brianmoler.hexaroll.ui.components.AchievementNotification
-import com.brianmoler.hexaroll.ui.components.BackgroundFitMode
 import com.brianmoler.hexaroll.ui.components.ThemedBackground
 import com.brianmoler.hexaroll.ui.theme.ThemeColorUtils
 import com.brianmoler.hexaroll.ui.theme.ColorType

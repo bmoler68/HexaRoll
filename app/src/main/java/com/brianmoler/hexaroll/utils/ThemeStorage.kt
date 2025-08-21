@@ -1,7 +1,6 @@
 package com.brianmoler.hexaroll.utils
 
 import android.content.Context
-import com.brianmoler.hexaroll.data.AppDefaultsData
 import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.data.DiceCustomization
 import com.google.gson.Gson
@@ -15,21 +14,7 @@ class ThemeStorage(context: Context) {
     private val gson = Gson()
     
     companion object {
-        private const val KEY_SELECTED_THEME = "selected_theme"
         private const val KEY_CUSTOMIZATION = "dice_customization"
-    }
-
-    fun loadTheme(): AppTheme {
-        val themeJson = sharedPreferences.getString(KEY_SELECTED_THEME, null)
-        return if (themeJson != null) {
-            try {
-                gson.fromJson(themeJson, AppTheme::class.java)
-            } catch (e: Exception) {
-                AppDefaultsData.Theme.DEFAULT_THEME // Centralized default fallback
-            }
-        } else {
-            AppDefaultsData.Theme.DEFAULT_THEME // Centralized default theme
-        }
     }
     
     /**
@@ -39,8 +24,6 @@ class ThemeStorage(context: Context) {
         val customizationJson = gson.toJson(customization)
         sharedPreferences.edit {
             putString(KEY_CUSTOMIZATION, customizationJson)
-            // Also save theme separately for backward compatibility
-            putString(KEY_SELECTED_THEME, gson.toJson(customization.theme))
         }
     }
     
@@ -59,13 +42,12 @@ class ThemeStorage(context: Context) {
             try {
                 return gson.fromJson(customizationJson, DiceCustomization::class.java)
             } catch (e: Exception) {
-                // JSON is corrupted, fall back to theme-only with data class defaults
+                // JSON is corrupted, fall back to data class defaults
             }
         }
         
-        // No customization data or corrupted data - use theme with data class defaults
-        val theme = loadTheme()
-        return DiceCustomization(theme = theme)
-        // backgroundEnabled, backgroundOpacity, backgroundScaling will use AppDefaultsData values
+        // No customization data or corrupted data - use data class defaults
+        return DiceCustomization()
+        // All properties will use AppDefaultsData values from data class defaults
     }
 } 

@@ -70,7 +70,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.inline)
-    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation(libs.androidx.core.testing)
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
 
     androidTestImplementation(libs.androidx.junit)

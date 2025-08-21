@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.brianmoler.hexaroll.data.*
-import com.brianmoler.hexaroll.ui.components.BackgroundFitMode
 import com.brianmoler.hexaroll.utils.AchievementManager
 import com.brianmoler.hexaroll.utils.AchievementStorage
 import com.brianmoler.hexaroll.utils.ErrorHandler
