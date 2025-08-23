@@ -214,11 +214,6 @@ The app features five distinct visual themes, each with its own color palette an
 - **Resource Management**: Automatic cleanup and memory management for optimal performance
 - **Error Handling**: Graceful fallback if audio files are missing or corrupted
 
-### 🔊 Sound Attribution
-**Dice Rolling on Table** by Flem0527  
-**Source**: [https://freesound.org/s/629982/](https://freesound.org/s/629982/)  
-**License**: Creative Commons 0 (CC0) - Public Domain
-
 ### 🎛️ Sound Settings
 - **Location**: Settings tab → Sound Settings section
 - **Control**: Toggle switch for "Dice Rolling Sound"
@@ -483,4 +478,49 @@ This project is **NOT open source** and is privately owned by Brian Moler.
 - **All Rights Reserved**: All intellectual property rights are retained by Brian Moler
 - **No Redistribution**: This code may not be copied, modified, or distributed without explicit permission
 
-For licensing inquiries, please contact Brian Moler directly. 
+For licensing inquiries, please contact Brian Moler directly.
+
+## Open Source Licenses
+
+This app uses several open-source libraries under permissive licenses.
+
+### Apache License 2.0
+
+Licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+
+Libraries:
+- `androidx.core:core-ktx` (1.16.0)
+- `androidx.lifecycle:lifecycle-runtime-ktx` (2.9.2)
+- `androidx.activity:activity-compose` (1.10.1)
+- `androidx.compose:compose-bom` (2025.07.00)
+- `androidx.compose.ui:ui`
+- `androidx.compose.ui:ui-graphics`
+- `androidx.compose.ui:ui-tooling`
+- `androidx.compose.ui:ui-test-manifest`
+- `androidx.compose.material3:material3`
+- `androidx.compose.material:material-icons-extended` (1.6.0)
+- `androidx.test.ext:junit` (1.3.0)
+- `com.android.tools:desugar_jdk_libs` (2.1.5)
+- `org.jetbrains.kotlinx:kotlinx-coroutines-android` (1.10.2)
+- Kotlin language features and compiler
+- `com.squareup.okhttp3:okhttp` (5.1.0)
+
+### Eclipse Public License 1.0
+
+Licensed under [EPL 1.0](https://www.eclipse.org/legal/epl-v10.html)
+
+Library:
+- `junit:junit` (4.13.2)
+
+### MIT License
+
+Licensed under the [MIT License](https://opensource.org/licenses/MIT)
+
+Library:
+- `org.robolectric:robolectric` (4.15.1)
+
+### Creative Commons 0 (CC0) - Public Domain
+
+**Dice Rolling on Table** by Flem0527  
+**Source**: [https://freesound.org/s/629982/](https://freesound.org/s/629982/)  
+**License**: Creative Commons 0 (CC0) - Public Domain 
