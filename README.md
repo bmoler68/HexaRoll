@@ -251,6 +251,20 @@ The app features five distinct visual themes, each with its own color palette an
 - Minimum 2GB RAM recommended
 - Internet permission for external links (optional)
 
+## Release History
+
+### v1.0.0 - Initial Release
+
+**Features:** Initial release with comprehensive dice rolling functionality, multi-theme system, achievement tracking, and persistent data management.
+
+- **8 Polyhedral Dice Types**: Complete set from D4 to D100 with 3D geometric representations
+- **Multi-Theme System**: Five distinct visual themes (Cyberpunk, Fantasy, SCI-FI, Western, Ancient)
+- **Achievement System**: 50+ achievements across multiple categories with tier progression
+- **Persistent Data**: Roll history, achievements, theme preferences, and preset rolls saved across sessions
+- **Sound Effects**: Immersive dice rolling sound effects with user control
+- **Landscape Optimization**: Horizontal split layout for perfect landscape viewing
+- **Settings Integration**: Centralized app information, privacy policy, and sound controls
+
 ## Usage
 
 1. **Select Dice**: Use the +/- buttons to choose dice quantities
