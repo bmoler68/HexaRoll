@@ -253,6 +253,19 @@ The app features five distinct visual themes, each with its own color palette an
 
 ## Release History
 
+### v1.1.0 - Build Configuration Update
+
+**Release Date:** September 2025  
+**Type:** Maintenance Release
+
+**Changes:** Updated build configuration to improve management of version numbering and dependency management.
+
+- **Version Catalog Integration**: Implemented TOML version catalog for centralized dependency management
+- **Build System Enhancement**: Improved Gradle configuration for better version control
+- **Dependency Management**: Streamlined dependency declarations using version catalog references
+- **Maintenance Focus**: Internal improvements to build process and project structure
+- **No Breaking Changes**: All existing functionality preserved with improved build reliability
+
 ### v1.0.0 - Initial Release
 
 **Features:** Initial release with comprehensive dice rolling functionality, multi-theme system, achievement tracking, and persistent data management.
