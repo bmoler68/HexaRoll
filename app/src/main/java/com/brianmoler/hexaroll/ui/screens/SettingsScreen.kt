@@ -487,7 +487,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
             )
             
             Text(
-                text = AppInfoData.getVersionString(),
+                text = AppInfoData.getVersionString(context),
                 color = when (customization.theme) {
                     AppTheme.CYBERPUNK -> CyberpunkColors.SecondaryText
                     AppTheme.FANTASY -> FantasyColors.SecondaryText
