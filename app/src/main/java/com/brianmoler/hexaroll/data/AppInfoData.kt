@@ -20,34 +20,54 @@ import java.util.Properties
  */
 object AppInfoData {
     
-    // Cache for loaded secrets
+    // Cache for loaded secrets - using @Volatile for thread-safe visibility
+    @Volatile
     private var secretsCache: Properties? = null
+    
+    // Synchronization lock for thread-safe cache initialization
+    private val cacheLock = Any()
     
     /**
      * Loads secrets from the assets/secrets.properties file
+     * 
+     * Uses double-checked locking pattern for thread-safe lazy initialization.
+     * This ensures that the file is only loaded once, even when accessed from
+     * multiple threads simultaneously.
      * 
      * @param context The context for accessing assets
      * @return Properties object containing the secrets
      * @throws IllegalStateException if the secrets file is not found or cannot be read
      */
     private fun loadSecrets(context: Context): Properties {
-        if (secretsCache != null) {
-            return secretsCache!!
+        // First check (fast path) - no synchronization needed if cache is already loaded
+        val cached = secretsCache
+        if (cached != null) {
+            return cached
         }
         
-        return try {
-            val properties = Properties()
-            context.assets.open("secrets.properties").use { inputStream ->
-                properties.load(inputStream)
+        // Synchronize only when cache needs to be initialized
+        return synchronized(cacheLock) {
+            // Second check (double-checked locking) - another thread might have loaded it
+            val cachedAgain = secretsCache
+            if (cachedAgain != null) {
+                cachedAgain
+            } else {
+                // Load the file and cache it
+                try {
+                    val properties = Properties()
+                    context.assets.open("secrets.properties").use { inputStream ->
+                        properties.load(inputStream)
+                    }
+                    secretsCache = properties
+                    properties
+                } catch (e: Exception) {
+                    throw IllegalStateException(
+                        "secrets.properties file not found in assets. " +
+                        "Please copy secrets.properties.example to secrets.properties and fill in the required values.",
+                        e
+                    )
+                }
             }
-            secretsCache = properties
-            properties
-        } catch (e: Exception) {
-            throw IllegalStateException(
-                "secrets.properties file not found in assets. " +
-                "Please copy secrets.properties.example to secrets.properties and fill in the required values.",
-                e
-            )
         }
     }
     
