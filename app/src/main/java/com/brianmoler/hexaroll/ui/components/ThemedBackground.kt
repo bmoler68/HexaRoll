@@ -9,9 +9,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.ui.theme.ThemeBackgrounds
 
@@ -77,7 +78,6 @@ fun ThemedBackground(
     content: @Composable () -> Unit
 ) {
     val configuration = LocalConfiguration.current
-    val density = LocalDensity.current
     
     // Detect orientation
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -119,10 +119,20 @@ fun ThemedBackground(
         }
     }
     
+    val context = LocalContext.current
+    val backgroundResource = ThemeBackgrounds.getBackgroundResource(theme, isLandscape)
+    
+    // Use Coil for async image loading to prevent blocking the main thread
+    val imagePainter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(context)
+            .data(backgroundResource)
+            .build()
+    )
+    
     Box(modifier = modifier.fillMaxSize()) {
         // Background image layer with orientation-aware smart scaling
         Image(
-            painter = painterResource(id = ThemeBackgrounds.getBackgroundResource(theme, isLandscape)),
+            painter = imagePainter,
             contentDescription = "Theme background for ${theme.name.lowercase()} theme (${if (isLandscape) "landscape" else "portrait"})",
             modifier = Modifier.fillMaxSize(),
             contentScale = optimalContentScale,

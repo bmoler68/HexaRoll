@@ -4,8 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.brianmoler.hexaroll.R
 import com.brianmoler.hexaroll.data.AppTheme
 import com.brianmoler.hexaroll.data.DiceType
@@ -70,8 +72,17 @@ fun DiceShape(
         }
     }
     
+    val context = LocalContext.current
+    
+    // Use Coil for async image loading to prevent blocking the main thread
+    val imagePainter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(context)
+            .data(imageResource)
+            .build()
+    )
+    
     Image(
-        painter = painterResource(id = imageResource),
+        painter = imagePainter,
         contentDescription = "${diceType.displayName} dice",
         modifier = modifier.size(80.dp)
     )
