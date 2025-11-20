@@ -49,12 +49,31 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
     var showResetConfirmation by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val snackbarHostState = remember { SnackbarHostState() }
     
+    // Show error message in Snackbar when error occurs
+    LaunchedEffect(errorMessage) {
+        errorMessage?.let { message ->
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Long
+            )
+            errorMessage = null // Clear the error message after showing
+        }
+    }
+    
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
+    ) { paddingValues ->
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
             .padding(12.dp)
+            .padding(paddingValues)
     ) {
         // Settings Header
         Text(
@@ -450,15 +469,28 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                 theme = customization.theme,
                 customization = customization,
                 onClick = {
-                    when (option.id) {
-                        "about" -> {
-                            val intent = Intent(Intent.ACTION_VIEW, AppInfoData.Urls.getAboutPage(context).toUri())
-                            context.startActivity(intent)
+                    try {
+                        when (option.id) {
+                            "about" -> {
+                                val url = AppInfoData.Urls.getAboutPage(context)
+                                val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                                context.startActivity(intent)
+                            }
+                            "privacy" -> {
+                                val url = AppInfoData.Urls.getPrivacyPolicy(context)
+                                val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                                context.startActivity(intent)
+                            }
                         }
-                        "privacy" -> {
-                            val intent = Intent(Intent.ACTION_VIEW, AppInfoData.Urls.getPrivacyPolicy(context).toUri())
-                            context.startActivity(intent)
-                        }
+                    } catch (e: IllegalStateException) {
+                        // Handle missing or misconfigured secrets file
+                        errorMessage = "Unable to open link. The app configuration is missing or incomplete. Please check the secrets.properties file."
+                    } catch (e: android.content.ActivityNotFoundException) {
+                        // Handle case where no browser is available
+                        errorMessage = "No browser app found to open the link."
+                    } catch (e: Exception) {
+                        // Handle other potential errors
+                        errorMessage = "Unable to open link. Please try again later."
                     }
                 }
             )
@@ -611,6 +643,7 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                 }
             }
         )
+    }
     }
 }
 
