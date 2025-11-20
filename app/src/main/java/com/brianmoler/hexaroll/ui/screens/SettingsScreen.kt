@@ -452,11 +452,11 @@ fun SettingsScreen(viewModel: DiceRollViewModel) {
                 onClick = {
                     when (option.id) {
                         "about" -> {
-                            val intent = Intent(Intent.ACTION_VIEW, AppInfoData.Urls.ABOUT_PAGE.toUri())
+                            val intent = Intent(Intent.ACTION_VIEW, AppInfoData.Urls.getAboutPage(context).toUri())
                             context.startActivity(intent)
                         }
                         "privacy" -> {
-                            val intent = Intent(Intent.ACTION_VIEW, AppInfoData.Urls.PRIVACY_POLICY.toUri())
+                            val intent = Intent(Intent.ACTION_VIEW, AppInfoData.Urls.getPrivacyPolicy(context).toUri())
                             context.startActivity(intent)
                         }
                     }
