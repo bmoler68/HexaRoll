@@ -310,6 +310,7 @@ Libraries:
 - `org.jetbrains.kotlinx:kotlinx-coroutines-test` (1.10.2)
 - Kotlin language features and compiler (2.2.10)
 - `com.google.code.gson:gson` (2.13.1)
+- `io.coil-kt:coil-compose` (2.6.0)
 
 ### Eclipse Public License 1.0
 
