@@ -3,6 +3,7 @@ package com.brianmoler.hexaroll.data
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import java.util.Properties
 
 /**
  * AppInfoData - Central storage for application information
@@ -13,15 +14,89 @@ import android.os.Build
  * 
  * Version information is dynamically retrieved from the build configuration
  * to ensure consistency between displayed version and actual app version.
+ * 
+ * URLs are loaded exclusively from the secrets.properties file in assets.
+ * The secrets file must be present and properly configured.
  */
 object AppInfoData {
     
+    // Cache for loaded secrets
+    private var secretsCache: Properties? = null
+    
+    /**
+     * Loads secrets from the assets/secrets.properties file
+     * 
+     * @param context The context for accessing assets
+     * @return Properties object containing the secrets
+     * @throws IllegalStateException if the secrets file is not found or cannot be read
+     */
+    private fun loadSecrets(context: Context): Properties {
+        if (secretsCache != null) {
+            return secretsCache!!
+        }
+        
+        return try {
+            val properties = Properties()
+            context.assets.open("secrets.properties").use { inputStream ->
+                properties.load(inputStream)
+            }
+            secretsCache = properties
+            properties
+        } catch (e: Exception) {
+            throw IllegalStateException(
+                "secrets.properties file not found in assets. " +
+                "Please copy secrets.properties.example to secrets.properties and fill in the required values.",
+                e
+            )
+        }
+    }
+    
+    /**
+     * Gets a property value from secrets file
+     * 
+     * @param context The context for accessing assets
+     * @param key The property key
+     * @return The property value
+     * @throws IllegalStateException if the property is not found or is empty
+     */
+    private fun getSecretProperty(context: Context, key: String): String {
+        val secrets = loadSecrets(context)
+        val value = secrets.getProperty(key)?.takeIf { it.isNotBlank() }
+            ?: throw IllegalStateException(
+                "Required property '$key' not found in secrets.properties. " +
+                "Please ensure all required properties are set in assets/secrets.properties."
+            )
+        return value
+    }
+    
     /**
      * Application URLs
+     * 
+     * URLs are loaded exclusively from the secrets.properties file in assets.
+     * The secrets file must be present and contain all required URL properties.
      */
     object Urls {
-        const val ABOUT_PAGE = "https://www.brianmoler.com/appdocs/HexaRoll/HexaRollDetails.html"
-        const val PRIVACY_POLICY = "https://www.brianmoler.com/appdocs/HexaRoll/HexaRollPrivacyPolicy.html"
+        /**
+         * Gets the About page URL from secrets file
+         * 
+         * @param context The context for accessing assets
+         * @return The About page URL
+         * @throws IllegalStateException if the URL is not found in secrets.properties
+         */
+        fun getAboutPage(context: Context): String {
+            return getSecretProperty(context, "about.page.url")
+        }
+        
+        /**
+         * Gets the Privacy Policy URL from secrets file
+         * 
+         * @param context The context for accessing assets
+         * @return The Privacy Policy URL
+         * @throws IllegalStateException if the URL is not found in secrets.properties
+         */
+        fun getPrivacyPolicy(context: Context): String {
+            return getSecretProperty(context, "privacy.policy.url")
+        }
     }
     
     /**
@@ -74,7 +149,6 @@ object AppInfoData {
      * Application metadata
      */
     object Info {
-        const val COPYRIGHT_TEXT = "© 2025 Brian Moler. All rights reserved."
         const val DEVELOPER_NAME = "Brian Moler"
         const val RELEASE_YEAR = "2025"
     }
@@ -88,9 +162,9 @@ object AppInfoData {
     fun getVersionString(context: Context): String = "Version ${Version.getVersionName(context)}"
     
     /**
-     * Helper function to get formatted copyright string
+     * Helper function to get formatted copyright string with MIT license information
      */
-    fun getCopyrightString(): String = "© ${Info.RELEASE_YEAR} ${Info.DEVELOPER_NAME}. All rights reserved."
+    fun getCopyrightString(): String = "Copyright (c) ${Info.RELEASE_YEAR} ${Info.DEVELOPER_NAME}\nLicensed under the MIT License"
     
     /**
      * Helper function to get full app information

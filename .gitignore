@@ -130,3 +130,6 @@ buildNumber.properties
 
 # Gradle wrapper (optional - some teams prefer to include this)
 # gradle/wrapper/gradle-wrapper.jar
+
+# Secrets file
+app/src/main/assets/secrets.properties
