@@ -147,17 +147,22 @@ The app features five distinct visual themes, each with its own color palette an
 **Release Date:** November 2025  
 **Type:** Latest Release
 
-**Changes:** Open source release with MIT license adoption and improved configuration management.
+**Changes:** Open source release with MIT license adoption, improved configuration management, and image asset optimization.
 
 - **MIT License Adoption**: Project licensed under MIT License for open source distribution
 - **Secrets Configuration**: Implemented secrets.properties file for secure URL management
   - External URLs moved to gitignored secrets file
   - Template file (secrets.properties.example) provided for easy setup
   - Improved security by removing hardcoded URLs from source code
+- **Image Asset Optimization**: Converted and optimized all image assets for better performance
+  - All dice images and theme backgrounds converted from PNG to WebP format
+  - Reduced file sizes significantly while maintaining visual quality
+  - Resized all dice image assets to proper xhdpi dimensions for optimal display
+  - Improved app performance and reduced APK size
 - **Documentation Updates**: Comprehensive README updates with accurate dependency versions and requirements
 - **Copyright Updates**: Updated copyright notices throughout the application to reflect MIT license
 - **Configuration Management**: Centralized app information and improved maintainability
-- **No Breaking Changes**: All existing functionality preserved with improved security and documentation
+- **No Breaking Changes**: All existing functionality preserved with improved security, performance, and documentation
 
 ### v1.1.0 - Build Configuration Update
 
