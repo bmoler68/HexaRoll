@@ -4,7 +4,7 @@ A modern Android dice rolling application with multiple theme options (Cyberpunk
 
 ## 🤖 About This Project
 
-This application was completely written and is maintained using AI-assisted development tools as a personal project in AI application development. The entire codebase, architecture, and documentation were created with the assistance of AI coding agents, demonstrating modern AI-powered software development workflows. This project serves as both a functional application for the Borderlands community and a personal project in exploring AI-assisted development practices.
+This application was completely written and is maintained using AI-assisted development tools as a personal project in AI application development. The entire codebase, architecture, and documentation were created with the assistance of AI coding agents, demonstrating modern AI-powered software development workflows. This project serves as both a functional application and a personal project in exploring AI-assisted development practices.
 
 **Contribution Policy:** Since this application is an experiment in AI development, contributions are not currently being accepted. This allows the project to remain completely AI-developed and maintained, which is central to the experimental nature of this project. However, you are free to clone the repository and create your own forks or modifications for personal use.
 
